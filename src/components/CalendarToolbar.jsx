@@ -16,18 +16,9 @@ export default function CalendarToolbar({ label, onNavigate, onView, view }) {
         {label}
       </Typography>
 
-      {/* View Buttons */}
-      <ButtonGroup variant="outlined">
-        {['week'].map((v) => (
-          <Button
-            key={v}
-            onClick={() => onView(v)}
-            variant={view === v ? 'contained' : 'outlined'}
-          >
-            {v.charAt(0).toUpperCase() + v.slice(1)}
-          </Button>
-        ))}
-      </ButtonGroup>
+
+      {/* Placeholder */}
+      <Box />
     </Box>
   )
 }

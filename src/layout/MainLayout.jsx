@@ -24,13 +24,11 @@ export default function MainLayout({ selectedDate, setSelectedDate, children }) 
         {!isMobile && (
           <Box
             sx={{
-              width: 350,
-              flexShrink: 0,
               borderRight: '1px solid #eee',
               height: '100%',
             }}
           >
-            <Sidebar onDateSelect={handleDateSelect} />
+          <Sidebar onDateSelect={handleDateSelect} />
           </Box>
         )}
 
@@ -40,7 +38,7 @@ export default function MainLayout({ selectedDate, setSelectedDate, children }) 
           ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': { width: 280 },
+            '& .MuiDrawer-paper': { width: 350 },
           }}
         >
           <SidebarDrawer onDateSelect={handleDateSelect} />
