@@ -1,4 +1,4 @@
-# 📅 Ultimate StarPlan – Bachelor Thesis Project
+# 📅 Ultimate [StarPlan](https://splan.hs-heilbronn.de) – Bachelor Thesis Project
 
 This project is a modern, responsive calendar web application built as part of a Bachelor's thesis. It is designed to replace the existing timetable UI used by students at Hochschule Heilbronn, providing a cleaner, more intuitive, and mobile-friendly user interface.
 
@@ -9,7 +9,7 @@ This project is a modern, responsive calendar web application built as part of a
 The goal of this project is to:
 - Replace the current timetable frontend with a modern React-based interface
 - Improve usability, accessibility, and responsiveness across all devices
-- Connect seamlessly with the existing RESTful timetable backend of StarPlan
+- Connect seamlessly with the existing RESTful timetable backend of [StarPlan](https://splan.hs-heilbronn.de)
 
 ---
 
@@ -26,7 +26,7 @@ The goal of this project is to:
 
 ## 🔌 Backend Integration
 
-This app is designed to connect to the **StarPlan REST API** that powers the current timetable UI. It can fetch and display:
+This app is designed to connect to the **[StarPlan](https://splan.hs-heilbronn.de) REST API** that powers the current timetable UI. It can fetch and display:
 - Courses
 - Rooms
 - Timeslots
@@ -55,9 +55,10 @@ npm install
 
 # Start development server
 npm run dev
+```
 
 ---
 
 ## 📄 License
 
-[Apache License 2.0](LICENSE)
+[Apache License 2.0](./LICENSE)
