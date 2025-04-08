@@ -10,9 +10,8 @@ export default function Sidebar({ onDateSelect }) {
 
   return (
     <Box
-      width={350}
       p={2}
-      sx={{ borderRight: '1px solid #eee', height: '100%' }}
+      sx={{ borderRight: '1px solid #eee', height: '100%', overflowX: 'hidden' }}
       display="flex"
       flexDirection="column"
       gap={2}
