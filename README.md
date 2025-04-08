@@ -55,3 +55,9 @@ npm install
 
 # Start development server
 npm run dev
+
+---
+
+## 📄 License
+
+[Apache License 2.0](LICENSE)
