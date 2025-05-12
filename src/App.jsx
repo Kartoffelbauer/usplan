@@ -1,7 +1,7 @@
 import { CssBaseline, Box } from '@mui/material'
-import CalendarApp from './components/CalendarApp'
 import MainLayout from './layout/MainLayout'
 import { useState } from 'react'
+import './index.css'
 
 function App() {
   const [selectedDate, setSelectedDate] = useState(new Date())

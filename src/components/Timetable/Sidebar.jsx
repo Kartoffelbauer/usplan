@@ -1,3 +1,4 @@
+import React, { useState } from 'react'
 import {
   Box,
   Divider,
@@ -11,20 +12,14 @@ import {
   ButtonGroup,
   Button,
 } from '@mui/material'
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { useState } from 'react'
 
 export default function Sidebar({ onDateSelect }) {
-  const [selectedDate, setSelectedDate] = useState(new Date())
   const [semester, setSemester] = useState('SS2025')
   const [studyProgram, setStudyProgram] = useState('Informatics')
   const [viewMode, setViewMode] = useState('course')
 
   const handleExportPDF = () => {
     console.log('Exporting to PDF...')
-    // PDF export logic here
   }
 
   const handlePrint = () => {
@@ -43,47 +38,6 @@ export default function Sidebar({ onDateSelect }) {
         boxSizing: 'border-box',
       }}
     >
-      {/* Month Picker */}
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <StaticDatePicker
-          displayStaticWrapperAs="desktop"
-          openTo="day"
-          value={selectedDate}
-          onChange={(newValue) => {
-            setSelectedDate(newValue)
-            onDateSelect(newValue)
-          }}
-          sx={{
-            '& .MuiPickersDay-root': {
-              fontSize: '0.8rem',
-              width: 36,
-              height: 36,
-            },
-          }}
-        />
-      </LocalizationProvider>
-
-      <Divider />
-
-      {/* View Mode ToggleButtonGroup */}
-      <Box>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Selection:
-        </Typography>
-        <ToggleButtonGroup
-          fullWidth
-          size="small"
-          exclusive
-          value={viewMode}
-          onChange={(e, newValue) => {
-            if (newValue !== null) setViewMode(newValue)
-          }}
-        >
-          <ToggleButton value="course">Course</ToggleButton>
-          <ToggleButton value="room">Room</ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
-
       {/* Semester Select */}
       <FormControl fullWidth size="small">
         <InputLabel id="semester-label">Semester</InputLabel>
@@ -99,7 +53,7 @@ export default function Sidebar({ onDateSelect }) {
         </Select>
       </FormControl>
 
-      {/* Study Program Select */}
+      {/* Study Program */}
       <FormControl fullWidth size="small">
         <InputLabel id="study-label">Study Program</InputLabel>
         <Select
@@ -114,7 +68,26 @@ export default function Sidebar({ onDateSelect }) {
         </Select>
       </FormControl>
 
-      {/* Export Section */}
+      {/* Selection */}
+      <Box>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Selection
+        </Typography>
+        <ToggleButtonGroup
+          fullWidth
+          size="small"
+          exclusive
+          value={viewMode}
+          onChange={(e, v) => v !== null && setViewMode(v)}
+        >
+          <ToggleButton value="course">Course</ToggleButton>
+          <ToggleButton value="room">Room</ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+      <Divider />
+
+      {/* Export */}
       <Box>
         <Typography variant="subtitle2" gutterBottom>
           Export
