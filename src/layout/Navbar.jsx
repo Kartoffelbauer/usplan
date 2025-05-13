@@ -9,11 +9,14 @@ import {
   Checkbox,
   Button,
 } from '@mui/material'
+import IconButton from '@mui/material/IconButton'
+import MenuIcon from '@mui/icons-material/Menu'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
 export default function Navbar({
+  onMenuClick,
   selectedDate,
   onDateChange,
   onToday,
@@ -30,17 +33,22 @@ export default function Navbar({
       }}
     >
       <Toolbar disableGutters sx={{ display: 'flex', width: '100%' }}>
-        {/* 1. Ultimate StarPlan title (fixed width) */}
+        {/* 1. Hamburger + title (fixed width) */}
         <Box
           sx={{
             width: 300,
             display: 'flex',
             alignItems: 'center',
             px: 2,
-            gap: 2,
+            gap: 1,
           }}
         >
-          <Typography variant="h6">Ultimate StarPlan</Typography>
+          <IconButton onClick={onMenuClick} size="small">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap>
+            Ultimate StarPlan
+          </Typography>
         </Box>
 
         {/* 2. Checkboxes */}

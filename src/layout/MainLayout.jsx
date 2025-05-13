@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import {
   Box,
   useMediaQuery,
@@ -24,22 +24,38 @@ export default function MainLayout() {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
+  // Global state
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [tabIndex, setTabIndex] = useState(0)
   const [selectedDate, setSelectedDate] = useState(new Date())
   const [view, setView] = useState('week')
-  const [tabIndex, setTabIndex] = useState(0)
 
-  // calendar handlers
+  // Sidebar toggle (hamburger)
+  const handleToggleSidebar = () => setSidebarOpen((o) => !o)
+
+  // Tab selection
+  const handleTabChange = (_, v) => setTabIndex(v)
+
+  // Calendar navigation
   const handleToday      = () => setSelectedDate(new Date())
   const handlePrev       = () => setSelectedDate((d) => addWeeks(d, -1))
-  const handleNext       = () => setSelectedDate((d) => addWeeks(d,  1))
+  const handleNext       = () => setSelectedDate((d) => addWeeks(d, 1))
   const handleDateChange = (date) => setSelectedDate(date)
   const handleViewChange = (v)    => setView(v)
 
-  const changeTab = (_, v) => setTabIndex(v)
+  // Sidebar date pick callback (also closes on mobile)
+  const handleSidebarDate = useCallback(
+    (date) => {
+      setSelectedDate(date)
+      if (isMobile) setSidebarOpen(false)
+    },
+    [isMobile]
+  )
 
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Navbar
+        onMenuClick={handleToggleSidebar}
         selectedDate={selectedDate}
         onDateChange={handleDateChange}
         onToday={handleToday}
@@ -49,7 +65,7 @@ export default function MainLayout() {
 
       <Tabs
         value={tabIndex}
-        onChange={changeTab}
+        onChange={handleTabChange}
         variant="scrollable"
         scrollButtons="auto"
         sx={{
@@ -67,9 +83,12 @@ export default function MainLayout() {
         <TabPanel value={tabIndex} index={0}>
           <Timetable
             selectedDate={selectedDate}
-            onDateChange={handleDateChange}
+            onDateChange={handleSidebarDate}
             view={view}
             onView={handleViewChange}
+            sidebarOpen={sidebarOpen}
+            onToggleSidebar={handleToggleSidebar}
+            onSidebarDateSelect={handleSidebarDate}
           />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
