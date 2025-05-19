@@ -11,12 +11,23 @@ import {
   ToggleButton,
   ButtonGroup,
   Button,
+  CircularProgress,
 } from '@mui/material'
+import { useTimetableData } from '../../hooks/useTimetableData'
 
 export default function Sidebar({ onDateSelect }) {
-  const [semester, setSemester] = useState('SS2025')
-  const [studyProgram, setStudyProgram] = useState('Informatics')
+  const [selectedSemester, setSelectedSemester] = useState('')
+  const [selectedProgram, setSelectedProgram] = useState('')
+  const [selectedGroup, setSelectedGroup] = useState('')
   const [viewMode, setViewMode] = useState('course')
+
+  const {
+    semesters,
+    programs,
+    groups,
+    loading,
+    error,
+  } = useTimetableData(selectedSemester, selectedProgram, selectedGroup)
 
   const handleExportPDF = () => {
     console.log('Exporting to PDF...')
@@ -39,36 +50,72 @@ export default function Sidebar({ onDateSelect }) {
       }}
     >
       {/* Semester Select */}
-      <FormControl fullWidth size="small">
+      <FormControl fullWidth size="small" disabled={loading.semesters || error}>
         <InputLabel id="semester-label">Semester</InputLabel>
         <Select
           labelId="semester-label"
-          value={semester}
+          value={selectedSemester}
           label="Semester"
-          onChange={(e) => setSemester(e.target.value)}
+          onChange={(e) => {
+            setSelectedSemester(e.target.value)
+            setSelectedProgram('')
+            setSelectedGroup('')
+          }}
         >
-          <MenuItem value="SS2025">SS 2025</MenuItem>
-          <MenuItem value="WS2024">WS 2024/25</MenuItem>
-          <MenuItem value="SS2024">SS 2024</MenuItem>
+          {semesters.map((sem) => (
+            <MenuItem key={sem.id} value={sem.id}>
+              {sem.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
-      {/* Study Program */}
-      <FormControl fullWidth size="small">
+      {/* Study Program Select */}
+      <FormControl
+        fullWidth
+        size="small"
+        disabled={!selectedSemester || loading.programs || error}
+      >
         <InputLabel id="study-label">Study Program</InputLabel>
         <Select
           labelId="study-label"
-          value={studyProgram}
+          value={selectedProgram}
           label="Study Program"
-          onChange={(e) => setStudyProgram(e.target.value)}
+          onChange={(e) => {
+            setSelectedProgram(e.target.value)
+            setSelectedGroup('')
+          }}
         >
-          <MenuItem value="Informatics">Informatics</MenuItem>
-          <MenuItem value="Business IT">Business IT</MenuItem>
-          <MenuItem value="Mechanical Engineering">Mechanical Engineering</MenuItem>
+          {programs.map((prog) => (
+            <MenuItem key={prog.id} value={prog.id}>
+              {prog.name}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
-      {/* Selection */}
+      {/* Group Select */}
+      <FormControl
+        fullWidth
+        size="small"
+        disabled={!selectedSemester || !selectedProgram || loading.groups || error}
+      >
+        <InputLabel id="group-label">Group</InputLabel>
+        <Select
+          labelId="group-label"
+          value={selectedGroup}
+          label="Group"
+          onChange={(e) => setSelectedGroup(e.target.value)}
+        >
+          {groups.map((group) => (
+            <MenuItem key={group.id} value={group.id}>
+              {group.name}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* Selection Toggle */}
       <Box>
         <Typography variant="body2" sx={{ mb: 1 }}>
           Selection
@@ -97,6 +144,14 @@ export default function Sidebar({ onDateSelect }) {
           <Button onClick={handlePrint}>Print</Button>
         </ButtonGroup>
       </Box>
+
+      {/* Loading and Error State */}
+      {(loading.semesters || loading.programs || loading.groups) && (
+        <Box display="flex" justifyContent="center">
+          <CircularProgress size={20} sx={{ mt: 2 }} />
+        </Box>
+      )}
+      {error && <Typography color="error">Failed to load data</Typography>}
     </Box>
   )
 }
