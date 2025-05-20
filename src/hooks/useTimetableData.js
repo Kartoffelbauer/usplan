@@ -7,11 +7,11 @@ import {
   getTimetable,
 } from '../services/timetableService'
 
-export function useTimetableData(selectedSemester, selectedProgram) {
+export function useTimetableData(selectedSemester, selectedProgram, selectedGroup) {
   const [semesters, setSemesters] = useState([])
   const [programs, setPrograms] = useState([])
   const [groups, setGroups] = useState([])
-  const [timetable, setTimetable] = useState([])
+  const [timetable, setTimetable] = useState(undefined)
 
   const [loadingSemesters, setLoadingSemesters] = useState(false)
   const [loadingPrograms, setLoadingPrograms] = useState(false)
@@ -48,16 +48,15 @@ export function useTimetableData(selectedSemester, selectedProgram) {
       .finally(() => setLoadingGroups(false))
   }, [selectedSemester, selectedProgram])
 
-  /*
   // Load timetable
   useEffect(() => {
-    if (!selectedSemester || !selectedProgram) return
+    if (!selectedSemester || !selectedProgram || !selectedGroup) return
     setLoadingTimetable(true)
-    getTimetable({ semesterId: selectedSemester, programId: selectedProgram, view: 'week' })
+    getTimetable(selectedSemester, selectedProgram, selectedGroup)
       .then(setTimetable)
       .catch(setError)
       .finally(() => setLoadingTimetable(false))
-  }, [selectedSemester, selectedProgram])*/
+  }, [selectedSemester, selectedProgram, selectedGroup])
 
   return {
     semesters,

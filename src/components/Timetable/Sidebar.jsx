@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   Divider,
@@ -13,21 +13,22 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material'
-import { useTimetableData } from '../../hooks/useTimetableData'
 
-export default function Sidebar({ onDateSelect }) {
-  const [selectedSemester, setSelectedSemester] = useState('')
-  const [selectedProgram, setSelectedProgram] = useState('')
-  const [selectedGroup, setSelectedGroup] = useState('')
-  const [viewMode, setViewMode] = useState('course')
-
-  const {
-    semesters,
-    programs,
-    groups,
-    loading,
-    error,
-  } = useTimetableData(selectedSemester, selectedProgram, selectedGroup)
+export default function Sidebar({
+  semesters,
+  programs,
+  groups,
+  selectedSemester,
+  selectedProgram,
+  selectedGroup,
+  setSelectedSemester,
+  setSelectedProgram,
+  setSelectedGroup,
+  loading,
+  error,
+  onDateSelect,
+}) {
+  const [viewMode, setViewMode] = React.useState('course')
 
   const handleExportPDF = () => {
     console.log('Exporting to PDF...')
