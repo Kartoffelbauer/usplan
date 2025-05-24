@@ -4,6 +4,7 @@ import Sidebar from './Sidebar'
 import SidebarDrawer from '../../layout/SidebarDrawer'
 import CalendarWidget from './CalendarWidget'
 import { useTimetableData } from '../../hooks/useTimetableData'
+import { eachWeekOfInterval, addMinutes, parseISO, add, parse } from 'date-fns';
 
 export default function Timetable({
   selectedDate,
@@ -37,22 +38,41 @@ export default function Timetable({
   useEffect(() => {
     if (timetable === undefined) return
 
-    const transformed = timetable.happenings.map((item) => {
-      if (item.singularDate && item.singularDate instanceof String) {
-        const [year, month, day] = item.singularDate.split('-').map(Number)
-        const start = new Date(year, month - 1, day, 0, item.beginMinute)
-        const end = new Date(year, month - 1, day, 0, item.endMinute)
-        console.log("title", item.orglectureName)
-        return {
+    // ToDo: This should not be hardcoded!!!
+    const semesterInertval = {
+      start: parseISO("2025-03-01"),
+      end: parseISO("2025-08-31"),
+    }
+    const happenings = []
+
+    timetable.happenings.forEach(item => {
+      // Handle WEEK type
+      if (item.type === 'WEEK') {
+        // Get all weekdays for this semester
+        eachWeekOfInterval(semesterInertval, { weekStartsOn: item.weekday + 1 })
+        .forEach(weekday => {
+          happenings.push({
+            title: item.orglectureName,
+            start: addMinutes(weekday, item.beginMinute),
+            end: addMinutes(weekday, item.endMinute),
+            location: item.roomNames,
+          })
+        })
+      }
+      // Handle SINGULAR type
+      else {
+        const date = (typeof item.singularDate === "string") ? parseISO(item.singularDate) : new Date(item.singularDate)
+        
+        happenings.push({
           title: item.orglectureName,
-          start,
-          end,
+          start: addMinutes(date, item.beginMinute),
+          end: addMinutes(date, item.endMinute),
           location: item.roomNames,
-        }
+        })
       }
     })
 
-    setEvents(transformed)
+    setEvents(happenings)
   }, [timetable])
 
   return (

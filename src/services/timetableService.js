@@ -26,7 +26,6 @@ export async function getTimetable(semesterId, programId, groupId) {
 if (!semesterId || !groupId) {
     throw new Error('Missing semester or program ID for timetable query')
   }
-  console.log(`https://splan.hs-heilbronn.de/splan/rest/TimetableService/getForPlanningUnitAndPlanningGroup/${semesterId}/${groupId}/true/${programId}`)
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/TimetableService/getForPlanningUnitAndPlanningGroup/${semesterId}/${groupId}/true/${programId}`)
   if (!res.ok) throw new Error('Failed to load timetable')
   return res.json()
