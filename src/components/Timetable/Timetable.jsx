@@ -36,12 +36,12 @@ export default function Timetable({
 
   // Transform timetable into calendar events
   useEffect(() => {
-    if (timetable === undefined) return
+    const currentSemester = semesters.find(semester => semester.id === selectedSemester)
+    if (timetable === undefined || !currentSemester) return
 
-    // ToDo: This should not be hardcoded!!!
     const semesterInertval = {
-      start: parseISO("2025-03-01"),
-      end: parseISO("2025-08-31"),
+      start: new Date(currentSemester.beginOfLectureDate),
+      end: new Date(currentSemester.endOfLectureDate),
     }
     const happenings = []
 
@@ -62,7 +62,7 @@ export default function Timetable({
       // Handle SINGULAR type
       else {
         const date = (typeof item.singularDate === "string") ? parseISO(item.singularDate) : new Date(item.singularDate)
-        
+
         happenings.push({
           title: item.orglectureName,
           start: addMinutes(date, item.beginMinute),
