@@ -2,7 +2,8 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { format, parse, startOfWeek, getDay } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
-import { Box } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
+import CalendarWrapper from '../../layout/CalendarWrapper'
 
 const locales = { 'en-US': enUS }
 const localizer = dateFnsLocalizer({
@@ -20,22 +21,33 @@ export default function CalendarWidget({
   onView,
   events = [],
 }) {
+  const theme = useTheme()
+  const formats = {
+    timeGutterFormat: (date) => format(date, 'HH:mm'),
+    eventTimeRangeFormat: ({ start, end }) => `${format(start, 'HH:mm')} – ${format(end, 'HH:mm')}`,
+  }
+
   return (
-    <Box sx={{ flexGrow: 1, overflow: 'hidden' }}>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        date={selectedDate}
-        view={view}
-        onNavigate={onDateChange}
-        onView={onView}
-        defaultView="week"
-        views={['week']}
-        toolbar={false}
-        style={{ width: '100%', height: '100%' }}
-      />
+    <Box flexGrow='1' overflow='hidden' padding={theme.spacing(2)}>
+      <CalendarWrapper>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          min={new Date(2023, 0, 1, 8, 0)}  // 08:00
+          max={new Date(2023, 0, 1, 18, 0)} // 18:00
+          date={selectedDate}
+          formats={formats}
+          view={view}
+          onNavigate={onDateChange}
+          onView={onView}
+          defaultView="week"
+          views={['week']}
+          toolbar={false}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </CalendarWrapper>
     </Box>
   )
 }

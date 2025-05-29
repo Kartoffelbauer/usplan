@@ -70,7 +70,7 @@ export default function MainLayout() {
         scrollButtons="auto"
         sx={{
           justifyContent: 'flex-start',
-          backgroundColor: theme.palette.grey[200],
+          backgroundColor: theme.palette.background.secondary,
           borderBottom: 'none',
         }}
       >

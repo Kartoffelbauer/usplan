@@ -62,14 +62,14 @@ export default function TimetableSection({
   }, [timetable])
 
   return (
-    <Box display="flex" flexGrow={1} overflow="hidden" width="100%">
+    <Box display="flex" flexGrow={1} overflow="hidden" width="100%" backgroundColor={theme.palette.background.secondary}>
       {/* Desktop Sidebar */}
       {!isMobile && sidebarOpen && (
         <Box
           sx={{
             width: 300,
             flexShrink: 0,
-            backgroundColor: theme.palette.grey[200],
+            backgroundColor: theme.palette.background.secondary,
           }}
         >
           <Sidebar />
@@ -86,7 +86,7 @@ export default function TimetableSection({
             display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {
               width: 300,
-              backgroundColor: theme.palette.grey[200],
+              backgroundColor: theme.palette.background.secondary,
               border: 'none',
             },
           }}

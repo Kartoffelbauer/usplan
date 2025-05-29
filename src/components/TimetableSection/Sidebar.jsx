@@ -43,6 +43,7 @@ export default function Sidebar() {
     <Box
       width="100%"
       p={2}
+      pt={4}
       sx={{
         height: '100%',
         display: 'flex',
