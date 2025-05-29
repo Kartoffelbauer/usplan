@@ -1,38 +1,24 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
+import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
+import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
-import SidebarDrawer from '../../layout/SidebarDrawer'
 import CalendarWidget from './CalendarWidget'
-import { useTimetableData } from '../../hooks/useTimetableData'
-import { eachWeekOfInterval, addMinutes, parseISO, add, parse } from 'date-fns';
 
-export default function Timetable({
+export default function TimetableSection({
   selectedDate,
   onDateChange,
   view,
   onView,
   sidebarOpen,
   onToggleSidebar,
-  onSidebarDateSelect,
 }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
-  // Shared selection state
-  const [selectedSemester, setSelectedSemester] = useState('')
-  const [selectedProgram, setSelectedProgram] = useState('')
-  const [selectedGroup, setSelectedGroup] = useState('')
+  // Shared state
   const [events, setEvents] = useState([])
-
-  // Fetch data based on selection
-  const {
-    semesters,
-    programs,
-    groups,
-    timetable,
-    loading,
-    error,
-  } = useTimetableData(selectedSemester, selectedProgram, selectedGroup)
+  const { semesters, timetable, selectedSemester } = useTimetable()
 
   // Transform timetable into calendar events
   useEffect(() => {
@@ -86,20 +72,7 @@ export default function Timetable({
             backgroundColor: theme.palette.grey[200],
           }}
         >
-          <Sidebar
-            semesters={semesters}
-            programs={programs}
-            groups={groups}
-            selectedSemester={selectedSemester}
-            selectedProgram={selectedProgram}
-            selectedGroup={selectedGroup}
-            setSelectedSemester={setSelectedSemester}
-            setSelectedProgram={setSelectedProgram}
-            setSelectedGroup={setSelectedGroup}
-            loading={loading}
-            error={error}
-            onDateSelect={onSidebarDateSelect}
-          />
+          <Sidebar />
         </Box>
       )}
 
@@ -118,7 +91,7 @@ export default function Timetable({
             },
           }}
         >
-          <SidebarDrawer onDateSelect={onSidebarDateSelect} />
+          <Sidebar />
         </Drawer>
       )}
 

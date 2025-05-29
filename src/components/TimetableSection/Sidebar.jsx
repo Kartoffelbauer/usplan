@@ -11,24 +11,25 @@ import {
   ToggleButton,
   ButtonGroup,
   Button,
-  CircularProgress,
 } from '@mui/material'
+import { useTimetable } from '../../context/TimetableContext'
 
-export default function Sidebar({
-  semesters,
-  programs,
-  groups,
-  selectedSemester,
-  selectedProgram,
-  selectedGroup,
-  setSelectedSemester,
-  setSelectedProgram,
-  setSelectedGroup,
-  loading,
-  error,
-  onDateSelect,
-}) {
+export default function Sidebar() {
   const [viewMode, setViewMode] = React.useState('course')
+  const {
+    semesters,
+    studyCourses,
+    studyGroups,
+    selectedSemester,
+    setSelectedSemester,
+    selectedStudyCourse,
+    setSelectedStudyCourse,
+    selectedStudyGroup,
+    setSelectedStudyGroup,
+    loading,
+    error,
+  } = useTimetable()
+  
 
   const handleExportPDF = () => {
     console.log('Exporting to PDF...')
@@ -59,8 +60,8 @@ export default function Sidebar({
           label="Semester"
           onChange={(e) => {
             setSelectedSemester(e.target.value)
-            setSelectedProgram('')
-            setSelectedGroup('')
+            setSelectedStudyCourse('')
+            setSelectedStudyGroup('')
           }}
         >
           {semesters.map((sem) => (
@@ -75,19 +76,19 @@ export default function Sidebar({
       <FormControl
         fullWidth
         size="small"
-        disabled={!selectedSemester || loading.programs || error}
+        disabled={!selectedSemester || loading.studyCourses || error}
       >
         <InputLabel id="study-label">Study Program</InputLabel>
         <Select
           labelId="study-label"
-          value={selectedProgram}
+          value={selectedStudyCourse}
           label="Study Program"
           onChange={(e) => {
-            setSelectedProgram(e.target.value)
-            setSelectedGroup('')
+            setSelectedStudyCourse(e.target.value)
+            setSelectedStudyGroup('')
           }}
         >
-          {programs.map((prog) => (
+          {studyCourses.map((prog) => (
             <MenuItem key={prog.id} value={prog.id}>
               {prog.name}
             </MenuItem>
@@ -99,16 +100,16 @@ export default function Sidebar({
       <FormControl
         fullWidth
         size="small"
-        disabled={!selectedSemester || !selectedProgram || loading.groups || error}
+        disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
       >
         <InputLabel id="group-label">Group</InputLabel>
         <Select
           labelId="group-label"
-          value={selectedGroup}
+          value={selectedStudyGroup}
           label="Group"
-          onChange={(e) => setSelectedGroup(e.target.value)}
+          onChange={(e) => setSelectedStudyGroup(e.target.value)}
         >
-          {groups.map((group) => (
+          {studyGroups.map((group) => (
             <MenuItem key={group.id} value={group.id}>
               {group.name}
             </MenuItem>
@@ -145,14 +146,6 @@ export default function Sidebar({
           <Button onClick={handlePrint}>Print</Button>
         </ButtonGroup>
       </Box>
-
-      {/* Loading and Error State */}
-      {(loading.semesters || loading.programs || loading.groups) && (
-        <Box display="flex" justifyContent="center">
-          <CircularProgress size={20} sx={{ mt: 2 }} />
-        </Box>
-      )}
-      {error && <Typography color="error">Failed to load data</Typography>}
     </Box>
   )
 }

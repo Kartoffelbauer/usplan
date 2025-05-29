@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   AppBar,
   Toolbar,
@@ -9,9 +8,9 @@ import {
   Checkbox,
   Button,
 } from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
@@ -93,15 +92,7 @@ export default function Navbar({
           <DatePicker
             value={selectedDate}
             onChange={onDateChange}
-            renderInput={(params) => (
-              <Button
-                {...params.inputProps}
-                variant="outlined"
-                sx={{ borderRadius: '50px', minWidth: 100 }}
-              >
-                {params.inputProps.value}
-              </Button>
-            )}
+            slotProps={{ textField: { variant: 'outlined', size: 'small' } }}
           />
           <Button
             variant="outlined"

@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import {
   Box,
   useMediaQuery,
@@ -8,9 +8,9 @@ import {
 } from '@mui/material'
 import { addWeeks } from 'date-fns'
 import Navbar from './Navbar'
-import Timetable from '../components/Timetable/Timetable'
-import RoomSearch from '../components/RoomSearch'
-import TimetableConfigurator from '../components/TimetableConfigurator'
+import TimetableSection from '../components/TimetableSection/TimetableSection'
+import RoomSearchSection from '../components/RoomSearchSection'
+import ConfiguratorSection from '../components/ConfiguratorSection'
 
 function TabPanel({ children, value, index }) {
   return value === index ? (
@@ -53,7 +53,7 @@ export default function MainLayout() {
   )
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="100%">
+    <Box display="flex" flexDirection="column" height="100vh" width="100vw" overflow="hidden">
       <Navbar
         onMenuClick={handleToggleSidebar}
         selectedDate={selectedDate}
@@ -81,7 +81,7 @@ export default function MainLayout() {
 
       <Box display="flex" flexGrow={1} width="100%" overflow="hidden">
         <TabPanel value={tabIndex} index={0}>
-          <Timetable
+          <TimetableSection
             selectedDate={selectedDate}
             onDateChange={handleSidebarDate}
             view={view}
@@ -92,10 +92,10 @@ export default function MainLayout() {
           />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
-          <RoomSearch />
+          <RoomSearchSection />
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
-          <TimetableConfigurator />
+          <ConfiguratorSection />
         </TabPanel>
       </Box>
     </Box>

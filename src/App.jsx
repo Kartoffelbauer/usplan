@@ -1,15 +1,14 @@
-import { CssBaseline, Box } from '@mui/material'
+import { TimetableProvider } from './context/TimetableContext'
+import { CssBaseline } from '@mui/material'
 import MainLayout from './layout/MainLayout'
 import './index.css'
 
 function App() {
   return (
-    <>
+    <TimetableProvider>
       <CssBaseline />
-      <Box sx={{ height: '100vh', width: '100vw', overflow: 'hidden' }}>
-        <MainLayout />
-      </Box>
-    </>
+      <MainLayout />
+    </TimetableProvider>
   )
 }
 
