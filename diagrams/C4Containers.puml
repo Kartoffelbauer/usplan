@@ -1,0 +1,22 @@
+@startuml USP_Containers
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Container.puml
+
+' Define people
+Person(student, "Student", "Uses StarPlan to plan their semester")
+
+' System
+System_Boundary(c1, "Ultimate StarPlan System") {
+  Container(webapp, "StarPlan Web UI", "React + MaterialUI", "Frontend for timetable visualization, interaction and configuration")
+  Container(service, "Service", "React Component", "Provides all timetable and room data to frontend")
+}
+
+' External system
+System_Ext(api, "StartPlan REST API", "External System", "Provides all timetable and room data to the service")
+
+' Relationships
+Rel(student, webapp, "Uses")
+
+Rel(webapp, service, "Calls")
+Rel(service, api, "Calls", "REST/JSON")
+
+@enduml

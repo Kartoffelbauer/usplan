@@ -1,0 +1,33 @@
+@startuml USP_Components
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+' Define container boundary
+Container_Boundary(c2WebUi, "Ultimate StarPlan Web UI") {
+  Container_Boundary(timetableSectionContainer, "TimetableSection") {
+    Component(timetableSection, "TimetableSection", "React Component", "Allows users to show their timetable")
+    Component(timetableSidebar, "Sidebar", "React Component", "Allows users to control the timetable widget")
+    Component(timetableCalendarWidget, "CalendarWidget", "React Component", "Displays weekly timetable similar to Google Calendar")
+  }
+  Component(roomSearchSection, "RoomSearchSection", "React Component", "Lets users search for rooms")
+  Component(configuratorSection, "ConfiguratorSection", "React Component", "Lets users generate custom timetables")
+}
+
+' External actors
+Person(student, "Student", "Uses StarPlan to plan their semester")
+
+' Containers
+Container(service, "Service", "React Component", "Provides timetable and room data")
+
+' Relationships
+Rel(student, timetableSection, "Views timetable via")
+Rel(timetableSection, timetableSidebar, "Shows")
+Rel(timetableSection, timetableCalendarWidget, "Shows")
+Rel(student, roomSearchSection, "Searches rooms via")
+Rel(student, configuratorSection, "Generates custom plan via")
+
+Rel(timetableSection, service, "Uses data from")
+Rel(timetableSidebar, service, "Uses data from")
+Rel(configuratorSection, service, "Uses data from")
+Rel(roomSearchSection, service, "Uses data from")
+
+@enduml
