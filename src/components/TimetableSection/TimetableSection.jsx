@@ -4,6 +4,7 @@ import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
 import { TimetableProvider, useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
+import { pt } from 'date-fns/locale';
 
 function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
   return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
@@ -99,6 +100,9 @@ export default function TimetableSection({
             width: 300,
             flexShrink: 0,
             backgroundColor: theme.palette.background.secondary,
+            p: 2,
+            pt: 4,
+            pr: 0,
           }}
         >
           <Sidebar />
@@ -117,6 +121,8 @@ export default function TimetableSection({
               width: 300,
               backgroundColor: theme.palette.background.secondary,
               border: 'none',
+              p: 2,
+              pt: 4,
             },
           }}
         >

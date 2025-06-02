@@ -45,8 +45,6 @@ export default function Sidebar() {
   return (
     <Box
       width="100%"
-      p={2}
-      pt={4}
       sx={{
         height: '100%',
         display: 'flex',
@@ -86,7 +84,7 @@ export default function Sidebar() {
         </Select>
       </FormControl>
 
-      {/* Study Program Autocomplete */}
+      {/* Study Course Autocomplete */}
       <Autocomplete
         fullWidth
         size="small"
@@ -123,7 +121,7 @@ export default function Sidebar() {
         )}
       />
 
-      {/* Group Autocomplete */}
+      {/* Study Group Autocomplete */}
       <Autocomplete
         fullWidth
         size="small"
