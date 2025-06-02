@@ -1,9 +1,10 @@
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import { format, parse, startOfWeek, getDay } from 'date-fns'
+import { format, parse, startOfWeek, getDay, addMinutes, set } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 import { Box, useTheme } from '@mui/material'
 import CalendarWrapper from '../../layout/CalendarWrapper'
+import { useTimetable } from '../../context/TimetableContext'
 
 const locales = { 'en-US': enUS }
 const localizer = dateFnsLocalizer({
@@ -26,6 +27,7 @@ export default function CalendarWidget({
     timeGutterFormat: (date) => format(date, 'HH:mm'),
     eventTimeRangeFormat: ({ start, end }) => `${format(start, 'HH:mm')} – ${format(end, 'HH:mm')}`,
   }
+  const { timetable } = useTimetable()
 
   return (
     <Box flexGrow='1' overflow='hidden' padding={theme.spacing(2)}>
@@ -35,8 +37,8 @@ export default function CalendarWidget({
           events={events}
           startAccessor="start"
           endAccessor="end"
-          min={new Date(2023, 0, 1, 8, 0)}  // 08:00
-          max={new Date(2023, 0, 1, 18, 0)} // 18:00
+          min={addMinutes(set(new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }), timetable?.beginTimeMinutes || 480)}
+          max={addMinutes(set(new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }), timetable?.endTimeMinutes || 1080)}
           date={selectedDate}
           formats={formats}
           view={view}
@@ -46,6 +48,11 @@ export default function CalendarWidget({
           views={['week']}
           toolbar={false}
           style={{ width: '100%', height: '100%' }}
+          eventPropGetter={(event) => ({
+            style: {
+              backgroundColor: event.color || theme.palette.primary.main, // fallback to theme color
+            }
+          })}
         />
       </CalendarWrapper>
     </Box>

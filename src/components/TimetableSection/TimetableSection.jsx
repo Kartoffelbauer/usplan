@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
-import { useTimetable } from '../../context/TimetableContext'
+import { TimetableProvider, useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
+
+function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
+  return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
+}
 
 export default function TimetableSection({
   selectedDate,
@@ -18,12 +22,15 @@ export default function TimetableSection({
 
   // Shared state
   const [events, setEvents] = useState([])
-  const { semesters, timetable, selectedSemester } = useTimetable()
+  const { semesters, timetable, selectedSemesterId } = useTimetable()
 
   // Transform timetable into calendar events
   useEffect(() => {
-    const currentSemester = semesters.find(semester => semester.id === selectedSemester)
-    if (timetable === undefined || !currentSemester) return
+    const currentSemester = semesters.find(semester => semester.id === selectedSemesterId)
+    if (!timetable || !currentSemester) {
+      setEvents([])
+      return
+    }
 
     const semesterInertval = {
       start: new Date(currentSemester.beginOfLectureDate),
@@ -31,30 +38,52 @@ export default function TimetableSection({
     }
     const happenings = []
 
-    timetable.happenings.forEach(item => {
-      // Handle WEEK type
-      if (item.type === 'WEEK') {
-        // Get all weekdays for this semester
-        eachWeekOfInterval(semesterInertval, { weekStartsOn: item.weekday + 1 })
-        .forEach(weekday => {
-          happenings.push({
-            title: item.orglectureName,
-            start: addMinutes(weekday, item.beginMinute),
-            end: addMinutes(weekday, item.endMinute),
-            location: item.roomNames,
-          })
+    console.log(timetable)
+
+    timetable.happenings.forEach(event => {
+      // Handle DAY type
+      if (event.type === 'DAY') {
+        const date = (typeof event.singularDate === "string") ? parseISO(event.singularDate) : new Date(event.singularDate)
+        happenings.push({
+          title: event.orglectureName,
+          start: addMinutes(date, event.beginMinute),
+          end: addMinutes(date, event.endMinute),
+          location: event.roomNames,
+          color: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
         })
       }
-      // Handle SINGULAR type
+      // Handle WEEK type
       else {
-        const date = (typeof item.singularDate === "string") ? parseISO(item.singularDate) : new Date(item.singularDate)
+        // Handle different WEEK types
+        var nthWeek = 1
+        switch (event.type) {
+          case 'TWO_WEEKS':
+              nthWeek = 2
+            break;
 
-        happenings.push({
-          title: item.orglectureName,
-          start: addMinutes(date, item.beginMinute),
-          end: addMinutes(date, item.endMinute),
-          location: item.roomNames,
-        })
+          case 'THREE_WEEKS':
+              nthWeek = 3
+            break;
+
+          case 'FOUR_WEEKS':
+              nthWeek = 4
+            break;
+
+          default:
+              nthWeek = 1
+        }
+       
+        // For each weekday, create an event
+        eachNthWeekOfInterval(semesterInertval, nthWeek, { weekStartsOn: event.weekday + 1 })
+          .forEach(weekday => {
+            happenings.push({
+              title: event.orglectureName,
+              start: addMinutes(weekday, event.beginMinute),
+              end: addMinutes(weekday, event.endMinute),
+              location: event.roomNames,
+              color: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
+            })
+          })
       }
     })
 

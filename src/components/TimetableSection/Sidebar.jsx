@@ -12,20 +12,23 @@ import {
   ButtonGroup,
   Button,
 } from '@mui/material'
+import { Autocomplete, useTheme } from '@mui/material'
+import TextField from '@mui/material/TextField'
 import { useTimetable } from '../../context/TimetableContext'
 
 export default function Sidebar() {
+  const theme = useTheme()
   const [viewMode, setViewMode] = React.useState('course')
   const {
     semesters,
     studyCourses,
     studyGroups,
-    selectedSemester,
-    setSelectedSemester,
-    selectedStudyCourse,
-    setSelectedStudyCourse,
-    selectedStudyGroup,
-    setSelectedStudyGroup,
+    selectedSemesterId,
+    setSelectedSemesterId,
+    selectedStudyCourseId,
+    setSelectedStudyCourseId,
+    selectedStudyGroupId,
+    setSelectedStudyGroupId,
     loading,
     error,
   } = useTimetable()
@@ -57,66 +60,84 @@ export default function Sidebar() {
         <InputLabel id="semester-label">Semester</InputLabel>
         <Select
           labelId="semester-label"
-          value={selectedSemester}
+          value={semesters.find((sem) => sem.id === selectedSemesterId)?.id || ''}
           label="Semester"
           onChange={(e) => {
-            setSelectedSemester(e.target.value)
-            setSelectedStudyCourse('')
-            setSelectedStudyGroup('')
+            setSelectedSemesterId(e.target.value)
+            setSelectedStudyCourseId('')
+            setSelectedStudyGroupId('')
           }}
         >
           {semesters.map((sem) => (
-            <MenuItem key={sem.id} value={sem.id}>
-              {sem.name}
+            <MenuItem key={sem.id} value={sem.id} style={{ whiteSpace: 'nowrap' }}>
+              <span>{sem.shortName}</span>
+              <span
+                style={{
+                  color: theme.palette.text.secondary,
+                  marginLeft: theme.spacing(1),
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                - {sem.name}
+              </span>
             </MenuItem>
           ))}
         </Select>
       </FormControl>
 
-      {/* Study Program Select */}
-      <FormControl
+      {/* Study Program Autocomplete */}
+      <Autocomplete
         fullWidth
         size="small"
-        disabled={!selectedSemester || loading.studyCourses || error}
-      >
-        <InputLabel id="study-label">Study Program</InputLabel>
-        <Select
-          labelId="study-label"
-          value={selectedStudyCourse}
-          label="Study Program"
-          onChange={(e) => {
-            setSelectedStudyCourse(e.target.value)
-            setSelectedStudyGroup('')
-          }}
-        >
-          {studyCourses.map((prog) => (
-            <MenuItem key={prog.id} value={prog.id}>
-              {prog.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        disabled={!selectedSemesterId || loading.studyCourses || error}
+        options={studyCourses}
+        getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
+        value={studyCourses.find((prog) => prog.id === selectedStudyCourseId) || null}
+        onChange={(_, newValue) => {
+          setSelectedStudyCourseId(newValue ? newValue.id : undefined)
+          setSelectedStudyGroupId(undefined)
+        }}
+        renderOption={(props, option) => {
+          const { key, ...rest } = props
+          return (
+            <li key={option.id} {...rest} style={{ display: 'flex', alignItems: 'center', minWidth: 0, whiteSpace: 'nowrap' }}>
+              <span>
+                {option.shortName}
+              </span>
+              <span
+                style={{
+                  color: theme.palette.text.secondary,
+                  marginLeft: theme.spacing(1),
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                – {option.name}
+              </span>
+            </li>
+          )
+        }}
+        renderInput={(params) => (
+          <TextField {...params} label="Study Program" variant="outlined" />
+        )}
+      />
 
-      {/* Group Select */}
-      <FormControl
+      {/* Group Autocomplete */}
+      <Autocomplete
         fullWidth
         size="small"
-        disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
-      >
-        <InputLabel id="group-label">Group</InputLabel>
-        <Select
-          labelId="group-label"
-          value={selectedStudyGroup}
-          label="Group"
-          onChange={(e) => setSelectedStudyGroup(e.target.value)}
-        >
-          {studyGroups.map((group) => (
-            <MenuItem key={group.id} value={group.id}>
-              {group.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+        disabled={!selectedSemesterId || !selectedStudyCourseId || loading.studyGroups || error}
+        options={studyGroups}
+        getOptionLabel={(option) => option.shortName }
+        value={studyGroups.find((group) => group.id === selectedStudyGroupId) || null}
+        onChange={(_, newValue) => {
+          setSelectedStudyGroupId(newValue ? newValue.id : undefined)
+        }}
+        renderInput={(params) => (
+          <TextField {...params} label="Group" variant="outlined" />
+        )}
+      />
 
       {/* Selection Toggle */}
       <Box>
