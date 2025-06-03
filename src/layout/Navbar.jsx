@@ -15,7 +15,7 @@ import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import CalendarToday from '@mui/icons-material/CalendarToday'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 
 export default function Navbar({
   onMenuClick,
@@ -85,7 +85,7 @@ export default function Navbar({
             variant="outlined"
             onClick={onToday}
             sx={{ borderRadius: '50px', minWidth: 40, px: 1 }}
-            startIcon={<CalendarToday />}
+            startIcon={<CalendarTodayIcon fontSize='small' />}
           >
             {!isMobile && "Today"}
           </Button>

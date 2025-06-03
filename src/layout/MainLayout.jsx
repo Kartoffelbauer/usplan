@@ -10,6 +10,9 @@ import { addDays, addWeeks } from 'date-fns'
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
 import ConfiguratorSection from '../components/ConfiguratorSection'
+import SettingsIcon from '@mui/icons-material/Settings'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+
 
 function TabPanel({ children, value, index }) {
   return value === index ? (
@@ -68,15 +71,28 @@ export default function MainLayout() {
         variant="scrollable"
         scrollButtons="auto"
         sx={{
-          justifyContent: 'flex-start',
           backgroundColor: theme.palette.background.secondary,
-          borderBottom: 'none',
+          minHeight: 'auto', // Remove default minimum height
+          '& .MuiTabs-root': {
+            minHeight: 'auto',
+          },
+          '& .MuiTab-root': {
+            minHeight: 'auto', // Remove default minimum height
+            paddingY: 1, // Reduce vertical padding (top and bottom)
+          },
         }}
       >
-        <Tab label="Timetable" />
-        <Tab label={ !isMobile ? "Configure Timetable" : "Configure" } />
+        <Tab 
+          label="Timetable" 
+          icon={<CalendarMonthIcon fontSize='small' />}
+          iconPosition="start"
+        />
+        <Tab 
+          label="Configure Timetable"
+          icon={<SettingsIcon fontSize='small' />}
+          iconPosition="start"
+        />
       </Tabs>
-
       <Box display="flex" flexGrow={1} width="100%" overflow="hidden">
         <TabPanel value={tabIndex} index={0}>
           <TimetableSection
