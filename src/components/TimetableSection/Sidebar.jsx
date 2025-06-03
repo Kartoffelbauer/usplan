@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import {
   Box,
   Divider,
@@ -11,36 +11,174 @@ import {
   ToggleButton,
   ButtonGroup,
   Button,
+  Autocomplete,
+  TextField,
+  useTheme,
 } from '@mui/material'
-import { Autocomplete, useTheme } from '@mui/material'
-import TextField from '@mui/material/TextField'
 import { useTimetable } from '../../context/TimetableContext'
 
+/**
+ * Sidebar component that provides timetable configuration controls
+ * Handles semester, study course, and study group selection
+ * Includes export functionality and view mode toggle
+ * 
+ * @returns {JSX.Element} The rendered sidebar component
+ */
 export default function Sidebar() {
+  // Theme hook for consistent styling
   const theme = useTheme()
-  const [viewMode, setViewMode] = React.useState('course')
-  const {
-    semesters,
-    studyCourses,
-    studyGroups,
-    selectedSemesterId,
-    setSelectedSemesterId,
-    selectedStudyCourseId,
-    setSelectedStudyCourseId,
-    selectedStudyGroupId,
-    setSelectedStudyGroupId,
-    loading,
-    error,
-  } = useTimetable()
   
+  // ==================== STATE ====================
+  
+  // Local state for view mode toggle (course/room)
+  const [viewMode, setViewMode] = React.useState('course')
+  
+  // Timetable context state and actions
+  const {
+    semesters,           // Available semesters list
+    studyCourses,        // Available study courses for selected semester
+    studyGroups,         // Available study groups for selected course
+    selectedSemesterId,  // Currently selected semester ID
+    setSelectedSemesterId,
+    selectedStudyCourseId, // Currently selected study course ID
+    setSelectedStudyCourseId,
+    selectedStudyGroupId,  // Currently selected study group ID
+    setSelectedStudyGroupId,
+    loading,             // Loading states for async operations
+    error,               // Error state
+  } = useTimetable()
 
-  const handleExportPDF = () => {
+  // ==================== EVENT HANDLERS ====================
+
+  /**
+   * Handles semester selection change
+   * Resets dependent selections (study course and group) when semester changes
+   * @param {Event} event - The select change event
+   */
+  const handleSemesterChange = useCallback((event) => {
+    const newSemesterId = event.target.value
+    setSelectedSemesterId(newSemesterId)
+    // Clear dependent selections when semester changes
+    setSelectedStudyCourseId('')
+    setSelectedStudyGroupId('')
+  }, [setSelectedSemesterId, setSelectedStudyCourseId, setSelectedStudyGroupId])
+
+  /**
+   * Handles study course selection change
+   * Resets study group selection when course changes
+   * @param {Event} _ - The autocomplete event (unused)
+   * @param {Object|null} newValue - The selected study course object or null
+   */
+  const handleStudyCourseChange = useCallback((_, newValue) => {
+    setSelectedStudyCourseId(newValue ? newValue.id : undefined)
+    // Clear study group when course changes
+    setSelectedStudyGroupId(undefined)
+  }, [setSelectedStudyCourseId, setSelectedStudyGroupId])
+
+  /**
+   * Handles study group selection change
+   * @param {Event} _ - The autocomplete event (unused)
+   * @param {Object|null} newValue - The selected study group object or null
+   */
+  const handleStudyGroupChange = useCallback((_, newValue) => {
+    setSelectedStudyGroupId(newValue ? newValue.id : undefined)
+  }, [setSelectedStudyGroupId])
+
+  /**
+   * Handles view mode toggle between course and room view
+   * @param {Event} _ - The toggle event (unused)
+   * @param {string} newViewMode - The new view mode ('course' or 'room')
+   */
+  const handleViewModeChange = useCallback((_, newViewMode) => {
+    // Only update if a valid option is selected (prevent deselection)
+    if (newViewMode !== null) {
+      setViewMode(newViewMode)
+    }
+  }, [])
+
+  /**
+   * Handles PDF export functionality
+   * Currently logs to console - implement actual PDF generation
+   */
+  const handleExportPDF = useCallback(() => {
     console.log('Exporting to PDF...')
-  }
+    // TODO: Implement PDF export functionality
+  }, [])
 
-  const handlePrint = () => {
+  /**
+   * Handles print functionality
+   * Opens the browser's print dialog
+   */
+  const handlePrint = useCallback(() => {
     window.print()
-  }
+  }, [])
+
+  // ==================== RENDER HELPERS ====================
+
+  /**
+   * Renders a semester menu item with short name and full name
+   * @param {Object} semester - The semester object
+   * @returns {JSX.Element} The rendered menu item
+   */
+  const renderSemesterMenuItem = useCallback((semester) => (
+    <MenuItem 
+      key={semester.id} 
+      value={semester.id} 
+      style={{ whiteSpace: 'nowrap' }}
+    >
+      {/* Primary semester identifier */}
+      <span>{semester.shortName}</span>
+      {/* Secondary full name with muted styling */}
+      <span
+        style={{
+          color: theme.palette.text.secondary,
+          marginLeft: theme.spacing(1),
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}
+      >
+        - {semester.name}
+      </span>
+    </MenuItem>
+  ), [theme])
+
+  /**
+   * Renders a study course option with short name and full name
+   * @param {Object} props - The option props from Autocomplete
+   * @param {Object} option - The study course object
+   * @returns {JSX.Element} The rendered option
+   */
+  const renderStudyCourseOption = useCallback((props, option) => {
+    const { key, ...rest } = props
+    return (
+      <li 
+        key={option.id} 
+        {...rest} 
+        style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          minWidth: 0, 
+          whiteSpace: 'nowrap' 
+        }}
+      >
+        {/* Primary course identifier */}
+        <span>{option.shortName}</span>
+        {/* Secondary full name with muted styling */}
+        <span
+          style={{
+            color: theme.palette.text.secondary,
+            marginLeft: theme.spacing(1),
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}
+        >
+          – {option.name}
+        </span>
+      </li>
+    )
+  }, [theme])
+
+  // ==================== RENDER ====================
 
   return (
     <Box
@@ -53,38 +191,24 @@ export default function Sidebar() {
         boxSizing: 'border-box',
       }}
     >
-      {/* Semester Select */}
-      <FormControl fullWidth size="small" disabled={loading.semesters || error}>
+      {/* Semester Selection */}
+      <FormControl 
+        fullWidth 
+        size="small" 
+        disabled={loading.semesters || error}
+      >
         <InputLabel id="semester-label">Semester</InputLabel>
         <Select
           labelId="semester-label"
           value={semesters.find((sem) => sem.id === selectedSemesterId)?.id || ''}
           label="Semester"
-          onChange={(e) => {
-            setSelectedSemesterId(e.target.value)
-            setSelectedStudyCourseId('')
-            setSelectedStudyGroupId('')
-          }}
+          onChange={handleSemesterChange}
         >
-          {semesters.map((sem) => (
-            <MenuItem key={sem.id} value={sem.id} style={{ whiteSpace: 'nowrap' }}>
-              <span>{sem.shortName}</span>
-              <span
-                style={{
-                  color: theme.palette.text.secondary,
-                  marginLeft: theme.spacing(1),
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                - {sem.name}
-              </span>
-            </MenuItem>
-          ))}
+          {semesters.map(renderSemesterMenuItem)}
         </Select>
       </FormControl>
 
-      {/* Study Course Autocomplete */}
+      {/* Study Course Selection */}
       <Autocomplete
         fullWidth
         size="small"
@@ -92,52 +216,28 @@ export default function Sidebar() {
         options={studyCourses}
         getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
         value={studyCourses.find((prog) => prog.id === selectedStudyCourseId) || null}
-        onChange={(_, newValue) => {
-          setSelectedStudyCourseId(newValue ? newValue.id : undefined)
-          setSelectedStudyGroupId(undefined)
-        }}
-        renderOption={(props, option) => {
-          const { key, ...rest } = props
-          return (
-            <li key={option.id} {...rest} style={{ display: 'flex', alignItems: 'center', minWidth: 0, whiteSpace: 'nowrap' }}>
-              <span>
-                {option.shortName}
-              </span>
-              <span
-                style={{
-                  color: theme.palette.text.secondary,
-                  marginLeft: theme.spacing(1),
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                – {option.name}
-              </span>
-            </li>
-          )
-        }}
+        onChange={handleStudyCourseChange}
+        renderOption={renderStudyCourseOption}
         renderInput={(params) => (
           <TextField {...params} label="Study Program" variant="outlined" />
         )}
       />
 
-      {/* Study Group Autocomplete */}
+      {/* Study Group Selection */}
       <Autocomplete
         fullWidth
         size="small"
         disabled={!selectedSemesterId || !selectedStudyCourseId || loading.studyGroups || error}
         options={studyGroups}
-        getOptionLabel={(option) => option.shortName }
+        getOptionLabel={(option) => option.shortName}
         value={studyGroups.find((group) => group.id === selectedStudyGroupId) || null}
-        onChange={(_, newValue) => {
-          setSelectedStudyGroupId(newValue ? newValue.id : undefined)
-        }}
+        onChange={handleStudyGroupChange}
         renderInput={(params) => (
           <TextField {...params} label="Group" variant="outlined" />
         )}
       />
 
-      {/* Selection Toggle */}
+      {/* View Mode Selection */}
       <Box>
         <Typography variant="body2" sx={{ mb: 1 }}>
           Selection
@@ -147,16 +247,17 @@ export default function Sidebar() {
           size="small"
           exclusive
           value={viewMode}
-          onChange={(e, v) => v !== null && setViewMode(v)}
+          onChange={handleViewModeChange}
         >
           <ToggleButton value="course">Course</ToggleButton>
           <ToggleButton value="room">Room</ToggleButton>
         </ToggleButtonGroup>
       </Box>
 
+      {/* Section Divider */}
       <Divider />
 
-      {/* Export */}
+      {/* Export Options */}
       <Box>
         <Typography variant="subtitle2" gutterBottom>
           Export

@@ -1,14 +1,35 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
 import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
 
+/**
+ * Helper function to get every nth week of an interval
+ * @param {Object} interval - Date interval with start and end
+ * @param {number} n - Every nth week
+ * @param {Object} options - Additional options for eachWeekOfInterval
+ * @param {number} offset - Week offset
+ * @returns {Date[]} Array of dates representing every nth week
+ */
 function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
   return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
 }
 
+/**
+ * TimetableSection component that manages the sidebar and calendar view
+ * Handles timetable data transformation and responsive layout
+ * 
+ * @param {Object} props - Component props
+ * @param {Date} props.selectedDate - Currently selected date
+ * @param {Function} props.onDateChange - Date change handler
+ * @param {string} props.view - Current calendar view
+ * @param {Function} props.onView - View change handler
+ * @param {boolean} props.sidebarOpen - Sidebar open state
+ * @param {Function} props.onToggleSidebar - Sidebar toggle handler
+ * @returns {JSX.Element} The rendered timetable section
+ */
 export default function TimetableSection({
   selectedDate,
   onDateChange,
@@ -20,9 +41,45 @@ export default function TimetableSection({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
-  // Shared state
+  // State
   const [events, setEvents] = useState([])
   const { semesters, timetable, selectedSemesterId } = useTimetable()
+
+  // Event handlers
+  const handleSidebarClose = useCallback(() => {
+    onToggleSidebar()
+  }, [onToggleSidebar])
+
+  const handleCalendarDateChange = useCallback((date) => {
+    onDateChange(date)
+  }, [onDateChange])
+
+  const handleCalendarViewChange = useCallback((newView) => {
+    onView(newView)
+  }, [onView])
+
+  // Helper function to determine week interval
+  const getWeekInterval = useCallback((eventType) => {
+    switch (eventType) {
+      case 'TWO_WEEKS':
+        return 2
+      case 'THREE_WEEKS':
+        return 3
+      case 'FOUR_WEEKS':
+        return 4
+      default:
+        return 1
+    }
+  }, [])
+
+  // Helper function to create event object
+  const createEvent = useCallback((happening, start, end) => ({
+    title: happening.orglectureName,
+    start,
+    end,
+    location: happening.roomNames,
+    lightColor: `rgba(${happening.red}, ${happening.green}, ${happening.blue}, ${happening.alpha})`,
+  }), [])
 
   // Transform timetable into calendar events
   useEffect(() => {
@@ -32,7 +89,7 @@ export default function TimetableSection({
       return
     }
 
-    const semesterInertval = {
+    const semesterInterval = {
       start: new Date(currentSemester.beginOfLectureDate),
       end: new Date(currentSemester.endOfLectureDate),
     }
@@ -41,54 +98,38 @@ export default function TimetableSection({
     console.log(timetable)
 
     timetable.happenings.forEach(event => {
-      // Handle DAY type
+      // Handle DAY type events
       if (event.type === 'DAY') {
-        const date = (typeof event.singularDate === "string") ? parseISO(event.singularDate) : new Date(event.singularDate)
-        happenings.push({
-          title: event.orglectureName,
-          start: addMinutes(date, event.beginMinute),
-          end: addMinutes(date, event.endMinute),
-          location: event.roomNames,
-          lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
-        })
+        const date = (typeof event.singularDate === "string") 
+          ? parseISO(event.singularDate) 
+          : new Date(event.singularDate)
+        
+        const eventObj = createEvent(
+          event,
+          addMinutes(date, event.beginMinute),
+          addMinutes(date, event.endMinute)
+        )
+        happenings.push(eventObj)
       }
-      // Handle WEEK type
+      // Handle WEEK type events
       else {
-        // Handle different WEEK types
-        var nthWeek = 1
-        switch (event.type) {
-          case 'TWO_WEEKS':
-              nthWeek = 2
-            break;
-
-          case 'THREE_WEEKS':
-              nthWeek = 3
-            break;
-
-          case 'FOUR_WEEKS':
-              nthWeek = 4
-            break;
-
-          default:
-              nthWeek = 1
-        }
+        const nthWeek = getWeekInterval(event.type)
        
         // For each weekday, create an event
-        eachNthWeekOfInterval(semesterInertval, nthWeek, { weekStartsOn: event.weekday + 1 })
+        eachNthWeekOfInterval(semesterInterval, nthWeek, { weekStartsOn: event.weekday + 1 })
           .forEach(weekday => {
-            happenings.push({
-              title: event.orglectureName,
-              start: addMinutes(weekday, event.beginMinute),
-              end: addMinutes(weekday, event.endMinute),
-              location: event.roomNames,
-              lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
-            })
+            const eventObj = createEvent(
+              event,
+              addMinutes(weekday, event.beginMinute),
+              addMinutes(weekday, event.endMinute)
+            )
+            happenings.push(eventObj)
           })
       }
     })
 
     setEvents(happenings)
-  }, [timetable])
+  }, [timetable, semesters, selectedSemesterId, createEvent, getWeekInterval])
 
   return (
     <Box 
@@ -96,7 +137,7 @@ export default function TimetableSection({
       flexGrow={1} 
       overflow="hidden" 
       width="100%" 
-      height="100%" // Add this
+      height="100%"
       backgroundColor={theme.palette.background.secondary}
     >
       {/* Desktop Sidebar with Animation */}
@@ -140,7 +181,7 @@ export default function TimetableSection({
       {isMobile && (
         <Drawer
           open={sidebarOpen}
-          onClose={onToggleSidebar}
+          onClose={handleSidebarClose}
           ModalProps={{ keepMounted: true }}
           sx={{
             display: { xs: 'block', md: 'none' },
@@ -165,9 +206,9 @@ export default function TimetableSection({
       <Box
         sx={{
           flexGrow: 1,
-          height: '100%', // Add this
-          display: 'flex', // Add this
-          flexDirection: 'column', // Add this
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
           transition: theme.transitions.create(['margin'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.standard,
@@ -176,9 +217,9 @@ export default function TimetableSection({
       >
         <CalendarWidget
           selectedDate={selectedDate}
-          onDateChange={onDateChange}
+          onDateChange={handleCalendarDateChange}
           view={view}
-          onView={onView}
+          onView={handleCalendarViewChange}
           events={events}
         />
       </Box>
