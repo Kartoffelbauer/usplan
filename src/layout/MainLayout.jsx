@@ -75,8 +75,8 @@ export default function MainLayout() {
         }}
       >
         <Tab label="Timetable" />
-        <Tab label="Room Search" />
-        <Tab label="Configure Timetable" />
+        <Tab label={ !isMobile ? "Room Search" : "Rooms" }  />
+        <Tab label={ !isMobile ? "Configure Timetable" : "Configure" } />
       </Tabs>
 
       <Box display="flex" flexGrow={1} width="100%" overflow="hidden">
