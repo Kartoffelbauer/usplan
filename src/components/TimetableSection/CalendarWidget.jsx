@@ -68,7 +68,7 @@ export default function CalendarWidget({
   const { timetable } = useTimetable()
 
   return (
-    <Box flexGrow='1' overflow='hidden' padding={theme.spacing(2)}>
+    <Box flexGrow='1' overflow='hidden' padding={!isMobile && theme.spacing(2)} paddingTop={0}>
       <CalendarWrapper>
         <Calendar
           localizer={localizer}

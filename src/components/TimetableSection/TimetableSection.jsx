@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
 import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
-import { TimetableProvider, useTimetable } from '../../context/TimetableContext'
+import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
-import { pt } from 'date-fns/locale';
 
 function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
   return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
@@ -92,24 +91,52 @@ export default function TimetableSection({
   }, [timetable])
 
   return (
-    <Box display="flex" flexGrow={1} overflow="hidden" width="100%" backgroundColor={theme.palette.background.secondary}>
-      {/* Desktop Sidebar */}
-      {!isMobile && sidebarOpen && (
+    <Box 
+      display="flex" 
+      flexGrow={1} 
+      overflow="hidden" 
+      width="100%" 
+      height="100%" // Add this
+      backgroundColor={theme.palette.background.secondary}
+    >
+      {/* Desktop Sidebar with Animation */}
+      {!isMobile && (
         <Box
           sx={{
-            width: 300,
+            width: sidebarOpen ? 300 : 0,
             flexShrink: 0,
+            overflow: 'hidden',
             backgroundColor: theme.palette.background.secondary,
-            p: 2,
-            pt: 4,
-            pr: 0,
+            transition: theme.transitions.create(['width'], {
+              easing: theme.transitions.easing.sharp,
+              duration: sidebarOpen 
+                ? theme.transitions.duration.enteringScreen 
+                : theme.transitions.duration.leavingScreen,
+            }),
           }}
         >
-          <Sidebar />
+          <Box
+            sx={{
+              width: 300,
+              height: '100%',
+              p: 2,
+              pt: 4,
+              pr: 0,
+              transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+              transition: theme.transitions.create(['transform'], {
+                easing: theme.transitions.easing.sharp,
+                duration: sidebarOpen 
+                  ? theme.transitions.duration.enteringScreen 
+                  : theme.transitions.duration.leavingScreen,
+              }),
+            }}
+          >
+            <Sidebar />
+          </Box>
         </Box>
       )}
 
-      {/* Mobile Sidebar Drawer */}
+      {/* Mobile Sidebar Drawer with Built-in Animation */}
       {isMobile && (
         <Drawer
           open={sidebarOpen}
@@ -118,26 +145,43 @@ export default function TimetableSection({
           sx={{
             display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {
-              width: 300,
+              width: 320,
               backgroundColor: theme.palette.background.secondary,
               border: 'none',
               p: 2,
               pt: 4,
             },
           }}
+          transitionDuration={{
+            enter: theme.transitions.duration.enteringScreen,
+            exit: theme.transitions.duration.leavingScreen,
+          }}
         >
           <Sidebar />
         </Drawer>
       )}
 
-      {/* Calendar View */}
-      <CalendarWidget
-        selectedDate={selectedDate}
-        onDateChange={onDateChange}
-        view={view}
-        onView={onView}
-        events={events}
-      />
+      {/* Calendar View with Smooth Margin Transition */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          height: '100%', // Add this
+          display: 'flex', // Add this
+          flexDirection: 'column', // Add this
+          transition: theme.transitions.create(['margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.standard,
+          }),
+        }}
+      >
+        <CalendarWidget
+          selectedDate={selectedDate}
+          onDateChange={onDateChange}
+          view={view}
+          onView={onView}
+          events={events}
+        />
+      </Box>
     </Box>
   )
 }
