@@ -57,20 +57,6 @@ export default function Navbar({
           </Typography>
         </Box>
 
-        {/* 2. Checkboxes */}
-        <Box sx={{ display: {xs: 'none', md: 'block'}, alignItems: 'center', gap: 1, px: 2, flexWrap: 'nowrap' }}>
-          <FormGroup row sx={{ flexWrap: 'nowrap' }}>
-            <FormControlLabel
-              control={<Checkbox size="small" />}
-              label="Date"
-            />
-            <FormControlLabel
-              control={<Checkbox size="small" />}
-              label="Specials"
-            />
-          </FormGroup>
-        </Box>
-
         {/* 3. Calendar controls (centered) */}
         <Box
           sx={{
@@ -94,7 +80,7 @@ export default function Navbar({
             {!isMobile && "Today"}
           </Button>
           <Button
-            variant="outlined"
+            variant="text"
             onClick={onPrev}
             sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
           >
@@ -106,7 +92,7 @@ export default function Navbar({
             slotProps={{ textField: { variant: 'outlined', size: 'small' } }}
           />
           <Button
-            variant="outlined"
+            variant="text"
             onClick={onNext}
             sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
           >
@@ -124,7 +110,7 @@ export default function Navbar({
               borderRadius: '50px',
             }}
           >
-            EN
+            {!isMobile && 'EN'}
           </Button>
           <Button
             component="a"

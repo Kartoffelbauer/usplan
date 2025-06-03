@@ -5,13 +5,20 @@ import {
   useTheme,
   Tabs,
   Tab,
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  IconButton,
+  Menu,
+  MenuItem,
 } from '@mui/material'
 import { addDays, addWeeks } from 'date-fns'
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
 import ConfiguratorSection from '../components/ConfiguratorSection'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
-import EditCalendarIcon from '@mui/icons-material/EditCalendar';
+import EditCalendarIcon from '@mui/icons-material/EditCalendar'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
 /**
  * TabPanel component that conditionally renders its children based on the active tab
@@ -49,6 +56,8 @@ export default function MainLayout() {
   const [tabIndex, setTabIndex] = useState(0)                 // Active tab index (0=Timetable, 1=Configure)
   const [selectedDate, setSelectedDate] = useState(new Date()) // Currently selected calendar date
   const [view, setView] = useState('week')                     // Calendar view mode (day/week)
+  const [selectedOptions, setSelectedOptions] = useState([])   // Selected checkbox options
+  const [anchorEl, setAnchorEl] = useState(null)              // Menu anchor element for mobile dropdown
 
   // ==================== EVENT HANDLERS ====================
 
@@ -115,6 +124,34 @@ export default function MainLayout() {
     [isMobile]
   )
 
+  /**
+   * Handles individual checkbox changes for both desktop and mobile
+   * @param {string} option - The checkbox option ('date' or 'specials')
+   * @param {boolean} checked - Whether the checkbox is checked
+   */
+  const handleCheckboxChange = useCallback((option, checked) => {
+    setSelectedOptions(prev => 
+      checked 
+        ? [...prev, option]
+        : prev.filter(item => item !== option)
+    )
+  }, [])
+
+  /**
+   * Opens the mobile dropdown menu
+   * @param {Event} event - The click event
+   */
+  const handleDropdownOpen = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  /**
+   * Closes the mobile dropdown menu
+   */
+  const handleDropdownClose = () => {
+    setAnchorEl(null)
+  }
+
   // ==================== RENDER ====================
 
   return (
@@ -135,42 +172,138 @@ export default function MainLayout() {
         onNext={handleNext}
       />
 
-      {/* Tab Navigation */}
-      <Tabs
-        value={tabIndex}
-        onChange={handleTabChange}
-        variant="scrollable"
-        scrollButtons="auto"
-        sx={{
-          backgroundColor: theme.palette.background.secondary,
-          minHeight: 'auto', // Remove default minimum height for thinner tabs
-          '& .MuiTabs-root': {
-            minHeight: 'auto',
-          },
-          '& .MuiTab-root': {
-            minHeight: 'auto', // Remove default minimum height
-            paddingY: 1, // Reduce vertical padding for more compact appearance
-            textTransform: 'none', // Prevent automatic uppercase transformation
-          },
-          '& .MuiTab-iconWrapper': {
-            marginBottom: 0, // Remove default icon margin for better alignment
-          },
+      {/* Tab Navigation with Checkboxes/Dropdown */}
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          backgroundColor: theme.palette.background.secondary 
         }}
       >
-        {/* Timetable Tab */}
-        <Tab 
-          label="Timetable" 
-          icon={<CalendarMonthIcon fontSize='small' />}
-          iconPosition="start"
-        />
-        
-        {/* Configuration Tab */}
-        <Tab 
-          label={isMobile ? "Configure" : "Configure Timetable"} // Shorter label on mobile
-          icon={<EditCalendarIcon fontSize='small' />}
-          iconPosition="start"
-        />
-      </Tabs>
+        {/* Tabs */}
+        <Tabs
+          value={tabIndex}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            flexGrow: 1, // Take up remaining space
+            minHeight: 'auto', // Remove default minimum height for thinner tabs
+            '& .MuiTabs-root': {
+              minHeight: 'auto',
+            },
+            '& .MuiTab-root': {
+              minHeight: 'auto', // Remove default minimum height
+              paddingY: 1, // Reduce vertical padding for more compact appearance
+              textTransform: 'none', // Prevent automatic uppercase transformation
+            },
+            '& .MuiTab-iconWrapper': {
+              marginBottom: 0, // Remove default icon margin for better alignment
+            },
+          }}
+        >
+          {/* Timetable Tab */}
+          <Tab 
+            label="Timetable" 
+            icon={<CalendarMonthIcon fontSize='small' />}
+            iconPosition="start"
+          />
+          
+          {/* Configuration Tab */}
+          <Tab 
+            label={isMobile ? "Configure" : "Configure Timetable"} // Shorter label on mobile
+            icon={<EditCalendarIcon fontSize='small' />}
+            iconPosition="start"
+          />
+        </Tabs>
+
+        {/* Desktop Checkboxes - Right aligned */}
+        <Box sx={{ 
+          display: { xs: 'none', md: 'flex' }, 
+          px: 2,
+          flexShrink: 0 // Prevent shrinking
+        }}>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  size="small" 
+                  checked={selectedOptions.includes('date')}
+                  onChange={(e) => handleCheckboxChange('date', e.target.checked)}
+                />
+              }
+              label="Date"
+              sx={{ mr: 2 }}
+            />
+            <FormControlLabel
+              control={
+                <Checkbox 
+                  size="small" 
+                  checked={selectedOptions.includes('specials')}
+                  onChange={(e) => handleCheckboxChange('specials', e.target.checked)}
+                />
+              }
+              label="Specials"
+            />
+          </FormGroup>
+        </Box>
+
+        {/* Mobile Dropdown Button */}
+        <Box sx={{ 
+          display: { xs: 'flex', md: 'none' }, 
+          px: 2,
+          flexShrink: 0
+        }}>
+          <IconButton
+            onClick={handleDropdownOpen}
+            size="small"
+            sx={{
+              border: `1px solid ${theme.palette.divider}`,
+              borderRadius: 1,
+            }}
+          >
+            <ExpandMoreIcon fontSize="small" />
+          </IconButton>
+          
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleDropdownClose}
+            PaperProps={{
+              sx: {
+                minWidth: 150,
+              },
+            }}
+          >
+            <MenuItem onClick={(e) => e.stopPropagation()}>
+              <FormControlLabel
+                control={
+                  <Checkbox 
+                    size="small" 
+                    checked={selectedOptions.includes('date')}
+                    onChange={(e) => handleCheckboxChange('date', e.target.checked)}
+                  />
+                }
+                label="Date"
+                sx={{ width: '100%', margin: 0 }}
+              />
+            </MenuItem>
+            <MenuItem onClick={(e) => e.stopPropagation()}>
+              <FormControlLabel
+                control={
+                  <Checkbox 
+                    size="small" 
+                    checked={selectedOptions.includes('specials')}
+                    onChange={(e) => handleCheckboxChange('specials', e.target.checked)}
+                  />
+                }
+                label="Specials"
+                sx={{ width: '100%', margin: 0 }}
+              />
+            </MenuItem>
+          </Menu>
+        </Box>
+      </Box>
 
       {/* Main Content Area */}
       <Box 
