@@ -16,6 +16,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
+import LanguageIcon from '@mui/icons-material/Language';
 
 export default function Navbar({
   onMenuClick,
@@ -84,8 +85,11 @@ export default function Navbar({
           <Button
             variant="outlined"
             onClick={onToday}
-            sx={{ borderRadius: '50px', minWidth: 40, px: 1 }}
             startIcon={<CalendarTodayIcon fontSize='small' />}
+            sx={{
+              minWidth: 'auto',
+              borderRadius: '50px',
+            }}
           >
             {!isMobile && "Today"}
           </Button>
@@ -114,7 +118,11 @@ export default function Navbar({
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 2 }}>
           <Button
             variant="outlined"
-            sx={{ borderRadius: '50px' }}
+            startIcon={<LanguageIcon fontSize='small'/>}
+            sx={{
+              minWidth: 'auto',
+              borderRadius: '50px',
+            }}
           >
             EN
           </Button>
@@ -122,11 +130,10 @@ export default function Navbar({
             component="a"
             href="https://www.progotec.de/site/splandok"
             target="_blank"
-            variant="text"
+            variant="outlined"
             sx={{
-              textTransform: 'none',
               minWidth: 'auto',
-              p: 0.5,
+              borderRadius: '50px'
             }}
           >
             ?

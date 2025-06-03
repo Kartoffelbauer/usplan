@@ -10,8 +10,8 @@ import { addDays, addWeeks } from 'date-fns'
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
 import ConfiguratorSection from '../components/ConfiguratorSection'
-import SettingsIcon from '@mui/icons-material/Settings'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import EditCalendarIcon from '@mui/icons-material/EditCalendar';
 
 /**
  * TabPanel component that conditionally renders its children based on the active tab
@@ -167,7 +167,7 @@ export default function MainLayout() {
         {/* Configuration Tab */}
         <Tab 
           label={isMobile ? "Configure" : "Configure Timetable"} // Shorter label on mobile
-          icon={<SettingsIcon fontSize='small' />}
+          icon={<EditCalendarIcon fontSize='small' />}
           iconPosition="start"
         />
       </Tabs>

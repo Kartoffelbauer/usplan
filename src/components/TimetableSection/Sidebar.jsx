@@ -15,6 +15,10 @@ import {
   TextField,
   useTheme,
 } from '@mui/material'
+import RoomIcon from '@mui/icons-material/Room'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import PrintIcon from '@mui/icons-material/Print';
 import { useTimetable } from '../../context/TimetableContext'
 
 /**
@@ -208,6 +212,33 @@ export default function Sidebar() {
         </Select>
       </FormControl>
 
+      {/* View Mode Selection */}
+      <Box>
+        <Typography variant="subtitle2" gutterBottom>
+          Selection
+        </Typography>
+        <ToggleButtonGroup
+          fullWidth
+          size="small"
+          exclusive
+          value={viewMode}
+          onChange={handleViewModeChange}
+        >
+          <ToggleButton value="course">
+            <CalendarMonthIcon fontSize="small" sx={{mr: 1}} />
+            Course
+          </ToggleButton>
+          <ToggleButton value="room">
+            <RoomIcon fontSize="small" sx={{mr: 1}} />
+            Room
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
+
+      {/* Section Divider */}
+      <Divider />
+
       {/* Study Course Selection */}
       <Autocomplete
         fullWidth
@@ -237,23 +268,6 @@ export default function Sidebar() {
         )}
       />
 
-      {/* View Mode Selection */}
-      <Box>
-        <Typography variant="body2" sx={{ mb: 1 }}>
-          Selection
-        </Typography>
-        <ToggleButtonGroup
-          fullWidth
-          size="small"
-          exclusive
-          value={viewMode}
-          onChange={handleViewModeChange}
-        >
-          <ToggleButton value="course">Course</ToggleButton>
-          <ToggleButton value="room">Room</ToggleButton>
-        </ToggleButtonGroup>
-      </Box>
-
       {/* Section Divider */}
       <Divider />
 
@@ -263,8 +277,17 @@ export default function Sidebar() {
           Export
         </Typography>
         <ButtonGroup fullWidth variant="outlined">
-          <Button onClick={handleExportPDF}>PDF</Button>
-          <Button onClick={handlePrint}>Print</Button>
+          <Button
+            onClick={handleExportPDF}
+            startIcon={<PictureAsPdfIcon fontSize="small" />}
+          >
+            PDF</Button>
+          <Button
+            onClick={handlePrint}
+            startIcon={<PrintIcon fontSize="small" />}
+          >
+            Print
+          </Button>
         </ButtonGroup>
       </Box>
     </Box>
