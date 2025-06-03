@@ -9,7 +9,6 @@ import {
 import { addDays, addWeeks } from 'date-fns'
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
-import RoomSearchSection from '../components/RoomSearchSection'
 import ConfiguratorSection from '../components/ConfiguratorSection'
 
 function TabPanel({ children, value, index }) {
@@ -75,7 +74,6 @@ export default function MainLayout() {
         }}
       >
         <Tab label="Timetable" />
-        <Tab label={ !isMobile ? "Room Search" : "Rooms" }  />
         <Tab label={ !isMobile ? "Configure Timetable" : "Configure" } />
       </Tabs>
 
@@ -92,9 +90,6 @@ export default function MainLayout() {
           />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
-          <RoomSearchSection />
-        </TabPanel>
-        <TabPanel value={tabIndex} index={2}>
           <ConfiguratorSection />
         </TabPanel>
       </Box>
