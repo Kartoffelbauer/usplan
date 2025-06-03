@@ -6,7 +6,7 @@ import {
   Tabs,
   Tab,
 } from '@mui/material'
-import { addWeeks } from 'date-fns'
+import { addDays, addWeeks } from 'date-fns'
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
 import RoomSearchSection from '../components/RoomSearchSection'
@@ -38,8 +38,8 @@ export default function MainLayout() {
 
   // Calendar navigation
   const handleToday      = () => setSelectedDate(new Date())
-  const handlePrev       = () => setSelectedDate((d) => addWeeks(d, -1))
-  const handleNext       = () => setSelectedDate((d) => addWeeks(d, 1))
+  const handlePrev       = () => setSelectedDate((d) => isMobile ? addDays(d, -1) : addWeeks(d, -1))
+  const handleNext       = () => setSelectedDate((d) => isMobile ? addDays(d, 1) : addWeeks(d, 1))
   const handleDateChange = (date) => setSelectedDate(date)
   const handleViewChange = (v)    => setView(v)
 

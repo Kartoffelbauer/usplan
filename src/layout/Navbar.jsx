@@ -7,12 +7,15 @@ import {
   FormControlLabel,
   Checkbox,
   Button,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import CalendarToday from '@mui/icons-material/CalendarToday'
 
 export default function Navbar({
   onMenuClick,
@@ -22,6 +25,9 @@ export default function Navbar({
   onPrev,
   onNext,
 }) {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
   return (
     <AppBar
       position="static"
@@ -35,7 +41,7 @@ export default function Navbar({
         {/* 1. Hamburger + title (fixed width) */}
         <Box
           sx={{
-            width: 300,
+            width: {sx: 'auto', md: '300px'},
             display: 'flex',
             alignItems: 'center',
             px: 2,
@@ -45,17 +51,17 @@ export default function Navbar({
           <IconButton onClick={onMenuClick} size="small">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography variant="h6" noWrap sx={{ display: { xs: 'none', md: 'block' } }}>
             Ultimate StarPlan
           </Typography>
         </Box>
 
         {/* 2. Checkboxes */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, px: 2 }}>
-          <FormGroup row>
+        <Box sx={{ display: {xs: 'none', md: 'block'}, alignItems: 'center', gap: 1, px: 2, flexWrap: 'nowrap' }}>
+          <FormGroup row sx={{ flexWrap: 'nowrap' }}>
             <FormControlLabel
               control={<Checkbox size="small" />}
-              label="With Date"
+              label="Date"
             />
             <FormControlLabel
               control={<Checkbox size="small" />}
@@ -78,9 +84,10 @@ export default function Navbar({
           <Button
             variant="outlined"
             onClick={onToday}
-            sx={{ borderRadius: '50px' }}
+            sx={{ borderRadius: '50px', minWidth: 40, px: 1 }}
+            startIcon={<CalendarToday />}
           >
-            Today
+            {!isMobile && "Today"}
           </Button>
           <Button
             variant="outlined"

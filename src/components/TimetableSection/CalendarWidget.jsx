@@ -2,7 +2,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { format, parse, startOfWeek, getDay, addMinutes, set } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
-import { Box, useTheme } from '@mui/material'
+import { Box, useTheme, useMediaQuery } from '@mui/material'
 import CalendarWrapper from '../../layout/CalendarWrapper'
 import { useTimetable } from '../../context/TimetableContext'
 
@@ -23,6 +23,7 @@ export default function CalendarWidget({
   events = [],
 }) {
   const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const formats = {
     timeGutterFormat: (date) => format(date, 'HH:mm'),
     eventTimeRangeFormat: ({ start, end }) => `${format(start, 'HH:mm')} – ${format(end, 'HH:mm')}`,
@@ -41,16 +42,16 @@ export default function CalendarWidget({
           max={addMinutes(set(new Date(), { hours: 0, minutes: 0, seconds: 0, milliseconds: 0 }), timetable?.endTimeMinutes || 1080)}
           date={selectedDate}
           formats={formats}
-          view={view}
+          view={isMobile ? "day" : view}
           onNavigate={onDateChange}
           onView={onView}
-          defaultView="week"
-          views={['week']}
+          defaultView={isMobile ? "day" : "week"}
+          views={isMobile ? ['day'] : ['week']}
           toolbar={false}
           style={{ width: '100%', height: '100%' }}
           eventPropGetter={(event) => ({
             style: {
-              backgroundColor: event.color || theme.palette.primary.main, // fallback to theme color
+              backgroundColor: event.color || theme.palette.primary.main,
             }
           })}
         />
