@@ -50,7 +50,7 @@ export default function TimetableSection({
           start: addMinutes(date, event.beginMinute),
           end: addMinutes(date, event.endMinute),
           location: event.roomNames,
-          color: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
+          lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
         })
       }
       // Handle WEEK type
@@ -82,7 +82,7 @@ export default function TimetableSection({
               start: addMinutes(weekday, event.beginMinute),
               end: addMinutes(weekday, event.endMinute),
               location: event.roomNames,
-              color: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
+              lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
             })
           })
       }
