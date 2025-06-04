@@ -203,11 +203,11 @@ export default function Sidebar() {
         size="small" 
         disabled={loading.semesters || error}
       >
-        <InputLabel id="semester-label">semester</InputLabel>
+        <InputLabel id="semester-label">{t('sidebar.semester')}</InputLabel>
         <Select
           labelId="semester-label"
           value={semesters.find((sem) => sem.id === selectedSemesterId)?.id || ''}
-          label={t('sidebar.semester')}
+          label="Semester"
           onChange={handleSemesterChange}
         >
           {semesters.map(renderSemesterMenuItem)}

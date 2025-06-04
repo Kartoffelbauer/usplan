@@ -28,5 +28,9 @@
             "pdf": "PDF",
             "print": "PRINT"
         }
+    },
+    "restError": {
+        "title": "Error",
+        "action": "Refresh page to try again."
     }
 }

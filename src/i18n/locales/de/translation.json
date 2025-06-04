@@ -24,5 +24,9 @@
         "export": {
             "print": "Drucken"
         }
+    },
+    "restError": {
+        "title": "Fehler",
+        "action": "Lade Sie die Seite neu, um es erneut zu versuchen."
     }
 }

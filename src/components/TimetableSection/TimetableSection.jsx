@@ -1,6 +1,17 @@
+import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useCallback } from 'react'
-import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
-import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns';
+import { 
+  Box, 
+  Drawer, 
+  useMediaQuery, 
+  useTheme, 
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography
+} from '@mui/material'
+import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns'
+import ErrorIcon from '@mui/icons-material/Error'
 import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
@@ -40,10 +51,11 @@ export default function TimetableSection({
 }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { t } = useTranslation()
 
   // State
   const [events, setEvents] = useState([])
-  const { semesters, timetable, selectedSemesterId } = useTimetable()
+  const { semesters, timetable, selectedSemesterId, error, clearError } = useTimetable()
 
   // Event handlers
   const handleSidebarClose = useCallback(() => {
@@ -132,39 +144,24 @@ export default function TimetableSection({
   }, [timetable, semesters, selectedSemesterId, createEvent, getWeekInterval])
 
   return (
-    <Box 
-      display="flex" 
-      flexGrow={1} 
-      overflow="hidden" 
-      width="100%" 
-      height="100%"
-      backgroundColor={theme.palette.background.secondary}
-    >
-      {/* Desktop Sidebar with Animation */}
-      {!isMobile && (
-        <Box
-          sx={{
-            width: sidebarOpen ? 300 : 0,
-            flexShrink: 0,
-            overflow: 'hidden',
-            backgroundColor: theme.palette.background.secondary,
-            transition: theme.transitions.create(['width'], {
-              easing: theme.transitions.easing.sharp,
-              duration: sidebarOpen 
-                ? theme.transitions.duration.enteringScreen 
-                : theme.transitions.duration.leavingScreen,
-            }),
-          }}
-        >
+    <>
+      <Box 
+        display="flex" 
+        flexGrow={1} 
+        overflow="hidden" 
+        width="100%" 
+        height="100%"
+        backgroundColor={theme.palette.background.secondary}
+      >
+        {/* Desktop Sidebar with Animation */}
+        {!isMobile && (
           <Box
             sx={{
-              width: 300,
-              height: '100%',
-              p: 2,
-              pt: 4,
-              pr: 0,
-              transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-              transition: theme.transitions.create(['transform'], {
+              width: sidebarOpen ? 300 : 0,
+              flexShrink: 0,
+              overflow: 'hidden',
+              backgroundColor: theme.palette.background.secondary,
+              transition: theme.transitions.create(['width'], {
                 easing: theme.transitions.easing.sharp,
                 duration: sidebarOpen 
                   ? theme.transitions.duration.enteringScreen 
@@ -172,57 +169,87 @@ export default function TimetableSection({
               }),
             }}
           >
-            <Sidebar />
+            <Box
+              sx={{
+                width: 300,
+                height: '100%',
+                p: 2,
+                pt: 4,
+                pr: 0,
+                transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
+                transition: theme.transitions.create(['transform'], {
+                  easing: theme.transitions.easing.sharp,
+                  duration: sidebarOpen 
+                    ? theme.transitions.duration.enteringScreen 
+                    : theme.transitions.duration.leavingScreen,
+                }),
+              }}
+            >
+              <Sidebar />
+            </Box>
           </Box>
-        </Box>
-      )}
+        )}
 
-      {/* Mobile Sidebar Drawer with Built-in Animation */}
-      {isMobile && (
-        <Drawer
-          open={sidebarOpen}
-          onClose={handleSidebarClose}
-          ModalProps={{ keepMounted: true }}
+        {/* Mobile Sidebar Drawer with Built-in Animation */}
+        {isMobile && (
+          <Drawer
+            open={sidebarOpen}
+            onClose={handleSidebarClose}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+              display: { xs: 'block', md: 'none' },
+              '& .MuiDrawer-paper': {
+                width: 320,
+                backgroundColor: theme.palette.background.secondary,
+                border: 'none',
+                p: 2,
+                pt: 4,
+              },
+            }}
+            transitionDuration={{
+              enter: theme.transitions.duration.enteringScreen,
+              exit: theme.transitions.duration.leavingScreen,
+            }}
+          >
+            <Sidebar />
+          </Drawer>
+        )}
+
+        {/* Calendar View with Smooth Margin Transition */}
+        <Box
           sx={{
-            display: { xs: 'block', md: 'none' },
-            '& .MuiDrawer-paper': {
-              width: 320,
-              backgroundColor: theme.palette.background.secondary,
-              border: 'none',
-              p: 2,
-              pt: 4,
-            },
-          }}
-          transitionDuration={{
-            enter: theme.transitions.duration.enteringScreen,
-            exit: theme.transitions.duration.leavingScreen,
+            flexGrow: 1,
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            transition: theme.transitions.create(['margin'], {
+              easing: theme.transitions.easing.sharp,
+              duration: theme.transitions.duration.standard,
+            }),
           }}
         >
-          <Sidebar />
-        </Drawer>
-      )}
-
-      {/* Calendar View with Smooth Margin Transition */}
-      <Box
-        sx={{
-          flexGrow: 1,
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          transition: theme.transitions.create(['margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.standard,
-          }),
-        }}
-      >
-        <CalendarWidget
-          selectedDate={selectedDate}
-          onDateChange={handleCalendarDateChange}
-          view={view}
-          onView={handleCalendarViewChange}
-          events={events}
-        />
+          <CalendarWidget
+            selectedDate={selectedDate}
+            onDateChange={handleCalendarDateChange}
+            view={view}
+            onView={handleCalendarViewChange}
+            events={events}
+          />
+        </Box>
       </Box>
-    </Box>
+
+      {/* Simple Error Dialog */}
+      <Dialog open={!!error} maxWidth="sm" fullWidth>
+        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <ErrorIcon color="error" />
+          {t('restError.title')}
+        </DialogTitle>
+        <DialogContent>
+          <Typography>
+            {error && error?.message } {t('restError.action')}
+          </Typography>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

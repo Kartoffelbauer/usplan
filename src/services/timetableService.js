@@ -1,17 +1,17 @@
 export async function getSemesters() {
   const res = await fetch('http://localhost:8010/proxy/splan/rest/PlanningUnitService/getSelectablePlanningUnits')
 
-  if (!res.ok) throw new Error('Failed to load semesters')
+  if (!res.ok) throw new Error('Failed to load semesters.')
   return res.json().catch(0)
 }
 
 export async function getStudyCourses(semesterId) {
   if (!semesterId) {
-    throw new Error('Missing semester ID for programs query')
+    throw new Error('Missing semester ID for programs query.')
   }
 
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/OrgGroupService/getSelectableOrgGroups/${semesterId}`)
-  if (!res.ok) throw new Error('Failed to load study programs')
+  if (!res.ok) throw new Error('Failed to load study programs.')
 
   return res.json()
 }
@@ -22,7 +22,7 @@ export async function getStudyGroups(semesterId, programId) {
   }
 
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/PlanningGroupService/getPlanningGroupsForPlanningUnitAndOrgGroup/${semesterId}/${programId}`)
-  if (!res.ok) throw new Error('Failed to load groups')
+  if (!res.ok) throw new Error('Failed to load groups.')
 
   return res.json()
 }
@@ -33,7 +33,7 @@ if (!semesterId || !groupId) {
   }
 
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/TimetableService/getForPlanningUnitAndPlanningGroup/${semesterId}/${groupId}/true/${programId}`)
-  if (!res.ok) throw new Error('Failed to load timetable')
+  if (!res.ok) throw new Error('Failed to load timetable.')
 
   return res.json()
 }
