@@ -1,11 +1,9 @@
+import { useTranslation } from 'react-i18next'
 import {
   AppBar,
   Toolbar,
   Box,
   Typography,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
   Button,
   useTheme,
   useMediaQuery,
@@ -16,7 +14,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import LanguageIcon from '@mui/icons-material/Language';
+import LanguageIcon from '@mui/icons-material/Language'
 
 export default function Navbar({
   onMenuClick,
@@ -28,6 +26,18 @@ export default function Navbar({
 }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { i18n, t } = useTranslation()
+
+  /**
+   * Toggles between English and German
+   */
+  const handleLanguageToggle = () => {
+    const newLanguage = i18n.language === 'en' ? 'de' : 'en'
+    i18n.changeLanguage(newLanguage)
+  }
+
+  // Get current language display
+  const currentLanguageCode = i18n.language === 'de' ? 'DE' : 'EN'
 
   return (
     <AppBar
@@ -42,7 +52,7 @@ export default function Navbar({
         {/* 1. Hamburger + title (fixed width) */}
         <Box
           sx={{
-            width: {sx: 'auto', md: '300px'},
+            width: {xs: 'auto', md: '300px'},
             display: 'flex',
             alignItems: 'center',
             px: 2,
@@ -53,7 +63,7 @@ export default function Navbar({
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ display: { xs: 'none', md: 'block' } }}>
-            Ultimate StarPlan
+            {t('nav.appTitle')}
           </Typography>
         </Box>
 
@@ -77,7 +87,7 @@ export default function Navbar({
               borderRadius: '50px',
             }}
           >
-            {!isMobile && "Today"}
+            {!isMobile && t('nav.today')}
           </Button>
           <Button
             variant="text"
@@ -102,16 +112,20 @@ export default function Navbar({
 
         {/* 4. Language & Help */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 2 }}>
+          {/* Language Toggle Button */}
           <Button
             variant="outlined"
             startIcon={<LanguageIcon fontSize='small'/>}
+            onClick={handleLanguageToggle}
             sx={{
               minWidth: 'auto',
               borderRadius: '50px',
             }}
           >
-            {!isMobile && 'EN'}
+            {!isMobile && currentLanguageCode}
           </Button>
+
+          {/* Help Button */}
           <Button
             component="a"
             href="https://www.progotec.de/site/splandok"

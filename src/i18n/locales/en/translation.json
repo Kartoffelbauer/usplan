@@ -1,0 +1,32 @@
+{
+    "nav": {
+        "appTitle": "Ultimate StarPlan",
+        "today": "Today",
+        "tabs": {
+            "timetable": "Timetable",
+            "configure": {
+                "full": "Configure Timetable",
+                "short": "Configure"
+            }
+        },
+        "view": {
+            "date": "Date",
+            "specials": "Specials"
+        }
+    },
+    "sidebar": {
+        "semester": "Semester",
+        "selection": {
+            "title": "Selection",
+            "course": "Course",
+            "room": "Room"
+        },
+        "studyProgram": "Study Program",
+        "group": "Group",
+        "export": {
+            "title": "Export",
+            "pdf": "PDF",
+            "print": "PRINT"
+        }
+    }
+}

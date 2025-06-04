@@ -1,0 +1,28 @@
+{
+    "nav": {
+        "today": "Heute",
+        "tabs": {
+            "timetable": "Stundenplan",
+            "configure": {
+                "full": "Stundenplan konfigurieren",
+                "short": "Konfigurieren"
+            }
+        },
+        "view": {
+            "date": "Datum",
+            "specials": "Spezial"
+        }
+    },
+    "sidebar": {
+        "selection": {
+            "title": "Auswahl",
+            "course": "Kurs",
+            "room": "Raum"
+        },
+        "studyProgram": "Programm",
+        "group": "Gruppe",
+        "export": {
+            "print": "Drucken"
+        }
+    }
+}

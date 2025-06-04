@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import React, { useCallback } from 'react'
 import {
   Box,
@@ -31,6 +32,7 @@ import { useTimetable } from '../../context/TimetableContext'
 export default function Sidebar() {
   // Theme hook for consistent styling
   const theme = useTheme()
+  const { t } = useTranslation()
   
   // ==================== STATE ====================
   
@@ -201,11 +203,11 @@ export default function Sidebar() {
         size="small" 
         disabled={loading.semesters || error}
       >
-        <InputLabel id="semester-label">Semester</InputLabel>
+        <InputLabel id="semester-label">semester</InputLabel>
         <Select
           labelId="semester-label"
           value={semesters.find((sem) => sem.id === selectedSemesterId)?.id || ''}
-          label="Semester"
+          label={t('sidebar.semester')}
           onChange={handleSemesterChange}
         >
           {semesters.map(renderSemesterMenuItem)}
@@ -215,7 +217,7 @@ export default function Sidebar() {
       {/* View Mode Selection */}
       <Box>
         <Typography variant="subtitle2" gutterBottom>
-          Selection
+          {t('sidebar.selection.title')}
         </Typography>
         <ToggleButtonGroup
           fullWidth
@@ -226,11 +228,11 @@ export default function Sidebar() {
         >
           <ToggleButton value="course">
             <CalendarMonthIcon fontSize="small" sx={{mr: 1}} />
-            Course
+            {t('sidebar.selection.course')}
           </ToggleButton>
           <ToggleButton value="room">
             <RoomIcon fontSize="small" sx={{mr: 1}} />
-            Room
+            {t('sidebar.selection.room')}
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
@@ -250,7 +252,7 @@ export default function Sidebar() {
         onChange={handleStudyCourseChange}
         renderOption={renderStudyCourseOption}
         renderInput={(params) => (
-          <TextField {...params} label="Study Program" variant="outlined" />
+          <TextField {...params} label={t('sidebar.studyProgram')} variant="outlined" />
         )}
       />
 
@@ -264,7 +266,7 @@ export default function Sidebar() {
         value={studyGroups.find((group) => group.id === selectedStudyGroupId) || null}
         onChange={handleStudyGroupChange}
         renderInput={(params) => (
-          <TextField {...params} label="Group" variant="outlined" />
+          <TextField {...params} label={t('sidebar.group')} variant="outlined" />
         )}
       />
 
@@ -274,19 +276,19 @@ export default function Sidebar() {
       {/* Export Options */}
       <Box>
         <Typography variant="subtitle2" gutterBottom>
-          Export
+          {t('sidebar.export.title')}
         </Typography>
         <ButtonGroup fullWidth variant="outlined">
           <Button
             onClick={handleExportPDF}
             startIcon={<PictureAsPdfIcon fontSize="small" />}
           >
-            PDF</Button>
+            {t('sidebar.export.pdf')}</Button>
           <Button
             onClick={handlePrint}
             startIcon={<PrintIcon fontSize="small" />}
           >
-            Print
+            {t('sidebar.export.print')}
           </Button>
         </ButtonGroup>
       </Box>

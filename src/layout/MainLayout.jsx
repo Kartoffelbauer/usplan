@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useState, useCallback } from 'react'
 import {
   Box,
@@ -49,6 +50,7 @@ export default function MainLayout() {
   // Theme and responsive detection hooks
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const { t } = useTranslation()
 
   // ==================== GLOBAL STATE ====================
   
@@ -204,14 +206,14 @@ export default function MainLayout() {
         >
           {/* Timetable Tab */}
           <Tab 
-            label="Timetable" 
+            label={t('nav.tabs.timetable')}
             icon={<CalendarMonthIcon fontSize='small' />}
             iconPosition="start"
           />
           
           {/* Configuration Tab */}
           <Tab 
-            label={isMobile ? "Configure" : "Configure Timetable"} // Shorter label on mobile
+            label={isMobile ? t('nav.tabs.configure.short') : t('nav.tabs.configure.full')}
             icon={<EditCalendarIcon fontSize='small' />}
             iconPosition="start"
           />
@@ -232,7 +234,7 @@ export default function MainLayout() {
                   onChange={(e) => handleCheckboxChange('date', e.target.checked)}
                 />
               }
-              label="Date"
+              label={t('nav.view.date')}
               sx={{ mr: 2 }}
             />
             <FormControlLabel
@@ -243,7 +245,7 @@ export default function MainLayout() {
                   onChange={(e) => handleCheckboxChange('specials', e.target.checked)}
                 />
               }
-              label="Specials"
+              label={t('nav.view.specials')}
             />
           </FormGroup>
         </Box>
