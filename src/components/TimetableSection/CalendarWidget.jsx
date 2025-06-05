@@ -3,27 +3,31 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { format, parse, startOfWeek, getDay, addMinutes, set } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
+import de from 'date-fns/locale/de'
 import { Box, useTheme, useMediaQuery } from '@mui/material'
+import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 import CalendarWrapper from '../../layout/CalendarWrapper'
 
 // ==================== CONFIGURATION ====================
 
 /**
- * Date-fns locale configuration for calendar localization
+ * Mapping of i18n language codes to date-fns locales
  */
-const locales = { 'en-US': enUS }
+const localeMap = {
+  'en': enUS,
+  'de': de
+}
 
 /**
- * React Big Calendar localizer using date-fns
- * Configured to start weeks on Monday (weekStartsOn: 1)
+ * React Big Calendar localizer using date-fns with i18n support
  */
-const localizer = dateFnsLocalizer({
+const createLocalizer = (currentLocale) => dateFnsLocalizer({
   format,
   parse,
   startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
   getDay,
-  locales,
+  locales: localeMap,
 })
 
 // ==================== UTILITY FUNCTIONS ====================
@@ -58,7 +62,7 @@ export function rgbaColorToTheme(lightColor, theme, darkenFactor = 0.5) {
 /**
  * CalendarWidget component that renders a React Big Calendar with Material UI theming.
  * Automatically switches to day view on mobile devices and applies theme-aware event colors.
- * Integrates with timetable context for schedule time boundaries.
+ * Integrates with timetable context for schedule time boundaries and i18n for localization.
  * 
  * @param {Object} props - Component props
  * @param {Date} props.selectedDate - The currently selected/displayed date
@@ -66,6 +70,7 @@ export function rgbaColorToTheme(lightColor, theme, darkenFactor = 0.5) {
  * @param {string} props.view - The current calendar view ('day', 'week', etc.)
  * @param {Function} props.onView - Callback function when the view is changed
  * @param {Array} props.events - Array of calendar events to display
+ * @param {boolean} props.showDates - Whether to show dates (default: true)
  * @returns {JSX.Element} The rendered calendar widget component
  */
 export default function CalendarWidget({
@@ -74,23 +79,45 @@ export default function CalendarWidget({
   view,
   onView,
   events = [],
+  showDates = true,
 }) {
   // ==================== HOOKS ====================
   
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { timetable } = useTimetable()
+  const { i18n } = useTranslation()
 
   // ==================== MEMOIZED VALUES ====================
 
   /**
-   * Calendar time format configuration
-   * Memoized to prevent recreation on every render
+   * Current language from i18n (fallback to 'en')
    */
-  const calendarFormats = useMemo(() => ({
-    timeGutterFormat: (date) => format(date, 'HH:mm'),
-    eventTimeRangeFormat: ({ start, end }) => `${format(start, 'HH:mm')} – ${format(end, 'HH:mm')}`,
-  }), [])
+  const currentLanguage = useMemo(() => {
+    const lang = i18n.language.split('-')[0]
+    return localeMap[lang] ? lang : 'en'
+  }, [i18n.language])
+
+  /**
+   * Localized calendar localizer
+   * Recreated when language changes
+   */
+  const localizer = useMemo(() => createLocalizer(currentLanguage), [currentLanguage])
+
+  /**
+   * Calendar format configuration with minimal custom formatting
+   * Only customizes what's needed for showDates functionality
+   */
+  const calendarFormats = useMemo(() => {
+    const formats = {}
+    
+    // Only override day header format if showDates is true
+    if (!showDates) {
+      formats.dayFormat = 'EEEE' // Full day name only
+    }
+    
+    return formats
+  }, [showDates])
 
   /**
    * Calendar minimum time boundary
@@ -188,8 +215,12 @@ export default function CalendarWidget({
     >
       <CalendarWrapper>
         <Calendar
-          // Core calendar configuration
+          // Force re-render when language changes
+          key={`calendar-${currentLanguage}-${showDates}`}
+          
+          // Core calendar configuration with locale support
           localizer={localizer}
+          culture={currentLanguage} // This is the key prop for built-in locale support!
           events={events}
           
           // Event data accessors
@@ -210,9 +241,9 @@ export default function CalendarWidget({
           onNavigate={handleNavigate}
           onView={handleViewChange}
           
-          // Formatting and display options
+          // Only minimal custom formatting (let React Big Calendar handle the rest)
           formats={calendarFormats}
-          toolbar={false} // Hide default toolbar (using custom navbar)
+          toolbar={false}
           
           // Styling
           style={{ width: '100%', height: '100%' }}

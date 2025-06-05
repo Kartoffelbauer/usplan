@@ -10,21 +10,27 @@ import {
   DialogContent,
   Typography
 } from '@mui/material'
-import { eachWeekOfInterval, addMinutes, parseISO } from 'date-fns'
+import { startOfWeek, addDays, addMinutes, getDay, eachWeekOfInterval, parseISO } from 'date-fns'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
 
+// Get specific weekday in current week
+const getCurrentWeekday = (weekdayIndex) => {
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday = 0
+  return addDays(weekStart, weekdayIndex)
+}
+
 /**
  * Helper function to get every nth week of an interval
  * @param {Object} interval - Date interval with start and end
- * @param {number} n - Every nth week
+ * @param {number} n - Every nth week (default: 1)
  * @param {Object} options - Additional options for eachWeekOfInterval
- * @param {number} offset - Week offset
+ * @param {number} offset - Week offset (default: 0)
  * @returns {Date[]} Array of dates representing every nth week
  */
-function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
+function eachNthWeekOfInterval(interval, n = 1, options = {}, offset = 0) {
   return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
 }
 
@@ -39,6 +45,7 @@ function eachNthWeekOfInterval(interval, n, options = {}, offset = 0) {
  * @param {Function} props.onView - View change handler
  * @param {boolean} props.sidebarOpen - Sidebar open state
  * @param {Function} props.onToggleSidebar - Sidebar toggle handler
+ * @param {boolean} props.showDates - Whether to show dates in calendar
  * @returns {JSX.Element} The rendered timetable section
  */
 export default function TimetableSection({
@@ -48,14 +55,16 @@ export default function TimetableSection({
   onView,
   sidebarOpen,
   onToggleSidebar,
+  showDates,
+  showSpecials,
 }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
+  const { semesters, timetable, selectedSemesterId, error } = useTimetable()
 
-  // State
+  // State to hold transformed calendar events
   const [events, setEvents] = useState([])
-  const { semesters, timetable, selectedSemesterId, error, clearError } = useTimetable()
 
   // Event handlers
   const handleSidebarClose = useCallback(() => {
@@ -69,6 +78,22 @@ export default function TimetableSection({
   const handleCalendarViewChange = useCallback((newView) => {
     onView(newView)
   }, [onView])
+
+  /**
+   * Maps any date to the equivalent day in the current week
+   * @param {Date} date - The original date
+   * @param {Date} referenceWeek - The week to map to (default: current week)
+   * @returns {Date} The equivalent day in the reference week
+   */
+  function mapToCurrentWeek(date, referenceWeek = new Date()) {
+    const weekStart = startOfWeek(referenceWeek, { weekStartsOn: 1 }) // Monday = 0
+    const dayOfWeek = getDay(date)
+    
+    // Handle Sunday (0) -> map to index 6, others map to dayOfWeek - 1
+    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1
+    
+    return addDays(weekStart, dayIndex)
+  }
 
   // Helper function to determine week interval
   const getWeekInterval = useCallback((eventType) => {
@@ -85,12 +110,12 @@ export default function TimetableSection({
   }, [])
 
   // Helper function to create event object
-  const createEvent = useCallback((happening, start, end) => ({
-    title: happening.orglectureName,
+  const createEvent = useCallback((event, start, end) => ({
+    title: event.orglectureName,
     start,
     end,
-    location: happening.roomNames,
-    lightColor: `rgba(${happening.red}, ${happening.green}, ${happening.blue}, ${happening.alpha})`,
+    location: event.roomNames,
+    lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
   }), [])
 
   // Transform timetable into calendar events
@@ -107,29 +132,33 @@ export default function TimetableSection({
     }
     const happenings = []
 
-    console.log(timetable)
-
     timetable.happenings.forEach(event => {
+      // Skip exams if not showing specials
+      if ((!showSpecials && event.exam) || event.holiday) return
+
       // Handle DAY type events
       if (event.type === 'DAY') {
-        const date = (typeof event.singularDate === "string") 
+        const originalDate = (typeof event.singularDate === "string") 
           ? parseISO(event.singularDate) 
           : new Date(event.singularDate)
+        const displayDate = showDates ? originalDate : mapToCurrentWeek(originalDate)
         
         const eventObj = createEvent(
           event,
-          addMinutes(date, event.beginMinute),
-          addMinutes(date, event.endMinute)
+          addMinutes(displayDate, event.beginMinute),
+          addMinutes(displayDate, event.endMinute)
         )
         happenings.push(eventObj)
       }
       // Handle WEEK type events
       else {
         const nthWeek = getWeekInterval(event.type)
-       
+        const dates = showDates
+          ? eachNthWeekOfInterval(semesterInterval, nthWeek, { weekStartsOn: event.weekday + 1 })
+          : [getCurrentWeekday(nthWeek)]
+
         // For each weekday, create an event
-        eachNthWeekOfInterval(semesterInterval, nthWeek, { weekStartsOn: event.weekday + 1 })
-          .forEach(weekday => {
+        dates.forEach(weekday => {
             const eventObj = createEvent(
               event,
               addMinutes(weekday, event.beginMinute),
@@ -141,7 +170,7 @@ export default function TimetableSection({
     })
 
     setEvents(happenings)
-  }, [timetable, semesters, selectedSemesterId, createEvent, getWeekInterval])
+  }, [timetable, semesters, selectedSemesterId, showDates, showSpecials, getWeekInterval, createEvent])
 
   return (
     <>
@@ -234,6 +263,7 @@ export default function TimetableSection({
             view={view}
             onView={handleCalendarViewChange}
             events={events}
+            showDates={showDates}
           />
         </Box>
       </Box>
