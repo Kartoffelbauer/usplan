@@ -44,12 +44,12 @@ export default function Sidebar() {
     semesters,           // Available semesters list
     studyCourses,        // Available study courses for selected semester
     studyGroups,         // Available study groups for selected course
-    selectedSemesterId,  // Currently selected semester ID
-    setSelectedSemesterId,
-    selectedStudyCourseId, // Currently selected study course ID
-    setSelectedStudyCourseId,
-    selectedStudyGroupId,  // Currently selected study group ID
-    setSelectedStudyGroupId,
+    selectedSemester,    // Currently selected semester object
+    setSelectedSemester,
+    selectedStudyCourse, // Currently selected study course object
+    setSelectedStudyCourse,
+    selectedStudyGroup,  // Currently selected study group object
+    setSelectedStudyGroup,
     loading,             // Loading states for async operations
     error,               // Error state
   } = useTimetable()
@@ -62,12 +62,13 @@ export default function Sidebar() {
    * @param {Event} event - The select change event
    */
   const handleSemesterChange = useCallback((event) => {
-    const newSemesterId = event.target.value
-    setSelectedSemesterId(newSemesterId)
+    const semesterId = event.target.value
+    const semesterObject = semesters.find(sem => sem.id === semesterId)
+    setSelectedSemester(semesterObject || null)
     // Clear dependent selections when semester changes
-    setSelectedStudyCourseId('')
-    setSelectedStudyGroupId('')
-  }, [setSelectedSemesterId, setSelectedStudyCourseId, setSelectedStudyGroupId])
+    setSelectedStudyCourse(null)
+    setSelectedStudyGroup(null)
+  }, [semesters, setSelectedSemester, setSelectedStudyCourse, setSelectedStudyGroup])
 
   /**
    * Handles study course selection change
@@ -76,10 +77,10 @@ export default function Sidebar() {
    * @param {Object|null} newValue - The selected study course object or null
    */
   const handleStudyCourseChange = useCallback((_, newValue) => {
-    setSelectedStudyCourseId(newValue ? newValue.id : undefined)
+    setSelectedStudyCourse(newValue)
     // Clear study group when course changes
-    setSelectedStudyGroupId(undefined)
-  }, [setSelectedStudyCourseId, setSelectedStudyGroupId])
+    setSelectedStudyGroup(null)
+  }, [setSelectedStudyCourse, setSelectedStudyGroup])
 
   /**
    * Handles study group selection change
@@ -87,8 +88,8 @@ export default function Sidebar() {
    * @param {Object|null} newValue - The selected study group object or null
    */
   const handleStudyGroupChange = useCallback((_, newValue) => {
-    setSelectedStudyGroupId(newValue ? newValue.id : undefined)
-  }, [setSelectedStudyGroupId])
+    setSelectedStudyGroup(newValue)
+  }, [setSelectedStudyGroup])
 
   /**
    * Handles view mode toggle between course and room view
@@ -199,14 +200,14 @@ export default function Sidebar() {
     >
       {/* Semester Selection */}
       <FormControl 
-        fullWidth 
-        size="small" 
+        fullWidth
+        size="small"
         disabled={loading.semesters || error}
       >
         <InputLabel id="semester-label">{t('sidebar.semester')}</InputLabel>
         <Select
           labelId="semester-label"
-          value={semesters.find((sem) => sem.id === selectedSemesterId)?.id || ''}
+          value={selectedSemester?.id || ''}
           label="Semester"
           onChange={handleSemesterChange}
         >
@@ -237,7 +238,6 @@ export default function Sidebar() {
         </ToggleButtonGroup>
       </Box>
 
-
       {/* Section Divider */}
       <Divider />
 
@@ -245,10 +245,10 @@ export default function Sidebar() {
       <Autocomplete
         fullWidth
         size="small"
-        disabled={!selectedSemesterId || loading.studyCourses || error}
+        disabled={!selectedSemester || loading.studyCourses || error}
         options={studyCourses}
         getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
-        value={studyCourses.find((prog) => prog.id === selectedStudyCourseId) || null}
+        value={selectedStudyCourse}
         onChange={handleStudyCourseChange}
         renderOption={renderStudyCourseOption}
         renderInput={(params) => (
@@ -260,10 +260,10 @@ export default function Sidebar() {
       <Autocomplete
         fullWidth
         size="small"
-        disabled={!selectedSemesterId || !selectedStudyCourseId || loading.studyGroups || error}
+        disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
         options={studyGroups}
         getOptionLabel={(option) => option.shortName}
-        value={studyGroups.find((group) => group.id === selectedStudyGroupId) || null}
+        value={selectedStudyGroup}
         onChange={handleStudyGroupChange}
         renderInput={(params) => (
           <TextField {...params} label={t('sidebar.group')} variant="outlined" />

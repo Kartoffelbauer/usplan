@@ -10,29 +10,16 @@ import {
   DialogContent,
   Typography
 } from '@mui/material'
-import { startOfWeek, addDays, addMinutes, getDay, eachWeekOfInterval, parseISO } from 'date-fns'
+import { addMinutes, parseISO } from 'date-fns'
 import ErrorIcon from '@mui/icons-material/Error'
 import { useTimetable } from '../../context/TimetableContext'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
-
-// Get specific weekday in current week
-const getCurrentWeekday = (weekdayIndex) => {
-  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 }) // Monday = 0
-  return addDays(weekStart, weekdayIndex)
-}
-
-/**
- * Helper function to get every nth week of an interval
- * @param {Object} interval - Date interval with start and end
- * @param {number} n - Every nth week (default: 1)
- * @param {Object} options - Additional options for eachWeekOfInterval
- * @param {number} offset - Week offset (default: 0)
- * @returns {Date[]} Array of dates representing every nth week
- */
-function eachNthWeekOfInterval(interval, n = 1, options = {}, offset = 0) {
-  return eachWeekOfInterval(interval, options).filter((_, idx) => (idx - offset) % n === 0)
-}
+import {
+  getCurrentWeekday,
+  eachNthWeekOfInterval, 
+  mapToCurrentWeek,
+} from '../../utils/weekUtils'
 
 /**
  * TimetableSection component that manages the sidebar and calendar view
@@ -46,6 +33,7 @@ function eachNthWeekOfInterval(interval, n = 1, options = {}, offset = 0) {
  * @param {boolean} props.sidebarOpen - Sidebar open state
  * @param {Function} props.onToggleSidebar - Sidebar toggle handler
  * @param {boolean} props.showDates - Whether to show dates in calendar
+ * @param {boolean} props.showSpecials - Whether to show special events
  * @returns {JSX.Element} The rendered timetable section
  */
 export default function TimetableSection({
@@ -61,7 +49,7 @@ export default function TimetableSection({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
-  const { semesters, timetable, selectedSemesterId, error } = useTimetable()
+  const { selectedSemester, timetable, error } = useTimetable()
 
   // State to hold transformed calendar events
   const [events, setEvents] = useState([])
@@ -78,22 +66,6 @@ export default function TimetableSection({
   const handleCalendarViewChange = useCallback((newView) => {
     onView(newView)
   }, [onView])
-
-  /**
-   * Maps any date to the equivalent day in the current week
-   * @param {Date} date - The original date
-   * @param {Date} referenceWeek - The week to map to (default: current week)
-   * @returns {Date} The equivalent day in the reference week
-   */
-  function mapToCurrentWeek(date, referenceWeek = new Date()) {
-    const weekStart = startOfWeek(referenceWeek, { weekStartsOn: 1 }) // Monday = 0
-    const dayOfWeek = getDay(date)
-    
-    // Handle Sunday (0) -> map to index 6, others map to dayOfWeek - 1
-    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1
-    
-    return addDays(weekStart, dayIndex)
-  }
 
   // Helper function to determine week interval
   const getWeekInterval = useCallback((eventType) => {
@@ -120,15 +92,14 @@ export default function TimetableSection({
 
   // Transform timetable into calendar events
   useEffect(() => {
-    const currentSemester = semesters.find(semester => semester.id === selectedSemesterId)
-    if (!timetable || !currentSemester) {
+    if (!timetable || !selectedSemester) {
       setEvents([])
       return
     }
 
     const semesterInterval = {
-      start: new Date(currentSemester.beginOfLectureDate),
-      end: new Date(currentSemester.endOfLectureDate),
+      start: new Date(selectedSemester.beginOfLectureDate),
+      end: new Date(selectedSemester.endOfLectureDate),
     }
     const happenings = []
 
@@ -159,18 +130,18 @@ export default function TimetableSection({
 
         // For each weekday, create an event
         dates.forEach(weekday => {
-            const eventObj = createEvent(
-              event,
-              addMinutes(weekday, event.beginMinute),
-              addMinutes(weekday, event.endMinute)
-            )
-            happenings.push(eventObj)
-          })
+          const eventObj = createEvent(
+            event,
+            addMinutes(weekday, event.beginMinute),
+            addMinutes(weekday, event.endMinute)
+          )
+          happenings.push(eventObj)
+        })
       }
     })
 
     setEvents(happenings)
-  }, [timetable, semesters, selectedSemesterId, showDates, showSpecials, getWeekInterval, createEvent])
+  }, [timetable, selectedSemester, showDates, showSpecials, getWeekInterval, createEvent])
 
   return (
     <>

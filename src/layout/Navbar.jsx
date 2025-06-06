@@ -27,7 +27,7 @@ export default function Navbar({
 }) {
   const theme = useTheme()
   const { i18n, t } = useTranslation()
-  const { semesters, selectedSemesterId } = useTimetable()
+  const { selectedSemester } = useTimetable()
 
   // ==================== COMPUTED VALUES ====================
 
@@ -36,12 +36,10 @@ export default function Navbar({
    * Fallback to DatePicker defaults if no semester is found
    */
   const semesterInterval = useMemo(() => {
-    const currentSemester = semesters.find(semester => semester.id === selectedSemesterId)
-
-    if (currentSemester) {
+    if (selectedSemester) {
       return {
-        begin: new Date(currentSemester.planningUnitBeginDate),
-        end: new Date(currentSemester.planningUnitEndDate),
+        begin: new Date(selectedSemester.planningUnitBeginDate),
+        end: new Date(selectedSemester.planningUnitEndDate),
       }
     }
 
@@ -50,7 +48,7 @@ export default function Navbar({
       begin: new Date('1900-01-01'),
       end: new Date('2099-12-31'),
     }
-  }, [semesters, selectedSemesterId])
+  }, [selectedSemester])
 
   /**
    * Navigation state based on semester boundaries

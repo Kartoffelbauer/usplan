@@ -20,9 +20,10 @@ export const TimetableProvider = ({ children }) => {
   const [loadingTimetable, setLoadingTimetable] = useState(false)
   const [error, setError] = useState(null)
 
-  const [selectedSemesterId, setSelectedSemesterId] = useState(undefined)
-  const [selectedStudyCourseId, setSelectedStudyCourseId] = useState(undefined)
-  const [selectedStudyGroupId, setSelectedStudyGroupId] = useState(undefined)
+  // Store actual objects instead of IDs
+  const [selectedSemester, setSelectedSemester] = useState(null)
+  const [selectedStudyCourse, setSelectedStudyCourse] = useState(null)
+  const [selectedStudyGroup, setSelectedStudyGroup] = useState(null)
 
   // Load semesters first
   useEffect(() => {
@@ -31,7 +32,7 @@ export const TimetableProvider = ({ children }) => {
       .then(val => {
         setSemesters(val)
         if (val.length > 0) {
-          setSelectedSemesterId(val[0].id)
+          setSelectedSemester(val[0])
         }
       })
       .catch(setError)
@@ -40,50 +41,52 @@ export const TimetableProvider = ({ children }) => {
 
   // Load study courses when semester is selected
   useEffect(() => {
-    if (!selectedSemesterId) {
+    if (!selectedSemester) {
       setStudyCourses([])
+      setSelectedStudyCourse(null)
       return
     }
 
     setLoadingStudyCourses(true)
-    getStudyCourses(selectedSemesterId)
+    getStudyCourses(selectedSemester.id)
       .then(setStudyCourses)
       .catch(setError)
       .finally(() => setLoadingStudyCourses(false))
-  }, [selectedSemesterId])
+  }, [selectedSemester])
 
   // Load groups when both semester and study course are selected
   useEffect(() => {
-    if (!selectedSemesterId || !selectedStudyCourseId) {
+    if (!selectedSemester || !selectedStudyCourse) {
       setStudyGroups([])
+      setSelectedStudyGroup(null)
       return
     }
 
     setLoadingStudyGroups(true)
-    getStudyGroups(selectedSemesterId, selectedStudyCourseId)
+    getStudyGroups(selectedSemester.id, selectedStudyCourse.id)
       .then(val => {
         setStudyGroups(val)
         if (val.length > 0) {
-          setSelectedStudyGroupId(val[0].id)
+          setSelectedStudyGroup(val[0])
         }
       })
       .catch(setError)
       .finally(() => setLoadingStudyGroups(false))
-  }, [selectedSemesterId, selectedStudyCourseId])
+  }, [selectedSemester, selectedStudyCourse])
 
   // Finally load the timetable
   useEffect(() => {
-    if (!selectedSemesterId || !selectedStudyCourseId || !selectedStudyGroupId) {
+    if (!selectedSemester || !selectedStudyCourse || !selectedStudyGroup) {
       setTimetable(undefined)
       return
     }
 
     setLoadingTimetable(true)
-    getTimetable(selectedSemesterId, selectedStudyCourseId, selectedStudyGroupId)
+    getTimetable(selectedSemester.id, selectedStudyCourse.id, selectedStudyGroup.id)
       .then(setTimetable)
       .catch(setError)
       .finally(() => setLoadingTimetable(false))
-  }, [selectedSemesterId, selectedStudyCourseId, selectedStudyGroupId])
+  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
 
   return (
     <TimetableContext.Provider
@@ -92,17 +95,17 @@ export const TimetableProvider = ({ children }) => {
         studyCourses,
         studyGroups,
         timetable,
-        selectedSemesterId,
-        selectedStudyCourseId,
-        selectedStudyGroupId,
-        setSelectedSemesterId,
-        setSelectedStudyCourseId,
-        setSelectedStudyGroupId,
+        selectedSemester,
+        selectedStudyCourse,
+        selectedStudyGroup,
+        setSelectedSemester,
+        setSelectedStudyCourse,
+        setSelectedStudyGroup,
         loading: {
-            semesters: loadingSemesters,
-            studyCourses: loadingStudyCourses,
-            studyGroups: loadingStudyGroups,
-            timetable: loadingTimetable,
+          semesters: loadingSemesters,
+          studyCourses: loadingStudyCourses,
+          studyGroups: loadingStudyGroups,
+          timetable: loadingTimetable,
         },
         error,
       }}
