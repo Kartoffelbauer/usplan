@@ -21,14 +21,11 @@
             "course": "Course",
             "room": "Room"
         },
-        "studyProgram": "Study Program",
-        "group": "Group",
+        "studyCourse": "Study Program",
+        "studyGroup": "Group",
         "export": {
             "title": "Export",
-            "pdf": {
-                "title": "PDF",
-                "generating": "Generating"
-            },
+            "ical": "ICAL",
             "print": "PRINT"
         }
     },

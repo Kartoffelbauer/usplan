@@ -15,13 +15,13 @@ import {
   Autocomplete,
   TextField,
   useTheme,
-  CircularProgress,
 } from '@mui/material'
 import RoomIcon from '@mui/icons-material/Room'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import PrintIcon from '@mui/icons-material/Print'
+import RssFeedIcon from '@mui/icons-material/RssFeed';
 import { useTimetable } from '../../context/TimetableContext'
+import { printTimetable, exportTimetableAsIcal } from '../../utils/exportUtils'
 
 /**
  * Sidebar component that provides timetable configuration controls
@@ -39,9 +39,6 @@ export default function Sidebar() {
   
   // Local state for view mode toggle (course/room)
   const [viewMode, setViewMode] = React.useState('course')
-  
-  // Add loading state for PDF generation
-  const [generatingPDF, setGeneratingPDF] = React.useState(false)
   
   // Timetable context state and actions
   const {
@@ -109,28 +106,18 @@ export default function Sidebar() {
   }, [])
 
   /**
-   * Dummy implementation for PDF export functionality
-   */
-  const onExportPDF = useCallback(async () => {
-    try {
-      setGeneratingPDF(true)
-      console.log('PDF export triggered with the following details:')
-      console.log('Semester:', selectedSemester?.name || 'N/A')
-      console.log('Study Course:', selectedStudyCourse?.name || 'N/A')
-      console.log('Study Group:', selectedStudyGroup?.shortName || 'N/A')
-    } catch (error) {
-      console.error('Failed to export PDF:', error)
-    } finally {
-      setGeneratingPDF(false)
-    }
-  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
-
-  /**
    * Print functionality
    */
-  const onPrint = useCallback(() => {
-    window.print()
-  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
+  const onExportPrint = useCallback(() => {
+    printTimetable()
+  }, [])
+
+  /**
+   * iCal functionality
+   */
+  const onExportIcal = useCallback(() => {
+    exportTimetableAsIcal(timetable, selectedSemester, selectedStudyCourse, selectedStudyGroup)
+  }, [timetable, selectedSemester, selectedStudyCourse, selectedStudyGroup])
 
   // ==================== RENDER HELPERS ====================
 
@@ -264,7 +251,7 @@ export default function Sidebar() {
         onChange={handleStudyCourseChange}
         renderOption={renderStudyCourseOption}
         renderInput={(params) => (
-          <TextField {...params} label={t('sidebar.studyProgram')} variant="outlined" />
+          <TextField {...params} label={t('sidebar.studyCourse')} variant="outlined" />
         )}
       />
 
@@ -278,7 +265,7 @@ export default function Sidebar() {
         value={selectedStudyGroup}
         onChange={handleStudyGroupChange}
         renderInput={(params) => (
-          <TextField {...params} label={t('sidebar.group')} variant="outlined" />
+          <TextField {...params} label={t('sidebar.studyGroup')} variant="outlined" />
         )}
       />
 
@@ -292,22 +279,18 @@ export default function Sidebar() {
         </Typography>
         <ButtonGroup fullWidth variant="outlined">
           <Button
-            onClick={onPrint}
+            onClick={onExportPrint}
             disabled={!timetable}
             startIcon={<PrintIcon fontSize="small" />}
           >
             {t('sidebar.export.print')}
           </Button>
           <Button
-            onClick={onExportPDF}
-            disabled={!timetable || generatingPDF}
-            startIcon={
-              generatingPDF ? 
-                <CircularProgress size={16} /> : 
-                <PictureAsPdfIcon fontSize="small" />
-            }
+            onClick={onExportIcal}
+            disabled={!timetable}
+            startIcon={<RssFeedIcon fontSize="small" />}
           >
-            {generatingPDF ? t('sidebar.export.pdf.generating') : t('sidebar.export.pdf.title')}
+            {t('sidebar.export.ical')}
           </Button>
         </ButtonGroup>
       </Box>

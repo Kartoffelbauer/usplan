@@ -49,7 +49,13 @@ export default function TimetableSection({
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
-  const { selectedSemester, timetable, error } = useTimetable()
+  const {
+    selectedSemester,
+    selectedStudyCourse,
+    selectedStudyGroup,
+    timetable,
+    error
+  } = useTimetable()
 
   // State to hold transformed calendar events
   const [events, setEvents] = useState([])
@@ -217,6 +223,7 @@ export default function TimetableSection({
 
         {/* Calendar View with Smooth Margin Transition */}
         <Box
+          className="print-only"
           sx={{
             flexGrow: 1,
             height: '100%',
@@ -228,6 +235,29 @@ export default function TimetableSection({
             }),
           }}
         >
+          {/* Print-only Header */}
+          <Box
+            sx={{
+              display: 'none',
+              '@media print': { display: 'block' },
+              padding: 2,
+              borderBottom: '1px solid black',
+              marginBottom: 2,
+              backgroundColor: 'white',
+            }}
+          >
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, color: 'black' }}>
+              <Typography variant="body1">
+                <strong>{t('sidebar.semester', 'Semester')}:</strong> {selectedSemester?.name || 'N/A'}
+              </Typography>
+              <Typography variant="body1">
+                <strong>{t('sidebar.studyCourse', 'Study Course')}:</strong> {selectedStudyCourse?.name || 'N/A'}
+              </Typography>
+              <Typography variant="body1">
+                <strong>{t('sidebar.studyGroup', 'Study Group')}:</strong> {selectedStudyGroup?.name || 'N/A'}
+              </Typography>
+            </Box>
+          </Box>
           <CalendarWidget
             selectedDate={selectedDate}
             onDateChange={handleCalendarDateChange}
