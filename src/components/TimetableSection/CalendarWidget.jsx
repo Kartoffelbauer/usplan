@@ -202,7 +202,8 @@ export default function CalendarWidget({
   // ==================== RENDER ====================
 
   return (
-    <Box 
+    <Box
+      className="print-only"
       flexGrow={1} 
       overflow="hidden" 
       padding={!isMobile && theme.spacing(2)} 

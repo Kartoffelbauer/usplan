@@ -25,7 +25,10 @@
         "group": "Group",
         "export": {
             "title": "Export",
-            "pdf": "PDF",
+            "pdf": {
+                "title": "PDF",
+                "generating": "Generating"
+            },
             "print": "PRINT"
         }
     },

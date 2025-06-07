@@ -22,7 +22,10 @@
         "studyProgram": "Programm",
         "group": "Gruppe",
         "export": {
-            "print": "Drucken"
+            "print": "Drucken",
+            "pdf": {
+                "generating": "Erstellen"
+            }
         }
     },
     "restError": {

@@ -15,11 +15,12 @@ import {
   Autocomplete,
   TextField,
   useTheme,
+  CircularProgress,
 } from '@mui/material'
 import RoomIcon from '@mui/icons-material/Room'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
-import PrintIcon from '@mui/icons-material/Print';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
+import PrintIcon from '@mui/icons-material/Print'
 import { useTimetable } from '../../context/TimetableContext'
 
 /**
@@ -39,11 +40,15 @@ export default function Sidebar() {
   // Local state for view mode toggle (course/room)
   const [viewMode, setViewMode] = React.useState('course')
   
+  // Add loading state for PDF generation
+  const [generatingPDF, setGeneratingPDF] = React.useState(false)
+  
   // Timetable context state and actions
   const {
     semesters,           // Available semesters list
     studyCourses,        // Available study courses for selected semester
     studyGroups,         // Available study groups for selected course
+    timetable,           // Current timetable data
     selectedSemester,    // Currently selected semester object
     setSelectedSemester,
     selectedStudyCourse, // Currently selected study course object
@@ -104,21 +109,28 @@ export default function Sidebar() {
   }, [])
 
   /**
-   * Handles PDF export functionality
-   * Currently logs to console - implement actual PDF generation
+   * Dummy implementation for PDF export functionality
    */
-  const handleExportPDF = useCallback(() => {
-    console.log('Exporting to PDF...')
-    // TODO: Implement PDF export functionality
-  }, [])
+  const onExportPDF = useCallback(async () => {
+    try {
+      setGeneratingPDF(true)
+      console.log('PDF export triggered with the following details:')
+      console.log('Semester:', selectedSemester?.name || 'N/A')
+      console.log('Study Course:', selectedStudyCourse?.name || 'N/A')
+      console.log('Study Group:', selectedStudyGroup?.shortName || 'N/A')
+    } catch (error) {
+      console.error('Failed to export PDF:', error)
+    } finally {
+      setGeneratingPDF(false)
+    }
+  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
 
   /**
-   * Handles print functionality
-   * Opens the browser's print dialog
+   * Print functionality
    */
-  const handlePrint = useCallback(() => {
+  const onPrint = useCallback(() => {
     window.print()
-  }, [])
+  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
 
   // ==================== RENDER HELPERS ====================
 
@@ -280,15 +292,22 @@ export default function Sidebar() {
         </Typography>
         <ButtonGroup fullWidth variant="outlined">
           <Button
-            onClick={handleExportPDF}
-            startIcon={<PictureAsPdfIcon fontSize="small" />}
-          >
-            {t('sidebar.export.pdf')}</Button>
-          <Button
-            onClick={handlePrint}
+            onClick={onPrint}
+            disabled={!timetable}
             startIcon={<PrintIcon fontSize="small" />}
           >
             {t('sidebar.export.print')}
+          </Button>
+          <Button
+            onClick={onExportPDF}
+            disabled={!timetable || generatingPDF}
+            startIcon={
+              generatingPDF ? 
+                <CircularProgress size={16} /> : 
+                <PictureAsPdfIcon fontSize="small" />
+            }
+          >
+            {generatingPDF ? t('sidebar.export.pdf.generating') : t('sidebar.export.pdf.title')}
           </Button>
         </ButtonGroup>
       </Box>
