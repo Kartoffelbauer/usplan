@@ -16,11 +16,16 @@
     "sidebar": {
         "selection": {
             "title": "Auswahl",
-            "course": "Kurs",
-            "room": "Raum"
+            "course": {
+                "title": "Kurs",
+                "studyCourse": "Studiengang",
+                "studyGroup": "Gruppe"
+            },
+            "room": {
+                "title": "Raum",
+                "location": "Standort"
+            }
         },
-        "studyCourse": "Studiengang",
-        "studyGroup": "Gruppe",
         "export": {
             "print": "Drucken"
         }

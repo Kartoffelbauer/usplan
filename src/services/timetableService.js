@@ -34,6 +34,14 @@ export async function getStudyGroups(semesterId, studyCourseId) {
   return res.json()
 }
 
+export async function getRooms(locationId) {
+  // Todo: Implement room fetching logic if needed
+  const res = { ok: true, json: () => Promise.resolve([]) } // Mock response for now
+
+  if (!res.ok) throw new Error('Failed to load rooms.')
+  return res.json()
+}
+
 export async function getTimetable(semesterId, studyCourseId, studyGroupId) {
 if (!semesterId || !studyCourseId || !studyGroupId) {
     throw new Error('Missing semester or program ID for timetable query')

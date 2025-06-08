@@ -42,18 +42,24 @@ export default function Sidebar() {
   
   // Timetable context state and actions
   const {
-    semesters,           // Available semesters list
-    studyCourses,        // Available study courses for selected semester
-    studyGroups,         // Available study groups for selected course
-    timetable,           // Current timetable data
-    selectedSemester,    // Currently selected semester object
+    locations,
+    rooms,
+    semesters,
+    studyCourses,
+    studyGroups,
+    timetable,
+    selectedLocation,
+    setSelectedLocation,
+    selectedRoom,
+    setSelectedRoom,
+    selectedSemester,
     setSelectedSemester,
-    selectedStudyCourse, // Currently selected study course object
+    selectedStudyCourse,
     setSelectedStudyCourse,
-    selectedStudyGroup,  // Currently selected study group object
+    selectedStudyGroup,
     setSelectedStudyGroup,
-    loading,             // Loading states for async operations
-    error,               // Error state
+    loading,
+    error,
   } = useTimetable()
 
   // ==================== EVENT HANDLERS ====================
@@ -94,7 +100,29 @@ export default function Sidebar() {
   }, [setSelectedStudyGroup])
 
   /**
+   * Handles location selection change
+   * Resets room selection when location changes
+   * @param {Event} _ - The autocomplete event (unused)
+   * @param {Object|null} newValue - The selected location object or null
+   */
+  const handleLocationChange = useCallback((_, newValue) => {
+    setSelectedLocation(newValue)
+    // Clear room when location changes
+    setSelectedRoom(null)
+  }, [setSelectedLocation, setSelectedRoom])
+
+  /**
+   * Handles room selection change
+   * @param {Event} _ - The autocomplete event (unused)
+   * @param {Object|null} newValue - The selected room object or null
+   */
+  const handleRoomChange = useCallback((_, newValue) => {
+    setSelectedRoom(newValue)
+  }, [setSelectedRoom])
+
+  /**
    * Handles view mode toggle between course and room view
+   * Clears selections when switching modes
    * @param {Event} _ - The toggle event (unused)
    * @param {string} newViewMode - The new view mode ('course' or 'room')
    */
@@ -102,8 +130,17 @@ export default function Sidebar() {
     // Only update if a valid option is selected (prevent deselection)
     if (newViewMode !== null) {
       setViewMode(newViewMode)
+      
+      // Clear selections when switching view modes
+      if (newViewMode === 'course') {
+        setSelectedLocation(null)
+        setSelectedRoom(null)
+      } else if (newViewMode === 'room') {
+        setSelectedStudyCourse(null)
+        setSelectedStudyGroup(null)
+      }
     }
-  }, [])
+  }, [setSelectedLocation, setSelectedRoom, setSelectedStudyCourse, setSelectedStudyGroup])
 
   /**
    * Print functionality
@@ -228,11 +265,11 @@ export default function Sidebar() {
         >
           <ToggleButton value="course">
             <CalendarMonthIcon fontSize="small" sx={{mr: 1}} />
-            {t('sidebar.selection.course')}
+            {t('sidebar.selection.course.title')}
           </ToggleButton>
           <ToggleButton value="room">
             <RoomIcon fontSize="small" sx={{mr: 1}} />
-            {t('sidebar.selection.room')}
+            {t('sidebar.selection.room.title')}
           </ToggleButton>
         </ToggleButtonGroup>
       </Box>
@@ -240,34 +277,72 @@ export default function Sidebar() {
       {/* Section Divider */}
       <Divider />
 
-      {/* Study Course Selection */}
-      <Autocomplete
-        fullWidth
-        size="small"
-        disabled={!selectedSemester || loading.studyCourses || error}
-        options={studyCourses}
-        getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
-        value={selectedStudyCourse}
-        onChange={handleStudyCourseChange}
-        renderOption={renderStudyCourseOption}
-        renderInput={(params) => (
-          <TextField {...params} label={t('sidebar.studyCourse')} variant="outlined" />
-        )}
-      />
+      {/* Course View - Study Course and Study Group Selection */}
+      {viewMode === 'course' && (
+        <>
+          {/* Study Course Selection */}
+          <Autocomplete
+            fullWidth
+            size="small"
+            disabled={!selectedSemester || loading.studyCourses || error}
+            options={studyCourses || []}
+            getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
+            value={selectedStudyCourse}
+            onChange={handleStudyCourseChange}
+            renderOption={renderStudyCourseOption}
+            renderInput={(params) => (
+              <TextField {...params} label={t('sidebar.selection.course.studyCourse')} variant="outlined" />
+            )}
+          />
 
-      {/* Study Group Selection */}
-      <Autocomplete
-        fullWidth
-        size="small"
-        disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
-        options={studyGroups}
-        getOptionLabel={(option) => option.shortName}
-        value={selectedStudyGroup}
-        onChange={handleStudyGroupChange}
-        renderInput={(params) => (
-          <TextField {...params} label={t('sidebar.studyGroup')} variant="outlined" />
-        )}
-      />
+          {/* Study Group Selection */}
+          <Autocomplete
+            fullWidth
+            size="small"
+            disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
+            options={studyGroups || []}
+            getOptionLabel={(option) => option.shortName}
+            value={selectedStudyGroup}
+            onChange={handleStudyGroupChange}
+            renderInput={(params) => (
+              <TextField {...params} label={t('sidebar.selection.course.studyGroup')} variant="outlined" />
+            )}
+          />
+        </>
+      )}
+
+      {/* Room View - Location and Room Selection */}
+      {viewMode === 'room' && (
+        <>
+          {/* Location Selection */}
+          <Autocomplete
+            fullWidth
+            size="small"
+            disabled={!selectedSemester || loading.locations || error}
+            options={locations || []}
+            getOptionLabel={(option) => option.shortName}
+            value={selectedLocation}
+            onChange={handleLocationChange}
+            renderInput={(params) => (
+              <TextField {...params} label={t('sidebar.selection.room.location')} variant="outlined" />
+            )}
+          />
+
+          {/* Room Selection */}
+          <Autocomplete
+            fullWidth
+            size="small"
+            disabled={!selectedSemester || !selectedLocation || loading.rooms || error}
+            options={rooms || []}
+            getOptionLabel={(option) => option.shortName}
+            value={selectedRoom}
+            onChange={handleRoomChange}
+            renderInput={(params) => (
+              <TextField {...params} label={t('sidebar.selection.room.title')} variant="outlined" />
+            )}
+          />
+        </>
+      )}
 
       {/* Section Divider */}
       <Divider />

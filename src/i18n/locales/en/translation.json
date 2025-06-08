@@ -18,11 +18,16 @@
         "semester": "Semester",
         "selection": {
             "title": "Selection",
-            "course": "Course",
-            "room": "Room"
+            "course": {
+                "title": "Course",
+                "studyCourse": "Study Program",
+                "studyGroup": "Group"
+            },
+            "room": {
+                "title": "Room",
+                "location": "Location"
+            }
         },
-        "studyCourse": "Study Program",
-        "studyGroup": "Group",
         "export": {
             "title": "Export",
             "ical": "ICAL",
