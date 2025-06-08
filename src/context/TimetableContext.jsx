@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import {
+  getLocations,
   getSemesters,
   getStudyCourses,
   getStudyGroups,
@@ -9,30 +10,45 @@ import {
 const TimetableContext = createContext()
 
 export const TimetableProvider = ({ children }) => {
+  const [locations, setLocations] = useState([])
   const [semesters, setSemesters] = useState([])
   const [studyCourses, setStudyCourses] = useState([])
   const [studyGroups, setStudyGroups] = useState([])
   const [timetable, setTimetable] = useState(undefined)
 
+  const [loadingLocations, setLoadingLocations] = useState(false)
   const [loadingSemesters, setLoadingSemesters] = useState(false)
   const [loadingStudyCourses, setLoadingStudyCourses] = useState(false)
   const [loadingStudyGroups, setLoadingStudyGroups] = useState(false)
   const [loadingTimetable, setLoadingTimetable] = useState(false)
   const [error, setError] = useState(null)
 
-  // Store actual objects instead of IDs
+  const [selectedLocation, setSelectedLocation] = useState(null)
   const [selectedSemester, setSelectedSemester] = useState(null)
   const [selectedStudyCourse, setSelectedStudyCourse] = useState(null)
   const [selectedStudyGroup, setSelectedStudyGroup] = useState(null)
 
   // Load semesters first
   useEffect(() => {
+      setLoadingLocations(true)
+      getLocations()
+        .then(val => {
+          setLocations(val)
+          if (val.length > 0) {
+            setSelectedLocation(val[0])
+          }
+          console.log('Locations loaded:', val)
+        })
+        .catch(setError)
+        .finally(() => setLoadingLocations(false))
+
     setLoadingSemesters(true)
     getSemesters()
       .then(val => {
         setSemesters(val)
         if (val.length > 0) {
           setSelectedSemester(val[0])
+          console.log('Semesters loaded:', val)
         }
       })
       .catch(setError)
@@ -91,10 +107,12 @@ export const TimetableProvider = ({ children }) => {
   return (
     <TimetableContext.Provider
       value={{
+        locations,
         semesters,
         studyCourses,
         studyGroups,
         timetable,
+        selectedLocation,
         selectedSemester,
         selectedStudyCourse,
         selectedStudyGroup,
@@ -102,6 +120,7 @@ export const TimetableProvider = ({ children }) => {
         setSelectedStudyCourse,
         setSelectedStudyGroup,
         loading: {
+          locations: loadingLocations,
           semesters: loadingSemesters,
           studyCourses: loadingStudyCourses,
           studyGroups: loadingStudyGroups,
