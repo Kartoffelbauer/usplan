@@ -15,7 +15,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import LanguageIcon from '@mui/icons-material/Language'
-import { addDays, subDays, isBefore, isAfter } from 'date-fns'
+import { addDays, subDays, isBefore, isAfter, startOfWeek, endOfWeek } from 'date-fns'
 import { useTimetable } from '../context/TimetableContext'
 
 export default function Navbar({
@@ -32,23 +32,15 @@ export default function Navbar({
   // ==================== COMPUTED VALUES ====================
 
   /**
-   * Semester interval computed from current semester
+   * Date picker interval based on selected semester
    * Fallback to DatePicker defaults if no semester is found
    */
-  const semesterInterval = useMemo(() => {
-    if (selectedSemester) {
-      return {
-        begin: new Date(selectedSemester.planningUnitBeginDate),
-        end: new Date(selectedSemester.planningUnitEndDate),
-      }
-    }
-
-    // Fallback to DatePicker defaults if no semester found
+  const datePickerInterval = useMemo(() => {
     return {
-      begin: new Date('1900-01-01'),
-      end: new Date('2099-12-31'),
+      begin: (!selectedSemester || !showDates) ? startOfWeek(new Date()) : selectedSemester.planningUnitBeginDate,
+      end: (!selectedSemester || !showDates) ? endOfWeek(new Date()) : selectedSemester.planningUnitEndDate,
     }
-  }, [selectedSemester])
+  }, [selectedSemester, isMobile, showDates])
 
   /**
    * Navigation state based on semester boundaries
@@ -59,11 +51,11 @@ export default function Navbar({
     const prevDate = subDays(selectedDate, step)
 
     return {
-      canGoNext: !isAfter(nextDate, semesterInterval.end),
-      canGoPrev: !isBefore(prevDate, semesterInterval.begin),
-      isDisabled: !showDates,
+      step,
+      canGoNext: !isAfter(nextDate, datePickerInterval.end),
+      canGoPrev: !isBefore(prevDate, datePickerInterval.begin),
     }
-  }, [selectedDate, semesterInterval, isMobile, showDates])
+  }, [selectedDate, datePickerInterval, isMobile])
 
   // ==================== EVENT HANDLERS ====================
 
@@ -71,39 +63,37 @@ export default function Navbar({
    * Navigate to today
    */
   const handleToday = useCallback(() => {
-    if (showDates) {
+    if (navigationState.canGoNext || navigationState.canGoPrev) {
       onDateChange(new Date())
     }
-  }, [showDates, onDateChange])
+  }, [navigationState, onDateChange])
 
   /**
    * Navigate to previous period
    */
   const handlePrev = useCallback(() => {
-    if (showDates && navigationState.canGoPrev) {
-      const step = isMobile ? 1 : 7
-      onDateChange(subDays(selectedDate, step))
+    if (navigationState.canGoPrev) {
+      onDateChange(subDays(selectedDate, navigationState.step))
     }
-  }, [showDates, navigationState.canGoPrev, selectedDate, isMobile, onDateChange])
+  }, [navigationState, selectedDate, isMobile, onDateChange])
 
   /**
    * Navigate to next period
    */
   const handleNext = useCallback(() => {
-    if (showDates && navigationState.canGoNext) {
-      const step = isMobile ? 1 : 7
-      onDateChange(addDays(selectedDate, step))
+    if (navigationState.canGoNext) {
+      onDateChange(addDays(selectedDate, navigationState.step))
     }
-  }, [showDates, navigationState.canGoNext, selectedDate, isMobile, onDateChange])
+  }, [navigationState, selectedDate, isMobile, onDateChange])
 
   /**
    * Handle date picker change
    */
   const handleDatePickerChange = useCallback((date) => {
-    if (showDates && date) {
+    if (date) {
       onDateChange(date)
     }
-  }, [showDates, onDateChange])
+  }, [onDateChange])
 
   /**
    * Toggle language
@@ -160,36 +150,36 @@ export default function Navbar({
             variant="outlined"
             onClick={handleToday}
             startIcon={<CalendarTodayIcon fontSize="small" />}
-            disabled={navigationState.isDisabled}
+            disabled={!navigationState.canGoNext && !navigationState.canGoPrev}
             sx={{ minWidth: 'auto', borderRadius: '50px' }}
           >
             {!isMobile && t('nav.today')}
           </Button>
 
-            <Button
-              variant="text"
-              onClick={handlePrev}
-              disabled={navigationState.isDisabled || !navigationState.canGoPrev}
-              sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-            >
-              <ArrowBackIosIcon fontSize="small" />
-            </Button>
+          <Button
+            variant="text"
+            onClick={handlePrev}
+            disabled={!navigationState.canGoPrev}
+            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
+          >
+            <ArrowBackIosIcon fontSize="small" />
+          </Button>
 
           <DatePicker
             value={selectedDate}
             onChange={handleDatePickerChange}
-            disabled={navigationState.isDisabled}
-            minDate={semesterInterval.begin}
-            maxDate={semesterInterval.end}
+            disabled={!navigationState.canGoNext && !navigationState.canGoPrev}
+            minDate={datePickerInterval.begin}
+            maxDate={datePickerInterval.end}
             slotProps={{ textField: { variant: 'outlined', size: 'small' } }}
           />
 
-            <Button
-              variant="text"
-              onClick={handleNext}
-              disabled={navigationState.isDisabled || !navigationState.canGoNext}
-              sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-            >
+          <Button
+            variant="text"
+            onClick={handleNext}
+            disabled={!navigationState.canGoNext}
+            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
+          >
             <ArrowForwardIosIcon fontSize="small" />
           </Button>
         </Box>
@@ -205,13 +195,13 @@ export default function Navbar({
             {!isMobile && currentLanguageCode}
           </Button>
 
-            <Button
-              component="a"
-              href="https://www.progotec.de/site/splandok"
-              target="_blank"
-              variant="outlined"
-              sx={{ minWidth: 'auto', borderRadius: '50px' }}
-            >
+          <Button
+            component="a"
+            href="https://www.progotec.de/site/splandok"
+            target="_blank"
+            variant="outlined"
+            sx={{ minWidth: 'auto', borderRadius: '50px' }}
+          >
             ?
           </Button>
         </Box>

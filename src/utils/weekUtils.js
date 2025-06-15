@@ -1,4 +1,4 @@
-import { startOfWeek, addDays, getDay, eachWeekOfInterval } from 'date-fns'
+import { startOfWeek, endOfWeek, addDays, getDay, eachWeekOfInterval } from 'date-fns'
 
 /**
  * Get specific weekday in current week
@@ -57,14 +57,4 @@ export const getDateForWeekdayInCurrentWeek = (weekdayIndex) => {
 export const isDateInWeek = (date, weekStart) => {
   const weekEnd = addDays(weekStart, 6)
   return date >= weekStart && date <= weekEnd
-}
-
-/**
- * Get week start date for any given date
- * @param {Date} date - Input date
- * @param {Object} options - Options for week start (default: { weekStartsOn: 1 })
- * @returns {Date} Start of the week for the given date
- */
-export const getWeekStart = (date, options = { weekStartsOn: 1 }) => {
-  return startOfWeek(date, options)
 }

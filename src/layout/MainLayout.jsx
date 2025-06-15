@@ -73,11 +73,11 @@ export default function MainLayout() {
    * Handles date selection from various components
    */
   const handleDateChange = useCallback((date) => {
-    if (showDates) {
-      setSelectedDate(date)
-      if (isMobile) setSidebarOpen(false)
+    setSelectedDate(date)
+    if (isMobile) {
+      setSidebarOpen(false)
     }
-  }, [showDates, isMobile])
+  }, [isMobile])
 
   /**
    * Handles checkbox changes
