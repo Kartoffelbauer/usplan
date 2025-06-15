@@ -37,8 +37,8 @@ export default function Navbar({
    */
   const datePickerInterval = useMemo(() => {
     return {
-      begin: (!selectedSemester || !showDates) ? startOfWeek(new Date()) : selectedSemester.planningUnitBeginDate,
-      end: (!selectedSemester || !showDates) ? endOfWeek(new Date()) : selectedSemester.planningUnitEndDate,
+      begin: (!selectedSemester || !showDates) ? startOfWeek(new Date(), { weekStartsOn: 1 }) : selectedSemester.planningUnitBeginDate,
+      end: (!selectedSemester || !showDates) ? endOfWeek(new Date(), { weekStartsOn: 1 }) : selectedSemester.planningUnitEndDate,
     }
   }, [selectedSemester, isMobile, showDates])
 
