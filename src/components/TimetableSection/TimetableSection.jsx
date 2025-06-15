@@ -50,9 +50,12 @@ export default function TimetableSection({
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
   const {
+    selectedLocation,
     selectedSemester,
     selectedStudyCourse,
     selectedStudyGroup,
+    selectedRoom,
+    selectedViewMode,
     timetable,
     error
   } = useTimetable()
@@ -246,18 +249,34 @@ export default function TimetableSection({
               backgroundColor: 'white',
             }}
           >
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, color: 'black' }}>
-              <Typography variant="body1">
-                <strong>{t('sidebar.semester', 'Semester')}:</strong> {selectedSemester?.name || 'N/A'}
-              </Typography>
-              <Typography variant="body1">
-                <strong>{t('sidebar.studyCourse', 'Study Course')}:</strong> {selectedStudyCourse?.name || 'N/A'}
-              </Typography>
-              <Typography variant="body1">
-                <strong>{t('sidebar.studyGroup', 'Study Group')}:</strong> {selectedStudyGroup?.name || 'N/A'}
-              </Typography>
-            </Box>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, color: 'black' }}>
+            <Typography variant="body1">
+              <strong>{t('sidebar.semester', 'Semester')}:</strong> {selectedSemester?.name || 'N/A'}
+            </Typography>
+            {/* Course View */}
+            {selectedViewMode === 'course' && (
+              <>
+                <Typography variant="body1">
+                  <strong>{t('sidebar.selection.course.studyCourse', 'Study Course')}:</strong> {selectedStudyCourse?.name || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>{t('sidebar.selection.course.studyGroup', 'Study Group')}:</strong> {selectedStudyGroup?.name || 'N/A'}
+                </Typography>
+              </>
+            )}
+            {/* Room View */}
+            {selectedViewMode === 'room' && (
+              <>
+                <Typography variant="body1">
+                  <strong>{t('sidebar.selection.room.location', 'Room')}:</strong> {selectedLocation?.shortName || 'N/A'}
+                </Typography>
+                <Typography variant="body1">
+                  <strong>{t('sidebar.selection.room.title', 'Location')}:</strong> {selectedRoom?.shortName || 'N/A'}
+                </Typography>
+              </>
+            )}
           </Box>
+        </Box>
           <CalendarWidget
             selectedDate={selectedDate}
             onDateChange={handleCalendarDateChange}
