@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import {
   Box,
   Divider,
@@ -15,13 +15,15 @@ import {
   Autocomplete,
   TextField,
   useTheme,
+  Fade,
+  Alert,
 } from '@mui/material'
 import RoomIcon from '@mui/icons-material/Room'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import PrintIcon from '@mui/icons-material/Print'
-import RssFeedIcon from '@mui/icons-material/RssFeed';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useTimetable } from '../../context/TimetableContext'
-import { printTimetable, exportTimetableAsIcal } from '../../utils/exportUtils'
+import { printTimetable, icalUrlForTimetable, copyToClipboard } from '../../utils/exportUtils'
 
 /**
  * Sidebar component that provides timetable configuration controls
@@ -33,7 +35,10 @@ import { printTimetable, exportTimetableAsIcal } from '../../utils/exportUtils'
 export default function Sidebar() {
   // Theme hook for consistent styling
   const theme = useTheme()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  // Local state for copy confirmation
+  const [showCopyConfirmation, setShowCopyConfirmation] = useState(false)
   
   // Timetable context state and actions
   const {
@@ -134,11 +139,28 @@ export default function Sidebar() {
   }, [])
 
   /**
-   * iCal functionality
+   * iCal export functionality - copies link to clipboard
    */
-  const onExportIcal = useCallback(() => {
-    exportTimetableAsIcal(timetable, selectedSemester, selectedStudyCourse, selectedStudyGroup)
-  }, [timetable, selectedSemester, selectedStudyCourse, selectedStudyGroup])
+  const onExportIcal = useCallback(async () => {
+    if (!selectedViewMode || !selectedSemester ||
+        (selectedViewMode === 'course' && !selectedStudyGroup) ||
+        (selectedViewMode === 'room' && !selectedRoom)) {
+      return
+    }
+    
+    const icalUrl = icalUrlForTimetable(selectedViewMode, selectedSemester.id, selectedViewMode === 'course' ? selectedStudyGroup.id : selectedRoom.id, i18n.language)
+    
+    if (icalUrl) {
+      const success = await copyToClipboard(icalUrl)
+      if (success) {
+        setShowCopyConfirmation(true)
+        // Hide confirmation after 3 seconds
+        setTimeout(() => {
+          setShowCopyConfirmation(false)
+        }, 3000)
+      }
+    }
+  }, [selectedViewMode, selectedSemester, selectedStudyGroup, selectedRoom, i18n.language])
 
   // ==================== RENDER HELPERS ====================
 
@@ -347,11 +369,25 @@ export default function Sidebar() {
           <Button
             onClick={onExportIcal}
             disabled={!timetable}
-            startIcon={<RssFeedIcon fontSize="small" />}
+            startIcon={<ContentCopyIcon fontSize="small" />}
           >
             {t('sidebar.export.ical')}
           </Button>
         </ButtonGroup>
+        
+        {/* Copy Confirmation */}
+        <Fade in={showCopyConfirmation}>
+          <Alert 
+            severity="success" 
+            sx={{ 
+              mt: 1, 
+              py: 0.5,
+              fontSize: '0.875rem'
+            }}
+          >
+            {t('sidebar.export.linkCopied', 'Link copied!')}
+          </Alert>
+        </Fade>
       </Box>
     </Box>
   )

@@ -31,7 +31,8 @@
         "export": {
             "title": "Export",
             "ical": "ICAL",
-            "print": "PRINT"
+            "print": "Print",
+            "linkCopied": "Link copied!"
         }
     },
     "restError": {

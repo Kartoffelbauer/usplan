@@ -27,7 +27,8 @@
             }
         },
         "export": {
-            "print": "Drucken"
+            "print": "Drucken",
+            "linkCopied": "Link kopiert!"
         }
     },
     "restError": {
