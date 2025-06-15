@@ -128,6 +128,9 @@ export default function Sidebar() {
    * @param {string} newViewMode - The new view mode ('course' or 'room')
    */
   const handleViewModeChange = useCallback((_, newViewMode) => {
+    if (!newViewMode) {
+      return
+    }
     setSelectedViewMode(newViewMode)
   }, [setSelectedViewMode])
 

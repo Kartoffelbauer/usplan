@@ -166,14 +166,14 @@ export default function Navbar({
             {!isMobile && t('nav.today')}
           </Button>
 
-          <Button
-            variant="text"
-            onClick={handlePrev}
-            disabled={navigationState.isDisabled || !navigationState.canGoPrev}
-            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-          >
-            <ArrowBackIosIcon fontSize="small" />
-          </Button>
+            <Button
+              variant="text"
+              onClick={handlePrev}
+              disabled={navigationState.isDisabled || !navigationState.canGoPrev}
+              sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
+            >
+              <ArrowBackIosIcon fontSize="small" />
+            </Button>
 
           <DatePicker
             value={selectedDate}
@@ -184,12 +184,12 @@ export default function Navbar({
             slotProps={{ textField: { variant: 'outlined', size: 'small' } }}
           />
 
-          <Button
-            variant="text"
-            onClick={handleNext}
-            disabled={navigationState.isDisabled || !navigationState.canGoNext}
-            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-          >
+            <Button
+              variant="text"
+              onClick={handleNext}
+              disabled={navigationState.isDisabled || !navigationState.canGoNext}
+              sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
+            >
             <ArrowForwardIosIcon fontSize="small" />
           </Button>
         </Box>
@@ -205,13 +205,13 @@ export default function Navbar({
             {!isMobile && currentLanguageCode}
           </Button>
 
-          <Button
-            component="a"
-            href="https://www.progotec.de/site/splandok"
-            target="_blank"
-            variant="outlined"
-            sx={{ minWidth: 'auto', borderRadius: '50px' }}
-          >
+            <Button
+              component="a"
+              href="https://www.progotec.de/site/splandok"
+              target="_blank"
+              variant="outlined"
+              sx={{ minWidth: 'auto', borderRadius: '50px' }}
+            >
             ?
           </Button>
         </Box>

@@ -205,12 +205,12 @@ export default function CalendarWidget({
     <Box
       flexGrow={1} 
       overflow="hidden" 
-      padding={!isMobile && theme.spacing(2)} 
       paddingTop={0}
       sx={{
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        padding: !isMobile ? 2 : 0
       }}
     >
       <CalendarWrapper>
