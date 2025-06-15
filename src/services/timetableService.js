@@ -14,18 +14,18 @@ export async function getSemesters() {
 
 export async function getStudyCourses(semesterId) {
   if (!semesterId) {
-    throw new Error('Missing semester ID for programs query.')
+    throw new Error('Missing semester ID for courses query.')
   }
 
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/OrgGroupService/getSelectableOrgGroups/${semesterId}`)
-  if (!res.ok) throw new Error('Failed to load study programs.')
+  if (!res.ok) throw new Error('Failed to load study courses.')
 
   return res.json()
 }
 
 export async function getStudyGroups(semesterId, studyCourseId) {
   if (!semesterId || !studyCourseId) {
-    throw new Error('Missing semester or program ID for group query')
+    throw new Error('Missing semester or course ID for group query.')
   }
 
   const res = await fetch(`http://localhost:8010/proxy/splan/rest/PlanningGroupService/getPlanningGroupsForPlanningUnitAndOrgGroup/${semesterId}/${studyCourseId}`)
@@ -35,20 +35,34 @@ export async function getStudyGroups(semesterId, studyCourseId) {
 }
 
 export async function getRooms(locationId) {
-  // Todo: Implement room fetching logic if needed
-  const res = { ok: true, json: () => Promise.resolve([]) } // Mock response for now
+  if (!locationId) {
+    throw new Error('Missing location ID for room query.')
+  }
 
+  const res = await fetch(`http://localhost:8010/proxy/splan/rest/RoomService/getSelectableRooms/${locationId}/null`)
   if (!res.ok) throw new Error('Failed to load rooms.')
+
   return res.json()
 }
 
-export async function getTimetable(semesterId, studyCourseId, studyGroupId) {
-if (!semesterId || !studyCourseId || !studyGroupId) {
-    throw new Error('Missing semester or program ID for timetable query')
+export async function getTimetableForCourses(semesterId, studyGroupId) {
+  if (!semesterId || !studyGroupId) {
+    throw new Error('Missing semester or group ID for courses timetable query.')
   }
 
-  const res = await fetch(`http://localhost:8010/proxy/splan/rest/TimetableService/getForPlanningUnitAndPlanningGroup/${semesterId}/${studyGroupId}/false/${studyCourseId}`)
-  if (!res.ok) throw new Error('Failed to load timetable.')
+  const res = await fetch(`http://localhost:8010/proxy/splan/rest/TimetableService/getForPlanningUnitAndPlanningGroup/${semesterId}/${studyGroupId}/false/-1`)
+  if (!res.ok) throw new Error('Failed to load timetable for courses.')
+
+  return res.json()
+}
+
+export async function getTimetableForRooms(semesterId, roomId) {
+  if (!semesterId || !roomId) {
+    throw new Error('Missing semester or room ID for rooms timetable query.')
+  }
+
+  const res = await fetch(`http://localhost:8010/proxy/splan/rest/TimetableService/getForPlanningUnitAndRoom/${semesterId}/${roomId}/false/-1`)
+  if (!res.ok) throw new Error('Failed to load timetable for rooms.')
 
   return res.json()
 }

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import {
   Box,
   Divider,
@@ -35,11 +35,6 @@ export default function Sidebar() {
   const theme = useTheme()
   const { t } = useTranslation()
   
-  // ==================== STATE ====================
-  
-  // Local state for view mode toggle (course/room)
-  const [viewMode, setViewMode] = React.useState('course')
-  
   // Timetable context state and actions
   const {
     locations,
@@ -51,6 +46,7 @@ export default function Sidebar() {
     selectedLocation,
     setSelectedLocation,
     selectedRoom,
+    selectedViewMode,
     setSelectedRoom,
     selectedSemester,
     setSelectedSemester,
@@ -58,6 +54,7 @@ export default function Sidebar() {
     setSelectedStudyCourse,
     selectedStudyGroup,
     setSelectedStudyGroup,
+    setSelectedViewMode,
     loading,
     error,
   } = useTimetable()
@@ -122,25 +119,12 @@ export default function Sidebar() {
 
   /**
    * Handles view mode toggle between course and room view
-   * Clears selections when switching modes
    * @param {Event} _ - The toggle event (unused)
    * @param {string} newViewMode - The new view mode ('course' or 'room')
    */
   const handleViewModeChange = useCallback((_, newViewMode) => {
-    // Only update if a valid option is selected (prevent deselection)
-    if (newViewMode !== null) {
-      setViewMode(newViewMode)
-      
-      // Clear selections when switching view modes
-      if (newViewMode === 'course') {
-        setSelectedLocation(null)
-        setSelectedRoom(null)
-      } else if (newViewMode === 'room') {
-        setSelectedStudyCourse(null)
-        setSelectedStudyGroup(null)
-      }
-    }
-  }, [setSelectedLocation, setSelectedRoom, setSelectedStudyCourse, setSelectedStudyGroup])
+    setSelectedViewMode(newViewMode)
+  }, [setSelectedViewMode])
 
   /**
    * Print functionality
@@ -260,7 +244,7 @@ export default function Sidebar() {
           fullWidth
           size="small"
           exclusive
-          value={viewMode}
+          value={selectedViewMode}
           onChange={handleViewModeChange}
         >
           <ToggleButton value="course">
@@ -278,7 +262,7 @@ export default function Sidebar() {
       <Divider />
 
       {/* Course View - Study Course and Study Group Selection */}
-      {viewMode === 'course' && (
+      {selectedViewMode === 'course' && (
         <>
           {/* Study Course Selection */}
           <Autocomplete
@@ -312,7 +296,7 @@ export default function Sidebar() {
       )}
 
       {/* Room View - Location and Room Selection */}
-      {viewMode === 'room' && (
+      {selectedViewMode === 'room' && (
         <>
           {/* Location Selection */}
           <Autocomplete

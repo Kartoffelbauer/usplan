@@ -5,7 +5,8 @@ import {
   getStudyCourses,
   getStudyGroups,
   getRooms,
-  getTimetable,
+  getTimetableForCourses,
+  getTimetableForRooms,
 } from '../services/timetableService'
 
 const TimetableContext = createContext()
@@ -31,6 +32,7 @@ export const TimetableProvider = ({ children }) => {
   const [selectedStudyCourse, setSelectedStudyCourse] = useState(null)
   const [selectedStudyGroup, setSelectedStudyGroup] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
+  const [selectedViewMode, setSelectedViewMode] = useState('course') // Course or room view
 
   // Load locations and semesters first
   useEffect(() => {
@@ -102,19 +104,27 @@ export const TimetableProvider = ({ children }) => {
       .finally(() => setLoadingRooms(false))
   }, [selectedLocation])
 
-  // Finally load the timetable
+  // Load the timetable when semester and study group are selected
   useEffect(() => {
-    if (!selectedSemester || !selectedStudyCourse || !selectedStudyGroup) {
+    if (!selectedSemester || !selectedViewMode
+        || (selectedViewMode === 'course' && !selectedStudyGroup)
+        || (selectedViewMode === 'room' && !selectedRoom)) {
       setTimetable(undefined)
       return
     }
 
     setLoadingTimetable(true)
-    getTimetable(selectedSemester.id, selectedStudyCourse.id, selectedStudyGroup.id)
-      .then(setTimetable)
-      .catch(setError)
-      .finally(() => setLoadingTimetable(false))
-  }, [selectedSemester, selectedStudyCourse, selectedStudyGroup])
+    
+    var promise = null
+    if (selectedViewMode === 'course') {
+      promise = getTimetableForCourses(selectedSemester.id, selectedStudyGroup.id)
+    }
+    else {
+      promise = getTimetableForRooms(selectedSemester.id, selectedRoom.id)
+    }
+
+    promise.then(setTimetable).catch(setError).finally(() => setLoadingTimetable(false))
+  }, [selectedSemester, selectedStudyGroup, selectedRoom, selectedViewMode])
 
   return (
     <TimetableContext.Provider
@@ -130,18 +140,20 @@ export const TimetableProvider = ({ children }) => {
         selectedStudyCourse,
         selectedStudyGroup,
         selectedRoom,
+        selectedViewMode,
         setSelectedLocation,
         setSelectedSemester,
         setSelectedStudyCourse,
         setSelectedStudyGroup,
         setSelectedRoom,
+        setSelectedViewMode,
         loading: {
           locations: loadingLocations,
           semesters: loadingSemesters,
           studyCourses: loadingStudyCourses,
           studyGroups: loadingStudyGroups,
           rooms: loadingRooms,
-          timetable: loadingTimetable,
+          loadingTimetable: loadingTimetable,
         },
         error,
       }}
