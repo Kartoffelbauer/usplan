@@ -99,7 +99,12 @@ export const TimetableProvider = ({ children }) => {
 
     setLoadingRooms(true)
     getRooms(selectedLocation.id)
-      .then(setRooms)
+      .then(val => {
+        setRooms(val)
+        if (val.length > 0) {
+          setSelectedRoom(val[0])
+        }
+      })
       .catch(setError)
       .finally(() => setLoadingRooms(false))
   }, [selectedLocation])
