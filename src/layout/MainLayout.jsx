@@ -16,7 +16,9 @@ import {
 import Navbar from './Navbar'
 import TimetableSection from '../components/TimetableSection/TimetableSection'
 import ConfiguratorSection from '../components/ConfiguratorSection'
+import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
+import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 
@@ -138,12 +140,20 @@ export default function MainLayout() {
         >
           <Tab 
             label={t('nav.tabs.timetable', 'Timetable')}
-            icon={<CalendarMonthIcon fontSize='small' />}
+            icon={
+              tabIndex === 0 
+                ? <CalendarMonthIcon fontSize="small" />
+                : <CalendarMonthOutlinedIcon fontSize="small" />
+            }
             iconPosition="start"
           />
           <Tab 
             label={isMobile ? t('nav.tabs.configure.short', 'Configure') : t('nav.tabs.configure.full', 'Configure Timetable')}
-            icon={<EditCalendarIcon fontSize='small' />}
+            icon={
+              tabIndex === 1 
+                ? <EditCalendarIcon fontSize="small" />
+                : <EditCalendarOutlinedIcon fontSize="small" />
+            }
             iconPosition="start"
           />
         </Tabs>
