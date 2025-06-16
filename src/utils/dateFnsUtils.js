@@ -1,4 +1,4 @@
-import { startOfWeek, endOfWeek, addDays, getDay, eachWeekOfInterval } from 'date-fns'
+import { startOfWeek, addDays, getDay, eachWeekOfInterval } from 'date-fns'
 
 /**
  * Get specific weekday in current week

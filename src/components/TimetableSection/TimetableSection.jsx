@@ -19,7 +19,7 @@ import {
   getCurrentWeekday,
   eachNthWeekOfInterval, 
   mapToCurrentWeek,
-} from '../../utils/weekUtils'
+} from '../../utils/dateFnsUtils'
 
 /**
  * TimetableSection component that manages the sidebar and calendar view

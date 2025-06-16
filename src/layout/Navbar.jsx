@@ -116,7 +116,7 @@ export default function Navbar({
         color: theme.palette.text.primary,
       }}
     >
-      <Toolbar disableGutters sx={{ display: 'flex', width: '100%' }}>
+      <Toolbar disableGutters sx={{ display: 'flex', width: '100%', minHeight: '64px !important' }}>
         {/* Left: Hamburger + Title */}
         <Box
           sx={{
@@ -151,7 +151,7 @@ export default function Navbar({
             onClick={handleToday}
             startIcon={<CalendarTodayIcon fontSize="small" />}
             disabled={!navigationState.canGoNext && !navigationState.canGoPrev}
-            sx={{ minWidth: 'auto', borderRadius: '50px' }}
+            sx={{ minWidth: 'auto', borderRadius: '50px', pr: isMobile ? 0 : 1  }}
           >
             {!isMobile && t('nav.today')}
           </Button>
@@ -171,7 +171,23 @@ export default function Navbar({
             disabled={!navigationState.canGoNext && !navigationState.canGoPrev}
             minDate={datePickerInterval.begin}
             maxDate={datePickerInterval.end}
-            slotProps={{ textField: { variant: 'outlined', size: 'small' } }}
+            slotProps={{
+              textField: {
+                variant: 'outlined',
+                size: 'small',
+                sx: {
+                  width: isMobile ? '40px' : 'auto',
+                  height: isMobile ? '40px' : 'auto',
+                  '& .MuiInputAdornment-root': {
+                    margin: 0,
+                    transform: isMobile ? 'translate(-50%, 0)' : undefined,
+                  },
+                },
+                inputProps: {
+                  inputMode: 'none',
+                },
+              },
+            }}
           />
 
           <Button
@@ -190,7 +206,7 @@ export default function Navbar({
             variant="outlined"
             startIcon={<LanguageIcon fontSize="small" />}
             onClick={handleLanguageToggle}
-            sx={{ minWidth: 'auto', borderRadius: '50px' }}
+            sx={{ minWidth: 'auto', borderRadius: '50px', pr: isMobile ? 0 : 1 }}
           >
             {!isMobile && currentLanguageCode}
           </Button>

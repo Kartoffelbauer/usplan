@@ -27,7 +27,7 @@ const createLocalizer = (currentLocale) => dateFnsLocalizer({
   parse,
   startOfWeek: () => startOfWeek(new Date(), { weekStartsOn: 1 }),
   getDay,
-  locales: localeMap,
+  locales: [],
 })
 
 // ==================== UTILITY FUNCTIONS ====================
