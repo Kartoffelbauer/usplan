@@ -13,8 +13,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
-import LanguageIcon from '@mui/icons-material/Language'
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { addDays, subDays, isBefore, isAfter, startOfWeek, endOfWeek } from 'date-fns'
 import { useTimetable } from '../context/TimetableContext'
 
@@ -116,14 +115,14 @@ export default function Navbar({
         color: theme.palette.text.primary,
       }}
     >
-      <Toolbar disableGutters sx={{ display: 'flex', width: '100%', minHeight: '64px !important' }}>
+      <Toolbar disableGutters sx={{ display: 'flex', width: '100%', minHeight: { xs: '46px', md: '64px' } }}>
         {/* Left: Hamburger + Title */}
         <Box
           sx={{
             width: { xs: 'auto', md: '300px' },
             display: 'flex',
             alignItems: 'center',
-            px: 2,
+            pl: 2,
             gap: 1,
           }}
         >
@@ -149,21 +148,15 @@ export default function Navbar({
           <Button
             variant="outlined"
             onClick={handleToday}
-            startIcon={<CalendarTodayIcon fontSize="small" />}
             disabled={!navigationState.canGoNext && !navigationState.canGoPrev}
-            sx={{ minWidth: 'auto', borderRadius: '50px', pr: isMobile ? 0 : 1  }}
+            sx={{ minWidth: 'auto', borderRadius: '50px', mr: 1 }}
           >
-            {!isMobile && t('nav.today')}
+            { t('nav.today') }
           </Button>
 
-          <Button
-            variant="text"
-            onClick={handlePrev}
-            disabled={!navigationState.canGoPrev}
-            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-          >
+          <IconButton onClick={handlePrev} disabled={!navigationState.canGoPrev}>
             <ArrowBackIosIcon fontSize="small" />
-          </Button>
+          </IconButton>
 
           <DatePicker
             value={selectedDate}
@@ -189,37 +182,30 @@ export default function Navbar({
               },
             }}
           />
-
-          <Button
-            variant="text"
-            onClick={handleNext}
-            disabled={!navigationState.canGoNext}
-            sx={{ borderRadius: '50px', minWidth: 40, px: 0 }}
-          >
+          <IconButton onClick={handleNext} disabled={!navigationState.canGoNext}>
             <ArrowForwardIosIcon fontSize="small" />
-          </Button>
+          </IconButton>
         </Box>
 
         {/* Right: Language & Help */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, pr: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
           <Button
-            variant="outlined"
-            startIcon={<LanguageIcon fontSize="small" />}
+            variant="text"
             onClick={handleLanguageToggle}
-            sx={{ minWidth: 'auto', borderRadius: '50px', pr: isMobile ? 0 : 1 }}
+            sx={{ minWidth: 'auto', borderRadius: '50px'}}
           >
-            {!isMobile && currentLanguageCode}
+            { currentLanguageCode }
           </Button>
 
-          <Button
+          <IconButton
+            onClick={handlePrev}
             component="a"
             href="https://www.progotec.de/site/splandok"
             target="_blank"
-            variant="outlined"
-            sx={{ minWidth: 'auto', borderRadius: '50px' }}
+            disabled={!navigationState.canGoPrev}
           >
-            ?
-          </Button>
+            <HelpOutlineIcon fontSize="small" />
+          </IconButton>
         </Box>
       </Toolbar>
     </AppBar>

@@ -190,7 +190,6 @@ export default function MainLayout() {
           <IconButton
             onClick={handleDropdownOpen}
             size="small"
-            sx={{ border: `1px solid ${theme.palette.divider}`, borderRadius: 1 }}
           >
             <ExpandMoreIcon fontSize="small" />
           </IconButton>
@@ -199,7 +198,6 @@ export default function MainLayout() {
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
             onClose={handleDropdownClose}
-            PaperProps={{ sx: { minWidth: 150 } }}
           >
             <MenuItem onClick={(e) => e.stopPropagation()}>
               <FormControlLabel
