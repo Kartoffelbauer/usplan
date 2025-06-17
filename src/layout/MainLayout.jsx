@@ -186,12 +186,12 @@ export default function MainLayout() {
         </Box>
 
         {/* Mobile Dropdown */}
-        <Box sx={{ display: { xs: 'flex', md: 'none' }, px: 2, flexShrink: 0 }}>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, px: isMobile ? 1 : 2, flexShrink: 0 }}>
           <IconButton
             onClick={handleDropdownOpen}
-            size="small"
+            size="medium"
           >
-            <ExpandMoreIcon fontSize="small" />
+            <ExpandMoreIcon fontSize="medium" />
           </IconButton>
           
           <Menu

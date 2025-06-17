@@ -122,7 +122,7 @@ export default function Navbar({
             width: { xs: 'auto', md: '300px' },
             display: 'flex',
             alignItems: 'center',
-            pl: 2,
+            pl: isMobile ? 1 : 2,
             gap: 1,
           }}
         >
@@ -188,7 +188,7 @@ export default function Navbar({
         </Box>
 
         {/* Right: Language & Help */}
-        <Box sx={{ display: 'flex', alignItems: 'center', pr: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', pr: isMobile ? 1 : 2 }}>
           <Button
             variant="text"
             onClick={handleLanguageToggle}
