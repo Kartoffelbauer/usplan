@@ -29,6 +29,16 @@
         "export": {
             "print": "Drucken",
             "linkCopied": "Link kopiert!"
+        },
+        "colorScheme": {
+            "title": "Farbschema",
+            "weekly": "Wöchentlich",
+            "everyTwoWeeks": "Vierzehntäglich",
+            "everyThreeWeeks": "Alle 3 Wochen",
+            "everyFourWeeks": "Alle 4 Wochen",
+            "specialEvent": "Einzeltermin/e",
+            "holiday": "Feiertag / Vorlesungsfrei",
+            "exam": "Prüfung"
         }
     },
     "restError": {

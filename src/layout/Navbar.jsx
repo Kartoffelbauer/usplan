@@ -15,6 +15,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { addDays, subDays, isBefore, isAfter, startOfWeek, endOfWeek } from 'date-fns'
+import { appName } from '../config'
 import { useTimetable } from '../context/TimetableContext'
 
 export default function Navbar({
@@ -130,7 +131,7 @@ export default function Navbar({
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap sx={{ display: { xs: 'none', md: 'block' } }}>
-            {t('nav.appTitle')}
+            { appName }
           </Typography>
         </Box>
 

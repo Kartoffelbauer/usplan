@@ -166,40 +166,27 @@ export default function TimetableSection({
         {!isMobile && (
           <Box
             sx={{
-              width: sidebarOpen ? 300 : 0,
               flexShrink: 0,
-              overflow: 'hidden',
+              width: 300,
+              maxHeight: '100vh',
+              height: '100%',
+              overflowY: 'auto',
+              marginLeft: sidebarOpen ? 0 : '-300px',
+              p: 2,
+              pt: 4,
+              pr: 0,
               backgroundColor: theme.palette.background.secondary,
-              transition: theme.transitions.create(['width'], {
-                easing: theme.transitions.easing.sharp,
-                duration: sidebarOpen 
-                  ? theme.transitions.duration.enteringScreen 
-                  : theme.transitions.duration.leavingScreen,
+              transition: theme.transitions.create(['margin-left'], {
+              easing: theme.transitions.easing.sharp,
+              duration: sidebarOpen
+                ? theme.transitions.duration.enteringScreen
+                : theme.transitions.duration.leavingScreen,
               }),
             }}
           >
-            <Box
-              sx={{
-                width: 300,
-                height: '100%',
-                p: 2,
-                pt: 4,
-                pr: 0,
-                transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
-                transition: theme.transitions.create(['transform'], {
-                  easing: theme.transitions.easing.sharp,
-                  duration: sidebarOpen 
-                    ? theme.transitions.duration.enteringScreen 
-                    : theme.transitions.duration.leavingScreen,
-                }),
-              }}
-            >
-              <Sidebar />
-            </Box>
+            <Sidebar />
           </Box>
         )}
-
-        {/* Mobile Sidebar Drawer with Built-in Animation */}
         {isMobile && (
           <Drawer
             open={sidebarOpen}

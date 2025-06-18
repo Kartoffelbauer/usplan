@@ -22,6 +22,8 @@ import RoomIcon from '@mui/icons-material/Room'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import PrintIcon from '@mui/icons-material/Print'
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { colorSchemeLegend } from '../../config'
+import { rgbaColorToTheme } from '../../utils/themeUtils'
 import { useTimetable } from '../../context/TimetableContext'
 import { printTimetable, icalUrlForTimetable, copyToClipboard } from '../../utils/exportUtils'
 
@@ -63,6 +65,16 @@ export default function Sidebar() {
     loading,
     error,
   } = useTimetable()
+
+  const colorSchemes = [
+    { color: rgbaColorToTheme('rgb(180, 238, 180)'), labelKey: 'weekly', defaultLabel: 'Weekly' },
+    { color: rgbaColorToTheme('rgb(198, 226, 255)'), labelKey: 'everyTwoWeeks', defaultLabel: 'Every 2 weeks' },
+    { color: rgbaColorToTheme('rgb(245, 198, 198)'), labelKey: 'everyThreeWeeks', defaultLabel: 'Every 3 weeks' },
+    { color: rgbaColorToTheme('rgb(244, 233, 234)'), labelKey: 'everyFourWeeks', defaultLabel: 'Every 4 weeks' },
+    { color: rgbaColorToTheme('rgb(255, 255, 149)'), labelKey: 'specialEvent', defaultLabel: 'Special Event' },
+    { color: rgbaColorToTheme('rgb(248, 208, 139)'), labelKey: 'holiday', defaultLabel: 'Holiday' },
+    { color: rgbaColorToTheme('rgb(255, 107, 107)'), labelKey: 'exam', defaultLabel: 'Exam' },
+  ]
 
   // ==================== EVENT HANDLERS ====================
 
@@ -234,13 +246,14 @@ export default function Sidebar() {
 
   return (
     <Box
-      width="100%"
       sx={{
+        width: '100%',
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
         gap: 2,
         boxSizing: 'border-box',
+
       }}
     >
       {/* Semester Selection */}
@@ -391,6 +404,41 @@ export default function Sidebar() {
             {t('sidebar.export.linkCopied', 'Link copied!')}
           </Alert>
         </Fade>
+      </Box>
+
+      { /* Section Divider */}
+      <Box sx={{ flexGrow: 1 }} />
+
+      { /* Color Scheme Legend */ }
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 0.5,
+          border: 1,
+          borderRadius: 1,
+          borderColor: theme.palette.divider,
+          p: 2,
+        }}
+      >
+        <Typography variant="subtitle2" color="textSecondary" gutterBottom>
+          {t('sidebar.colorScheme.title', 'Color Scheme')}
+        </Typography>
+        {colorSchemeLegend.map((scheme, index) => (
+          <Box key={index} display="flex" alignItems="center" gap={1}>
+            <Box
+              width="16px"
+              height="16px"
+              sx={{
+                borderRadius: '50%',
+                backgroundColor: rgbaColorToTheme(scheme.color),
+              }}
+            />
+            <Typography variant="body2" color="textSecondary">
+              {t(`sidebar.colorScheme.${scheme.labelKey}`, scheme.defaultLabel)}
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   )

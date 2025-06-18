@@ -1,6 +1,5 @@
 {
     "nav": {
-        "appTitle": "Ultimate StarPlan",
         "today": "Today",
         "tabs": {
             "timetable": "Timetable",
@@ -33,6 +32,16 @@
             "ical": "ICAL",
             "print": "Print",
             "linkCopied": "Link copied!"
+        },
+        "colorScheme": {
+            "title": "Color Scheme",
+            "weekly": "Weekly",
+            "everyTwoWeeks": "Every 2 weeks",
+            "everyThreeWeeks": "Every 3 weeks",
+            "everyFourWeeks": "Every 4 weeks",
+            "specialEvent": "Special Event",
+            "holiday": "Holiday",
+            "exam": "Exam"
         }
     },
     "restError": {
