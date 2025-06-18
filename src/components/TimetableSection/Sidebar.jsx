@@ -66,16 +66,6 @@ export default function Sidebar() {
     error,
   } = useTimetable()
 
-  const colorSchemes = [
-    { color: rgbaColorToTheme('rgb(180, 238, 180)'), labelKey: 'weekly', defaultLabel: 'Weekly' },
-    { color: rgbaColorToTheme('rgb(198, 226, 255)'), labelKey: 'everyTwoWeeks', defaultLabel: 'Every 2 weeks' },
-    { color: rgbaColorToTheme('rgb(245, 198, 198)'), labelKey: 'everyThreeWeeks', defaultLabel: 'Every 3 weeks' },
-    { color: rgbaColorToTheme('rgb(244, 233, 234)'), labelKey: 'everyFourWeeks', defaultLabel: 'Every 4 weeks' },
-    { color: rgbaColorToTheme('rgb(255, 255, 149)'), labelKey: 'specialEvent', defaultLabel: 'Special Event' },
-    { color: rgbaColorToTheme('rgb(248, 208, 139)'), labelKey: 'holiday', defaultLabel: 'Holiday' },
-    { color: rgbaColorToTheme('rgb(255, 107, 107)'), labelKey: 'exam', defaultLabel: 'Exam' },
-  ]
-
   // ==================== EVENT HANDLERS ====================
 
   /**
@@ -253,7 +243,8 @@ export default function Sidebar() {
         flexDirection: 'column',
         gap: 2,
         boxSizing: 'border-box',
-
+        p: 2,
+        pt: 4,
       }}
     >
       {/* Semester Selection */}

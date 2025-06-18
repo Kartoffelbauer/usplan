@@ -16,6 +16,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { addDays, subDays, isBefore, isAfter, startOfWeek, endOfWeek } from 'date-fns'
 import { appName } from '../config'
+import { useCheckMobile } from '../utils/themeUtils'
 import { useTimetable } from '../context/TimetableContext'
 
 export default function Navbar({
@@ -23,10 +24,10 @@ export default function Navbar({
   selectedDate,
   onDateChange,
   showDates,
-  isMobile,
 }) {
   const theme = useTheme()
   const { i18n, t } = useTranslation()
+  const isMobile = useCheckMobile()
   const { selectedSemester } = useTimetable()
 
   // ==================== COMPUTED VALUES ====================

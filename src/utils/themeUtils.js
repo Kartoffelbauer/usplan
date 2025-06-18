@@ -30,12 +30,13 @@ export function rgbaColorToTheme(lightColor, darkenFactor = 0.5) {
 }
 
 /**
- * Checks if the application is running on a mobile device.
+ * Custom hook to check if the application is running on a mobile device.
  * Uses the theme's breakpoints to determine if the screen width is below 'md'.
+ * Automatically updates when the screen size changes.
  *
  * @returns {boolean} - True if the application is running on a mobile device, false otherwise.
  */
-export function isMobile() {
+export function useCheckMobile() {
   const theme = useTheme()
   return useMediaQuery(theme.breakpoints.down('md'))
 }

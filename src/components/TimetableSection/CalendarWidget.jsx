@@ -7,7 +7,7 @@ import de from 'date-fns/locale/de'
 import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
-import { rgbaColorToTheme, isMobile } from '../../utils/themeUtils'
+import { rgbaColorToTheme, useCheckMobile } from '../../utils/themeUtils'
 import CalendarWrapper from '../../layout/CalendarWrapper'
 
 const localeMap = { en: enUS, de }
@@ -22,14 +22,14 @@ const createLocalizer = (currentLocale) => dateFnsLocalizer({
 
 export default function CalendarWidget({
   selectedDate,
-  onDateChange,
   view,
-  onView,
+  onDateChange,
   events = [],
   showDates = true,
 }) {
   const { timetable } = useTimetable()
   const { i18n } = useTranslation()
+  const isMobile = useCheckMobile()
 
   const currentLanguage = useMemo(() => {
     const lang = i18n.language.split('-')[0]
@@ -48,12 +48,7 @@ export default function CalendarWidget({
   const minTime = useMemo(() => getTime(timetable?.beginTimeMinutes, 480), [timetable?.beginTimeMinutes, getTime])
   const maxTime = useMemo(() => getTime(timetable?.endTimeMinutes, 1080), [timetable?.endTimeMinutes, getTime])
 
-  const currentView = isMobile() ? 'day' : view
-  const availableViews = isMobile() ? ['day'] : ['week']
-  const defaultView = isMobile() ? 'day' : 'week'
-
   const handleNavigate = useCallback((newDate) => onDateChange(newDate), [onDateChange])
-  const handleViewChange = useCallback((newView) => onView(newView), [onView])
 
   const getEventProps = useCallback((event) => ({
     style: {
@@ -62,13 +57,9 @@ export default function CalendarWidget({
   }))
 
   return (
-    <Box
-      flexGrow={1}
-      overflow="hidden"
-      sx={{ display: 'flex', flexDirection: 'column', height: '100%', padding: isMobile() ? 0 : 2 }}
-    >
+    <Box width='100%' height='100%' overflow='hidden'>
       <CalendarWrapper>
-        {currentView === 'day' && (
+        {view === 'day' && (
           <Box sx={{ paddingBottom: 1, display: 'flex', justifyContent: 'center' }}>
             <Typography variant='body1'>
               {format(selectedDate, calendarFormats.dayFormat, { locale: localeMap[currentLanguage] })}
@@ -85,11 +76,10 @@ export default function CalendarWidget({
           min={minTime}
           max={maxTime}
           date={selectedDate}
-          view={currentView}
-          defaultView={defaultView}
-          views={availableViews}
+          view={view}
+          defaultView={view}
+          views={['day', 'week']}
           onNavigate={handleNavigate}
-          onView={handleViewChange}
           formats={calendarFormats}
           toolbar={false}
           style={{ width: '100%', height: '100%' }}

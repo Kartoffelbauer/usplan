@@ -3,7 +3,6 @@ import { useEffect, useState, useCallback } from 'react'
 import { 
   Box, 
   Drawer, 
-  useMediaQuery, 
   useTheme, 
   Dialog,
   DialogTitle,
@@ -12,14 +11,11 @@ import {
 } from '@mui/material'
 import { addMinutes, parseISO } from 'date-fns'
 import ErrorIcon from '@mui/icons-material/Error'
+import { useCheckMobile } from '../../utils/themeUtils'
 import { useTimetable } from '../../context/TimetableContext'
+import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../utils/dateFnsUtils'
 import Sidebar from './Sidebar'
 import CalendarWidget from './CalendarWidget'
-import {
-  getCurrentWeekday,
-  eachNthWeekOfInterval, 
-  mapToCurrentWeek,
-} from '../../utils/dateFnsUtils'
 
 /**
  * TimetableSection component that manages the sidebar and calendar view
@@ -28,8 +24,6 @@ import {
  * @param {Object} props - Component props
  * @param {Date} props.selectedDate - Currently selected date
  * @param {Function} props.onDateChange - Date change handler
- * @param {string} props.view - Current calendar view
- * @param {Function} props.onView - View change handler
  * @param {boolean} props.sidebarOpen - Sidebar open state
  * @param {Function} props.onToggleSidebar - Sidebar toggle handler
  * @param {boolean} props.showDates - Whether to show dates in calendar
@@ -39,16 +33,14 @@ import {
 export default function TimetableSection({
   selectedDate,
   onDateChange,
-  view,
-  onView,
   sidebarOpen,
   onToggleSidebar,
   showDates,
   showSpecials,
 }) {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
+  const isMobile = useCheckMobile()
+  const theme = useTheme()
   const {
     selectedLocation,
     selectedSemester,
@@ -71,10 +63,6 @@ export default function TimetableSection({
   const handleCalendarDateChange = useCallback((date) => {
     onDateChange(date)
   }, [onDateChange])
-
-  const handleCalendarViewChange = useCallback((newView) => {
-    onView(newView)
-  }, [onView])
 
   // Helper function to determine week interval
   const getWeekInterval = useCallback((eventType) => {
@@ -172,9 +160,6 @@ export default function TimetableSection({
               height: '100%',
               overflowY: 'auto',
               marginLeft: sidebarOpen ? 0 : '-300px',
-              p: 2,
-              pt: 4,
-              pr: 0,
               backgroundColor: theme.palette.background.secondary,
               transition: theme.transitions.create(['margin-left'], {
               easing: theme.transitions.easing.sharp,
@@ -198,8 +183,6 @@ export default function TimetableSection({
                 width: 320,
                 backgroundColor: theme.palette.background.secondary,
                 border: 'none',
-                p: 2,
-                pt: 4,
               },
             }}
             transitionDuration={{
@@ -264,14 +247,24 @@ export default function TimetableSection({
             )}
           </Box>
         </Box>
+        <Box
+          sx={{
+              width: '100%',
+              height: '100%',
+              overflow: 'hidden',
+              p: isMobile ? 0 : 2,
+              pl: sidebarOpen || isMobile ? 0 : 2,
+              borderRadius: { xs: 0, md: 4 },
+            }}
+          >
           <CalendarWidget
             selectedDate={selectedDate}
+            view={isMobile ? 'day' : 'week'}
             onDateChange={handleCalendarDateChange}
-            view={view}
-            onView={handleCalendarViewChange}
             events={events}
             showDates={showDates}
           />
+        </Box>
         </Box>
       </Box>
 

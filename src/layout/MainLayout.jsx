@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect } from 'react'
+import { useCheckMobile } from '../utils/themeUtils'
 import {
   Box,
-  useMediaQuery,
   useTheme,
   Tabs,
   Tab,
@@ -37,9 +37,9 @@ function TabPanel({ children, value, index }) {
  * MainLayout component that provides the overall application structure
  */
 export default function MainLayout() {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { t } = useTranslation()
+  const isMobile = useCheckMobile()
+  const theme = useTheme()
 
   // ==================== GLOBAL STATE ====================
   
@@ -69,7 +69,6 @@ export default function MainLayout() {
 
   const handleToggleSidebar = () => setSidebarOpen((prevOpen) => !prevOpen)
   const handleTabChange = (_, newTabIndex) => setTabIndex(newTabIndex)
-  const handleViewChange = (newView) => setView(newView)
 
   /**
    * Handles date selection from various components
@@ -110,9 +109,7 @@ export default function MainLayout() {
         onMenuClick={handleToggleSidebar}
         selectedDate={selectedDate}
         onDateChange={handleDateChange}
-        view={view}
         showDates={showDates}
-        isMobile={isMobile}
       />
 
       {/* Tab Navigation with Checkboxes */}
@@ -235,8 +232,6 @@ export default function MainLayout() {
           <TimetableSection
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
-            view={view}
-            onView={handleViewChange}
             sidebarOpen={sidebarOpen}
             onToggleSidebar={handleToggleSidebar}
             showDates={showDates}
