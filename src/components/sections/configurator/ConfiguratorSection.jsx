@@ -11,11 +11,11 @@ import {
 } from '@mui/material'
 import { addMinutes, parseISO } from 'date-fns'
 import ErrorIcon from '@mui/icons-material/Error'
-import { useCheckMobile } from '../../utils/themeUtils'
-import { useTimetable } from '../../context/TimetableContext'
-import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../utils/dateFnsUtils'
+import { useCheckMobile } from '../../../utils/themeUtils'
+import { useTimetable } from '../../../context/TimetableContext'
+import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../utils/dateFnsUtils'
 import Sidebar from './Sidebar'
-import CalendarWidget from './CalendarWidget'
+import CalendarWidget from '../../widgets/CalendarWidget'
 
 /**
  * TimetableSection component that manages the sidebar and calendar view
@@ -47,7 +47,7 @@ export default function TimetableSection({
     selectedStudyCourse,
     selectedStudyGroup,
     selectedRoom,
-    selectedViewMode,
+    selectedTimetable,
     timetable,
     error
   } = useTimetable()
@@ -224,7 +224,7 @@ export default function TimetableSection({
               <strong>{t('sidebar.semester', 'Semester')}:</strong> {selectedSemester?.name || 'N/A'}
             </Typography>
             {/* Course View */}
-            {selectedViewMode === 'course' && (
+            {selectedTimetable === 'course' && (
               <>
                 <Typography variant="body1">
                   <strong>{t('sidebar.selection.course.studyCourse', 'Study Course')}:</strong> {selectedStudyCourse?.name || 'N/A'}
@@ -235,7 +235,7 @@ export default function TimetableSection({
               </>
             )}
             {/* Room View */}
-            {selectedViewMode === 'room' && (
+            {selectedTimetable === 'room' && (
               <>
                 <Typography variant="body1">
                   <strong>{t('sidebar.selection.room.location', 'Room')}:</strong> {selectedLocation?.shortName || 'N/A'}

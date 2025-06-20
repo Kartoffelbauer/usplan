@@ -68,3 +68,14 @@ export async function getTimetableForRooms(semesterId, roomId) {
 
   return res.json()
 }
+
+export async function getTimetablesForLectures(semesterId, lectures) {
+  if (!semesterId || !lectures || !Array.isArray(lectures) || lectures.length === 0) {
+    throw new Error('Missing semester or lectures for lectures timetable query.')
+  }
+
+  const res = await fetch(`${restEndpoint}/splan/rest/TimetableService/getForPlanningUnitAndRoom/${semesterId}/${lectures.join(',')}/false/-1/false`)
+  if (!res.ok) throw new Error('Failed to load timetable for lectures.')
+
+  return res.json()
+}

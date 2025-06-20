@@ -7,6 +7,7 @@ import {
   getRooms,
   getTimetableForCourses,
   getTimetableForRooms,
+  getTimetablesForLectures,
 } from '../services/timetableService'
 
 export const useTimetableData = () => {
@@ -15,6 +16,7 @@ export const useTimetableData = () => {
   const [studyCourses, setStudyCourses] = useState([])
   const [studyGroups, setStudyGroups] = useState([])
   const [rooms, setRooms] = useState([])
+  const [selectedLectures, setSelectedLectures] = useState([])
   const [timetable, setTimetable] = useState(undefined)
 
   const [loadingLocations, setLoadingLocations] = useState(false)
@@ -31,7 +33,7 @@ export const useTimetableData = () => {
   const [selectedStudyCourse, setSelectedStudyCourse] = useState(null)
   const [selectedStudyGroup, setSelectedStudyGroup] = useState(null)
   const [selectedRoom, setSelectedRoom] = useState(null)
-  const [selectedViewMode, setSelectedViewMode] = useState('course')
+  const [selectedTimetable, setSelectedTimetable] = useState('course')
 
   // Load initial data
   useEffect(() => {
@@ -111,9 +113,10 @@ export const useTimetableData = () => {
   // Load timetable
   useEffect(() => {
     if (
-      !selectedSemester || !selectedViewMode ||
-      (selectedViewMode === 'course' && !selectedStudyGroup) ||
-      (selectedViewMode === 'room' && !selectedRoom)
+      !selectedSemester || !selectedTimetable ||
+      (selectedTimetable === 'course' && !selectedStudyGroup) ||
+      (selectedTimetable === 'room' && !selectedRoom) ||
+      (selectedTimetable === 'config' && !selectedLectures)
     ) {
       setTimetable(undefined)
       return
@@ -121,15 +124,20 @@ export const useTimetableData = () => {
 
     setLoadingTimetable(true)
 
-    const fetchFn = selectedViewMode === 'course'
-      ? () => getTimetableForCourses(selectedSemester.id, selectedStudyGroup.id)
-      : () => getTimetableForRooms(selectedSemester.id, selectedRoom.id)
+    let fetchFn;
+    if (selectedTimetable === 'course') {
+      fetchFn = () => getTimetableForCourses(selectedSemester.id, selectedStudyGroup.id);
+    } else if (selectedTimetable === 'room') {
+      fetchFn = () => getTimetableForRooms(selectedSemester.id, selectedRoom.id);
+    } else if (selectedTimetable === 'config') {
+      fetchFn = () => getTimetablesForLectures(selectedSemester.id, selectedLectures);
+    }
 
     fetchFn()
       .then(setTimetable)
       .catch(setError)
       .finally(() => setLoadingTimetable(false))
-  }, [selectedSemester, selectedStudyGroup, selectedRoom, selectedViewMode])
+  }, [selectedSemester, selectedStudyGroup, selectedRoom, selectedLectures, selectedTimetable])
 
   return {
     locations,
@@ -143,13 +151,15 @@ export const useTimetableData = () => {
     selectedStudyCourse,
     selectedStudyGroup,
     selectedRoom,
-    selectedViewMode,
+    selectedLectures,
+    selectedTimetable,
     setSelectedLocation,
     setSelectedSemester,
     setSelectedStudyCourse,
     setSelectedStudyGroup,
     setSelectedRoom,
-    setSelectedViewMode,
+    setSelectedLectures,
+    setSelectedTimetable,
     loading: {
       locations: loadingLocations,
       semesters: loadingSemesters,

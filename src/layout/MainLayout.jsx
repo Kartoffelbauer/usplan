@@ -14,8 +14,8 @@ import {
   MenuItem,
 } from '@mui/material'
 import Navbar from './Navbar'
-import TimetableSection from '../components/TimetableSection/TimetableSection'
-import ConfiguratorSection from '../components/ConfiguratorSection'
+import TimetableSection from '../components/sections/timetable/TimetableSection'
+import ConfiguratorSection from '../components/sections/configurator/ConfiguratorSection'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined'
@@ -239,7 +239,14 @@ export default function MainLayout() {
         </TabPanel>
 
         <TabPanel value={activeTabIndex} index={1}>
-          <ConfiguratorSection />
+          <ConfiguratorSection
+            selectedDate={selectedDate}
+            onDateChange={handleDateChange}
+            sidebarOpen={sidebarOpen}
+            onToggleSidebar={handleToggleSidebar}
+            showDates={showDates}
+            showSpecials={selectedOptions.includes('specials')}
+          />
         </TabPanel>
       </Box>
     </Box>
