@@ -44,11 +44,10 @@ export default function MainLayout() {
   // ==================== GLOBAL STATE ====================
   
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [tabIndex, setTabIndex] = useState(0)
+  const [activeTabIndex, setActiveTabIndex] = useState(0)
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [view, setView] = useState('week')
   const [selectedOptions, setSelectedOptions] = useState(['date', 'specials'])
-  const [anchorEl, setAnchorEl] = useState(null)
+  const [dropdownAnchor, setDropdownAnchor] = useState(null)
 
   // ==================== COMPUTED VALUES ====================
 
@@ -68,7 +67,7 @@ export default function MainLayout() {
   // ==================== EVENT HANDLERS ====================
 
   const handleToggleSidebar = () => setSidebarOpen((prevOpen) => !prevOpen)
-  const handleTabChange = (_, newTabIndex) => setTabIndex(newTabIndex)
+  const handleTabChange = (_, newTabIndex) => setActiveTabIndex(newTabIndex)
 
   /**
    * Handles date selection from various components
@@ -91,8 +90,8 @@ export default function MainLayout() {
     )
   }, [])
 
-  const handleDropdownOpen = (event) => setAnchorEl(event.currentTarget)
-  const handleDropdownClose = () => setAnchorEl(null)
+  const handleDropdownOpen = (event) => setDropdownAnchor(event.currentTarget)
+  const handleDropdownClose = () => setDropdownAnchor(null)
 
   // ==================== RENDER ====================
 
@@ -121,7 +120,7 @@ export default function MainLayout() {
         }}
       >
         <Tabs
-          value={tabIndex}
+          value={activeTabIndex}
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
@@ -138,7 +137,7 @@ export default function MainLayout() {
           <Tab 
             label={t('nav.tabs.timetable', 'Timetable')}
             icon={
-              tabIndex === 0 
+              activeTabIndex === 0 
                 ? <CalendarMonthIcon fontSize="small" />
                 : <CalendarMonthOutlinedIcon fontSize="small" />
             }
@@ -147,7 +146,7 @@ export default function MainLayout() {
           <Tab 
             label={isMobile ? t('nav.tabs.configure.short', 'Configure') : t('nav.tabs.configure.full', 'Configure Timetable')}
             icon={
-              tabIndex === 1 
+              activeTabIndex === 1 
                 ? <EditCalendarIcon fontSize="small" />
                 : <EditCalendarOutlinedIcon fontSize="small" />
             }
@@ -192,8 +191,8 @@ export default function MainLayout() {
           </IconButton>
           
           <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
+            anchorEl={dropdownAnchor}
+            open={Boolean(dropdownAnchor)}
             onClose={handleDropdownClose}
           >
             <MenuItem onClick={(e) => e.stopPropagation()}>
@@ -228,7 +227,7 @@ export default function MainLayout() {
 
       {/* Main Content */}
       <Box display="flex" flexGrow={1} width="100%" overflow="hidden">
-        <TabPanel value={tabIndex} index={0}>
+        <TabPanel value={activeTabIndex} index={0}>
           <TimetableSection
             selectedDate={selectedDate}
             onDateChange={handleDateChange}
@@ -239,7 +238,7 @@ export default function MainLayout() {
           />
         </TabPanel>
 
-        <TabPanel value={tabIndex} index={1}>
+        <TabPanel value={activeTabIndex} index={1}>
           <ConfiguratorSection />
         </TabPanel>
       </Box>
