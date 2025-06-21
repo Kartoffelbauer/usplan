@@ -32,8 +32,8 @@ export default function TimetableSection({
   showDates,
   showSpecials,
 }) {
-  const isMobile = useCheckMobile()
   const theme = useTheme()
+  const isMobile = useCheckMobile()
   const {
     selectedSemester,
     timetable,

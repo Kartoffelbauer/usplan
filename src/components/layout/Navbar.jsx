@@ -25,8 +25,8 @@ export default function Navbar({
   onDateChange,
   showDates,
 }) {
-  const theme = useTheme()
   const { i18n, t } = useTranslation()
+  const theme = useTheme()
   const isMobile = useCheckMobile()
   const { selectedSemester } = useTimetable()
 
