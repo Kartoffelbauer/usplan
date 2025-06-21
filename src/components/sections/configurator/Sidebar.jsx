@@ -1,5 +1,6 @@
-import { Box, Divider } from '@mui/material'
+import { Divider } from '@mui/material'
 import Spacer from '../../ui/Spacer'
+import SidebarWrapper from '../../layout/SidebarWrapper';
 import SemesterSelectWidget from '../../widgets/SemesterSelectWidget';
 import LectureSelectorWidget from '../../widgets/LectureSelectorWidget';
 import ExportTimetableWidget from '../../widgets/ExportTimetableWidget';
@@ -8,22 +9,13 @@ import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
 /**
  * Sidebar component that provides controls for timetable configuration
  * 
+ * @param {boolean} sidebarOpen - Sidebar open state
+ * @param {Function} onToggleSidebar - Sidebar toggle handler
  * @returns {JSX.Element} The rendered sidebar component
  */
-export default function Sidebar() {
+export default function Sidebar(sidebarOpen, onToggleSidebar,) {
   return (
-    <Box
-      sx={{
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        boxSizing: 'border-box',
-        p: 2,
-        pt: 4,
-      }}
-    >
+    <SidebarWrapper sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar}>
       {/* Semester Selection */}
       <SemesterSelectWidget />
 
@@ -41,6 +33,6 @@ export default function Sidebar() {
 
       { /* Color Scheme Legend */ }
       <ColorSchemeLegendWidget />
-    </Box>
+    </SidebarWrapper>
   )
 }

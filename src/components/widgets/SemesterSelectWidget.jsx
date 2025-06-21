@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import {
   FormControl,
   InputLabel,
@@ -10,8 +10,9 @@ import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 
 /**
- * Semester selection widget (standalone)
- * Uses timetable context directly, no props required
+ * SemesterSelectWidget component that allows users to select a semester
+ * from a dropdown list. It updates the selected semester and resets
+ * related selections (study course and group) when a new semester is chosen.
  */
 export default function SemesterSelectWidget() {
   const theme = useTheme()

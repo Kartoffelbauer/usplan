@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useCallback } from 'react'
 import { 
   Box, 
-  Drawer, 
   useTheme, 
   Dialog,
   DialogTitle,
@@ -58,6 +57,7 @@ export default function TimetableSection({
   // Event handlers
   const handleSidebarClose = useCallback(() => {
     onToggleSidebar()
+    console.log('Sidebar closed')
   }, [onToggleSidebar])
 
   const handleCalendarDateChange = useCallback((date) => {
@@ -150,49 +150,8 @@ export default function TimetableSection({
         height="100%"
         backgroundColor={theme.palette.background.secondary}
       >
-        {/* Desktop Sidebar with Animation */}
-        {!isMobile && (
-          <Box
-            sx={{
-              flexShrink: 0,
-              width: 300,
-              maxHeight: '100vh',
-              height: '100%',
-              overflowY: 'auto',
-              marginLeft: sidebarOpen ? 0 : '-300px',
-              backgroundColor: theme.palette.background.secondary,
-              transition: theme.transitions.create(['margin-left'], {
-              easing: theme.transitions.easing.sharp,
-              duration: sidebarOpen
-                ? theme.transitions.duration.enteringScreen
-                : theme.transitions.duration.leavingScreen,
-              }),
-            }}
-          >
-            <Sidebar />
-          </Box>
-        )}
-        {isMobile && (
-          <Drawer
-            open={sidebarOpen}
-            onClose={handleSidebarClose}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': {
-                width: 320,
-                backgroundColor: theme.palette.background.secondary,
-                border: 'none',
-              },
-            }}
-            transitionDuration={{
-              enter: theme.transitions.duration.enteringScreen,
-              exit: theme.transitions.duration.leavingScreen,
-            }}
-          >
-            <Sidebar />
-          </Drawer>
-        )}
+        {/* Sidebar for navigation */}
+        <Sidebar sidebarOpen={sidebarOpen} onToggleSidebar={handleSidebarClose} />
 
         {/* Calendar View with Smooth Margin Transition */}
         <Box

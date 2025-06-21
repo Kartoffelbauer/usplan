@@ -7,11 +7,11 @@ export default function CalendarWrapper({ children }) {
   return (
     <Box
       sx={{
+        height: '100%',
         backgroundColor: theme.palette.background.paper,
         color: theme.palette.text.primary,
         borderRadius: { xs: 0, md: 4 },
         p: 2,
-        height: '100%',
         transition: 'all 0.3s ease-in-out',
 
         // Apply only to non-print media

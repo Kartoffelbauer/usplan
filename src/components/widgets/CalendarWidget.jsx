@@ -7,7 +7,7 @@ import de from 'date-fns/locale/de'
 import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
-import { rgbaColorToTheme, useCheckMobile } from '../../utils/themeUtils'
+import { rgbaColorToTheme } from '../../utils/themeUtils'
 import CalendarWrapper from '../layout/CalendarWrapper'
 
 const localeMap = { en: enUS, de }
@@ -56,35 +56,33 @@ export default function CalendarWidget({
   }))
 
   return (
-    <Box width='100%' height='100%' overflow='hidden'>
-      <CalendarWrapper>
-        {view === 'day' && (
-          <Box sx={{ paddingBottom: 1, display: 'flex', justifyContent: 'center' }}>
-            <Typography variant='body1'>
-              {format(selectedDate, calendarFormats.dayFormat, { locale: localeMap[currentLanguage] })}
-            </Typography>
-          </Box>
-        )}
-        <Calendar
-          key={`calendar-${currentLanguage}-${showDates}`}
-          localizer={localizer}
-          culture={currentLanguage}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          min={minTime}
-          max={maxTime}
-          date={selectedDate}
-          view={view}
-          defaultView={view}
-          views={['day', 'week']}
-          onNavigate={handleNavigate}
-          formats={calendarFormats}
-          toolbar={false}
-          style={{ width: '100%', height: '100%' }}
-          eventPropGetter={getEventProps}
-        />
-      </CalendarWrapper>
-    </Box>
+    <CalendarWrapper>
+      {view === 'day' && (
+        <Box sx={{ paddingBottom: 1, display: 'flex', justifyContent: 'center' }}>
+          <Typography variant='body1'>
+            {format(selectedDate, calendarFormats.dayFormat, { locale: localeMap[currentLanguage] })}
+          </Typography>
+        </Box>
+      )}
+      <Calendar
+        key={`calendar-${currentLanguage}-${showDates}`}
+        localizer={localizer}
+        culture={currentLanguage}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        min={minTime}
+        max={maxTime}
+        date={selectedDate}
+        view={view}
+        defaultView={view}
+        views={['day', 'week']}
+        onNavigate={handleNavigate}
+        formats={calendarFormats}
+        toolbar={false}
+        style={{ width: '100%', height: '100%' }}
+        eventPropGetter={getEventProps}
+      />
+    </CalendarWrapper>
   )
 }
