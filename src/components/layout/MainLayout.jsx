@@ -112,7 +112,8 @@ export default function MainLayout() {
       />
 
       {/* Tab Navigation with Checkboxes */}
-      <Box 
+      <Box
+        className="no-print"
         sx={{ 
           display: 'flex', 
           alignItems: 'center', 

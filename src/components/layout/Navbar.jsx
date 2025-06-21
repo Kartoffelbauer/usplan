@@ -110,6 +110,7 @@ export default function Navbar({
 
   return (
     <AppBar
+      className="no-print"
       position="static"
       elevation={0}
       sx={{

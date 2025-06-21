@@ -21,6 +21,7 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
       {/* Desktop Sidebar with Animation */}
       {!isMobile && (
         <Box
+          className="no-print"
           sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -47,6 +48,7 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
       )}
       {isMobile && (
         <Drawer
+          className="no-print"
           open={sidebarOpen}
           onClose={onToggleSidebar}
           ModalProps={{ keepMounted: true }}

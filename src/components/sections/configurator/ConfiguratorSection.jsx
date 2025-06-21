@@ -14,7 +14,7 @@ import ErrorIcon from '@mui/icons-material/Error'
 import { useCheckMobile } from '../../../utils/themeUtils'
 import { useTimetable } from '../../../context/TimetableContext'
 import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../utils/dateFnsUtils'
-import Sidebar from './Sidebar'
+import ConfiguratorSidebar from './ConfiguratorSidebar'
 import CalendarWidget from '../../widgets/CalendarWidget'
 
 /**
@@ -54,11 +54,6 @@ export default function TimetableSection({
 
   // State to hold transformed calendar events
   const [events, setEvents] = useState([])
-
-  // Event handlers
-  const handleSidebarClose = useCallback(() => {
-    onToggleSidebar()
-  }, [onToggleSidebar])
 
   const handleCalendarDateChange = useCallback((date) => {
     onDateChange(date)
@@ -150,49 +145,8 @@ export default function TimetableSection({
         height="100%"
         backgroundColor={theme.palette.background.secondary}
       >
-        {/* Desktop Sidebar with Animation */}
-        {!isMobile && (
-          <Box
-            sx={{
-              flexShrink: 0,
-              width: 300,
-              maxHeight: '100vh',
-              height: '100%',
-              overflowY: 'auto',
-              marginLeft: sidebarOpen ? 0 : '-300px',
-              backgroundColor: theme.palette.background.secondary,
-              transition: theme.transitions.create(['margin-left'], {
-              easing: theme.transitions.easing.sharp,
-              duration: sidebarOpen
-                ? theme.transitions.duration.enteringScreen
-                : theme.transitions.duration.leavingScreen,
-              }),
-            }}
-          >
-            <Sidebar />
-          </Box>
-        )}
-        {isMobile && (
-          <Drawer
-            open={sidebarOpen}
-            onClose={handleSidebarClose}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              display: { xs: 'block', md: 'none' },
-              '& .MuiDrawer-paper': {
-                width: 320,
-                backgroundColor: theme.palette.background.secondary,
-                border: 'none',
-              },
-            }}
-            transitionDuration={{
-              enter: theme.transitions.duration.enteringScreen,
-              exit: theme.transitions.duration.leavingScreen,
-            }}
-          >
-            <Sidebar />
-          </Drawer>
-        )}
+        {/* Sidebar for navigation */}
+        <ConfiguratorSidebar sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar} />
 
         {/* Calendar View with Smooth Margin Transition */}
         <Box
