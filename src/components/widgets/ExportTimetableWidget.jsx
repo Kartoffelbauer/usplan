@@ -14,9 +14,10 @@ import { useTimetable } from '../../context/TimetableContext'
 import { printTimetable, icalUrlForTimetable, copyToClipboard } from '../../utils/exportUtils'
 
 /**
- * Widget for export actions: print, iCal.
+ * Widget for exporting the timetable
+ * Provides options to print the timetable or copy iCal link to clipboard
  */
-export default function ExportOptionsWidget() {
+export default function ExportTimetableWidget() {
     const { t, i18n } = useTranslation()
     const [showCopyConfirmation, setShowCopyConfirmation] = useState(false)
     const {

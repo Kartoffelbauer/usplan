@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Box, Typography, useTheme } from '@mui/material'
 import { rgbaColorToTheme } from '../../utils/themeUtils'
-import { colorSchemeLegend } from '../../config'
+import { COLOR_SCHEME_LEGEND } from '../../config'
 
 /**
  * Widget to display the color scheme legend
@@ -26,7 +26,7 @@ export default function ColorSchemeLegendWidget() {
         {t('sidebar.colorScheme.title', 'Color Scheme')}
       </Typography>
 
-      {colorSchemeLegend.map((scheme, index) => (
+      {COLOR_SCHEME_LEGEND.map((scheme, index) => (
         <Box key={index} display="flex" alignItems="center" gap={1}>
           <Box
             width="16px"

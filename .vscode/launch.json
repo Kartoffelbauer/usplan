@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Dev Server",
+      "name": "Dev Server",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/node_modules/vite/bin/vite.js",
@@ -11,18 +11,28 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "Launch LCP Server",
+      "name": "LCP Server",
         "type": "node",
         "request": "launch",
         "runtimeExecutable": "npm",
         "runtimeArgs": ["run", "lcp", "--", "--proxyUrl", "https://splan.hs-heilbronn.de/"],
         "console": "integratedTerminal"
+    },
+    {
+      "name": "NPM Build",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "build"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
-      "name": "Launch Both Servers",
-      "configurations": ["Launch Dev Server", "Launch LCP Server"]
+      "name": "Both Servers",
+      "default": true,
+      "configurations": ["Dev Server", "LCP Server"]
     }
   ]
 }

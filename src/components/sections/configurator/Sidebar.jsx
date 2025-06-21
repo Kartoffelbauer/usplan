@@ -1,15 +1,12 @@
-import {
-  Box,
-  Divider,
-} from '@mui/material'
+import { Box, Divider } from '@mui/material'
+import Spacer from '../../ui/Spacer'
 import SemesterSelectWidget from '../../widgets/SemesterSelectWidget';
-import ExportOptionsWidget from '../../widgets/ExportOptionsWidget';
+import LectureSelectorWidget from '../../widgets/LectureSelectorWidget';
+import ExportTimetableWidget from '../../widgets/ExportTimetableWidget';
 import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
 
 /**
- * Sidebar component that provides timetable configuration controls
- * Handles semester, study course, and study group selection
- * Includes export functionality and view mode toggle
+ * Sidebar component that provides controls for timetable configuration
  * 
  * @returns {JSX.Element} The rendered sidebar component
  */
@@ -30,14 +27,17 @@ export default function Sidebar() {
       {/* Semester Selection */}
       <SemesterSelectWidget />
 
+      { /* Lecture Selection */}
+      <LectureSelectorWidget />
+
       {/* Section Divider */}
       <Divider />
 
       {/* Export Options */}
-      <ExportOptionsWidget />
+      <ExportTimetableWidget />
 
-      { /* Section Divider */}
-      <Box sx={{ flexGrow: 1 }} />
+      { /* Spacer for layout consistency */ }
+      <Spacer />
 
       { /* Color Scheme Legend */ }
       <ColorSchemeLegendWidget />

@@ -8,7 +8,7 @@ import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 import { rgbaColorToTheme, useCheckMobile } from '../../utils/themeUtils'
-import CalendarWrapper from '../../layout/CalendarWrapper'
+import CalendarWrapper from '../layout/CalendarWrapper'
 
 const localeMap = { en: enUS, de }
 
@@ -29,7 +29,6 @@ export default function CalendarWidget({
 }) {
   const { timetable } = useTimetable()
   const { i18n } = useTranslation()
-  const isMobile = useCheckMobile()
 
   const currentLanguage = useMemo(() => {
     const lang = i18n.language.split('-')[0]

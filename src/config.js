@@ -1,11 +1,11 @@
 // The name of the application
-export const appName = 'Ultimate StarPlan'
+export const APP_NAME = 'Ultimate StarPlan'
 
 // The rest endpoint of the API
-export const restEndpoint = 'http://localhost:8010/proxy'
+export const REST_ENDPOINT = 'http://localhost:8010/proxy'
 
 // This file defines the color schemes for diffrent types of lectures
-export const colorSchemeLegend = [
+export const COLOR_SCHEME_LEGEND = [
   { color: 'rgb(180, 238, 180)', labelKey: 'weekly', defaultLabel: 'Weekly' },
   { color: 'rgb(198, 226, 255)', labelKey: 'everyTwoWeeks', defaultLabel: 'Every 2 weeks' },
   { color: 'rgb(245, 198, 198)', labelKey: 'everyThreeWeeks', defaultLabel: 'Every 3 weeks' },

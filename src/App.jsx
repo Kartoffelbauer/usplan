@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
 import { getTheme } from './theme'
 import { TimetableProvider } from './context/TimetableContext'
-import MainLayout from './layout/MainLayout'
+import MainLayout from './components/layout/MainLayout'
 
 function App() {
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')

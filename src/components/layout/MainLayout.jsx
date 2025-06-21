@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback, useEffect } from 'react'
-import { useCheckMobile } from '../utils/themeUtils'
+import { useCheckMobile } from '../../utils/themeUtils'
 import {
   Box,
   useTheme,
@@ -14,8 +14,8 @@ import {
   MenuItem,
 } from '@mui/material'
 import Navbar from './Navbar'
-import TimetableSection from '../components/sections/timetable/TimetableSection'
-import ConfiguratorSection from '../components/sections/configurator/ConfiguratorSection'
+import TimetableSection from '../sections/timetable/TimetableSection'
+import ConfiguratorSection from '../sections/configurator/ConfiguratorSection'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined'
