@@ -1,20 +1,14 @@
-import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useCallback } from 'react'
 import { 
   Box, 
-  Drawer, 
   useTheme, 
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography
 } from '@mui/material'
 import { addMinutes, parseISO } from 'date-fns'
-import ErrorIcon from '@mui/icons-material/Error'
 import { useCheckMobile } from '../../../utils/themeUtils'
 import { useTimetable } from '../../../context/TimetableContext'
 import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../utils/dateFnsUtils'
 import ConfiguratorSidebar from './ConfiguratorSidebar'
+import PrintOnlyHeaderWidget from '../../widgets/PrintOnlyHeaderWidget'
 import CalendarWidget from '../../widgets/CalendarWidget'
 
 /**
@@ -38,18 +32,11 @@ export default function TimetableSection({
   showDates,
   showSpecials,
 }) {
-  const { t } = useTranslation()
-  const isMobile = useCheckMobile()
   const theme = useTheme()
+  const isMobile = useCheckMobile()
   const {
-    selectedLocation,
     selectedSemester,
-    selectedStudyCourse,
-    selectedStudyGroup,
-    selectedRoom,
-    selectedTimetable,
     timetable,
-    error
   } = useTimetable()
 
   // State to hold transformed calendar events
@@ -148,69 +135,20 @@ export default function TimetableSection({
         {/* Sidebar for navigation */}
         <ConfiguratorSidebar sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar} />
 
-        {/* Calendar View with Smooth Margin Transition */}
+        {/* Calendar View */}
         <Box
-          className="print-only"
+          className="show-print"
           sx={{
-            flexGrow: 1,
-            height: '100%',
             display: 'flex',
+            flexGrow: 1,
             flexDirection: 'column',
-            transition: theme.transitions.create(['margin'], {
-              easing: theme.transitions.easing.sharp,
-              duration: theme.transitions.duration.standard,
-            }),
+            height: '100%',
+            p: isMobile ? 0 : 2,
+            pl: sidebarOpen || isMobile ? 0 : 2
           }}
         >
           {/* Print-only Header */}
-          <Box
-            sx={{
-              display: 'none',
-              '@media print': { display: 'block' },
-              padding: 2,
-              borderBottom: '1px solid black',
-              marginBottom: 2,
-              backgroundColor: 'white',
-            }}
-          >
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3, color: 'black' }}>
-            <Typography variant="body1">
-              <strong>{t('sidebar.semester', 'Semester')}:</strong> {selectedSemester?.name || 'N/A'}
-            </Typography>
-            {/* Course View */}
-            {selectedTimetable === 'course' && (
-              <>
-                <Typography variant="body1">
-                  <strong>{t('sidebar.selection.course.studyCourse', 'Study Course')}:</strong> {selectedStudyCourse?.name || 'N/A'}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>{t('sidebar.selection.course.studyGroup', 'Study Group')}:</strong> {selectedStudyGroup?.name || 'N/A'}
-                </Typography>
-              </>
-            )}
-            {/* Room View */}
-            {selectedTimetable === 'room' && (
-              <>
-                <Typography variant="body1">
-                  <strong>{t('sidebar.selection.room.location', 'Room')}:</strong> {selectedLocation?.shortName || 'N/A'}
-                </Typography>
-                <Typography variant="body1">
-                  <strong>{t('sidebar.selection.room.title', 'Location')}:</strong> {selectedRoom?.shortName || 'N/A'}
-                </Typography>
-              </>
-            )}
-          </Box>
-        </Box>
-        <Box
-          sx={{
-              width: '100%',
-              height: '100%',
-              overflow: 'hidden',
-              p: isMobile ? 0 : 2,
-              pl: sidebarOpen || isMobile ? 0 : 2,
-              borderRadius: { xs: 0, md: 4 },
-            }}
-          >
+          <PrintOnlyHeaderWidget />
           <CalendarWidget
             selectedDate={selectedDate}
             view={isMobile ? 'day' : 'week'}
@@ -219,21 +157,7 @@ export default function TimetableSection({
             showDates={showDates}
           />
         </Box>
-        </Box>
       </Box>
-
-      {/* Simple Error Dialog */}
-      <Dialog open={!!error} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <ErrorIcon color="error" />
-          {t('restError.title')}
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            {error && error?.message } {t('restError.action')}
-          </Typography>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

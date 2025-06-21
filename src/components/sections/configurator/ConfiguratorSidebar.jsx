@@ -9,18 +9,36 @@ import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
 /**
  * Sidebar component that provides controls for timetable configuration
  * 
- * @param {boolean} sidebarOpen - Sidebar open state
- * @param {Function} onToggleSidebar - Sidebar toggle handler
- * @returns {JSX.Element} The rendered sidebar component
+ * @param {Object} props - Component props
+ * @param {boolean} props.sidebarOpen - Whether the sidebar is open
+ * @param {Function} props.onToggleSidebar - Function to toggle sidebar visibility
+ * @returns {JSX.Element} The rendered sidebar with configuration options
  */
-export default function Sidebar(sidebarOpen, onToggleSidebar,) {
+export default function ConfiguratorSidebar({sidebarOpen, onToggleSidebar}) {
+  const lectures = [ {id: 243242, semester: 'SEB1', name: 'Grundlagen Verteilter Systeme'}, {id: 234243, semester: 'SEB2', name: 'Interaktive Programme'}] // Replace with actual lectures data from context or props
+
+  const handleAddLecture = () => {
+    // Logic to add a lecture
+  }
+  const handleClearLectures = () => {
+    // Logic to clear all lectures
+  }
+  const handleRemoveLecture = (id) => {
+    // Logic to remove a single lecture by id
+  }
+
   return (
     <SidebarWrapper sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar}>
       {/* Semester Selection */}
       <SemesterSelectorWidget />
 
       { /* Lecture Selection */}
-      <LectureSelectorWidget />
+      <LectureSelectorWidget
+        lectures={lectures}
+        onAdd={handleAddLecture}
+        onClear={handleClearLectures}
+        onRemove={handleRemoveLecture}
+      />
 
       {/* Section Divider */}
       <Divider />

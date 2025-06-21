@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
   Dialog,
   DialogTitle,
@@ -5,7 +6,6 @@ import {
   Typography,
 } from '@mui/material'
 import ErrorIcon from '@mui/icons-material/Error'
-import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 
 /**

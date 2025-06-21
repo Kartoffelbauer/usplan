@@ -1,11 +1,11 @@
+import { useTranslation } from 'react-i18next'
 import {
   Box,
-  Paper,
   Typography,
   IconButton,
-  Button,
   Divider,
   Stack,
+  useTheme,
 } from '@mui/material'
 import { Delete, Add } from '@mui/icons-material'
 
@@ -18,33 +18,39 @@ import { Delete, Add } from '@mui/icons-material'
  * @param {Function} onRemove - Callback when a single lecture is removed (gets `id`)
  */
 export default function LectureSelectorWidget({ lectures, onAdd, onClear, onRemove }) {
+  const { t } = useTranslation()
+  const theme = useTheme()
   const isEmpty = lectures.length === 0
 
   return (
-    <Paper variant="outlined" sx={{ p: 2 }}>
+    <Box
+      sx={{
+        width: '100%',
+        border: 1,
+        borderRadius: 1,
+        borderColor: theme.palette.divider,
+        p: 2
+      }}
+    >
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="subtitle1" fontWeight="bold">Lectures</Typography>
+        <Typography variant="body1">{t('sidebar.lectures.title', 'Lectures')}</Typography>
         <Box>
-          <Button
-            variant="outlined"
+          <IconButton
             size="small"
-            startIcon={<Delete />}
             onClick={onClear}
             disabled={isEmpty}
             color={isEmpty ? 'inherit' : 'error'}
             sx={{ mr: 1 }}
           >
-            CLEAR
-          </Button>
-          <Button
-            variant="outlined"
+            <Delete />
+          </IconButton>
+          <IconButton
             size="small"
-            startIcon={<Add />}
             onClick={onAdd}
           >
-            ADD
-          </Button>
+            <Add />
+          </IconButton>
         </Box>
       </Box>
 
@@ -53,14 +59,16 @@ export default function LectureSelectorWidget({ lectures, onAdd, onClear, onRemo
         {isEmpty ? (
           <Box
             sx={{
-              border: '1px dashed grey',
+              border: 1,
               borderRadius: 1,
-              py: 4,
+              borderStyle: 'dashed',
+              borderColor: theme.palette.divider,
+              color: theme.palette.text.secondary,
               textAlign: 'center',
-              color: 'text.secondary',
+              py: 2,
             }}
           >
-            No Lectures
+            {t('sidebar.lectures.empty', 'No Lectures')}
           </Box>
         ) : (
           <Stack divider={<Divider />} spacing={1}>
@@ -79,13 +87,13 @@ export default function LectureSelectorWidget({ lectures, onAdd, onClear, onRemo
                     <Delete fontSize="small" />
                   </IconButton>
                   <Box ml={1}>
-                    <Typography variant="caption" color="text.secondary">
-                      Semester {lecture.semester}
+                    <Typography variant="caption" color={theme.palette.text.secondary}>
+                      {lecture.semester}
                     </Typography>
-                    <Typography>{lecture.name}</Typography>
+                    <Typography variant='subtitle2'>{lecture.name}</Typography>
                   </Box>
                 </Box>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="subtitle2" color={theme.palette.text.secondary}>
                   {lecture.id}
                 </Typography>
               </Box>
@@ -93,6 +101,6 @@ export default function LectureSelectorWidget({ lectures, onAdd, onClear, onRemo
           </Stack>
         )}
       </Box>
-    </Paper>
+    </Box>
   )
 }

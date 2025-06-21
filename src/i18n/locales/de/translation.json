@@ -26,6 +26,10 @@
                 "location": "Standort"
             }
         },
+        "lectures": {
+            "title": "Veranstaltungen",
+            "empty": "keine Veranstaltungen"
+        },
         "export": {
             "print": "Drucken",
             "linkCopied": "Link kopiert!"

@@ -60,7 +60,6 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
               border: 'none',
               gap: 2,
               p: 2,
-              pt: 4,
             },
           }}
           transitionDuration={{

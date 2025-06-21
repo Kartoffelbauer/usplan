@@ -3,7 +3,6 @@ import { useState, useCallback, useEffect } from 'react'
 import { useCheckMobile } from '../../utils/themeUtils'
 import {
   Box,
-  useTheme,
   Tabs,
   Tab,
   FormGroup,
@@ -12,6 +11,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  useTheme,
 } from '@mui/material'
 import Navbar from './Navbar'
 import TimetableSection from '../sections/timetable/TimetableSection'

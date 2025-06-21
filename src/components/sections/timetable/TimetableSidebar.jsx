@@ -14,7 +14,7 @@ import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
  * @param {Function} props.onToggleSidebar - Function to toggle the sidebar visibility
  * @returns {JSX.Element} The rendered sidebar component
  */
-export default function Sidebar({sidebarOpen, onToggleSidebar}) {
+export default function TimetableSidebar({sidebarOpen, onToggleSidebar}) {
   return (
     <SidebarWrapper sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar}>
       {/* Semester Selection */}
