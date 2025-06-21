@@ -1,7 +1,7 @@
 import { Divider } from '@mui/material'
 import Spacer from '../../ui/Spacer'
 import SidebarWrapper from '../../layout/SidebarWrapper';
-import SemesterSelectWidget from '../../widgets/SemesterSelectWidget';
+import SemesterSelectorWidget from '../../widgets/SemesterSelectorWidget';
 import LectureSelectorWidget from '../../widgets/LectureSelectorWidget';
 import ExportTimetableWidget from '../../widgets/ExportTimetableWidget';
 import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
@@ -17,7 +17,7 @@ export default function Sidebar(sidebarOpen, onToggleSidebar,) {
   return (
     <SidebarWrapper sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar}>
       {/* Semester Selection */}
-      <SemesterSelectWidget />
+      <SemesterSelectorWidget />
 
       { /* Lecture Selection */}
       <LectureSelectorWidget />

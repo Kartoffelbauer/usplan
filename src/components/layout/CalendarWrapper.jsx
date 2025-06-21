@@ -1,6 +1,16 @@
 import { useTheme } from '@mui/material/styles'
 import { Box } from '@mui/material'
 
+
+/**
+ * 
+ * CalendarWrapper component that styles the calendar layout
+ * and applies consistent theming for both print and non-print media.
+ * 
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components to render inside the wrapper
+ * @return {JSX.Element} The rendered calendar wrapper component
+ */
 export default function CalendarWrapper({ children }) {
   const theme = useTheme()
 

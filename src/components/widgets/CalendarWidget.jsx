@@ -12,6 +12,12 @@ import CalendarWrapper from '../layout/CalendarWrapper'
 
 const localeMap = { en: enUS, de }
 
+/**
+ * Creates a date-fns localizer for react-big-calendar
+ * 
+ * @param {string} currentLocale - The current locale to use for localization
+ * @returns {Object} The localizer object for react-big-calendar
+ */
 const createLocalizer = (currentLocale) => dateFnsLocalizer({
   format,
   parse,
@@ -20,6 +26,18 @@ const createLocalizer = (currentLocale) => dateFnsLocalizer({
   locales: { [currentLocale]: localeMap[currentLocale] },
 })
 
+/**
+ * CalendarWidget component that displays a calendar with events
+ * Supports day and week views, localization, and custom event styling
+ *
+ * @param {Object} props - Component props
+ * @param {Date} props.selectedDate - Currently selected date
+ * @param {string} props.view - Current view ('day' or 'week')
+ * @param {Function} props.onDateChange - Callback for date changes
+ * @param {Array} props.events - Array of events to display
+ * @param {boolean} [props.showDates=true] - Whether to show dates in the header
+ * @returns {JSX.Element} The rendered calendar widget
+ */
 export default function CalendarWidget({
   selectedDate,
   view,

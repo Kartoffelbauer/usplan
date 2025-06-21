@@ -10,11 +10,11 @@ import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 
 /**
- * SemesterSelectWidget component that allows users to select a semester
+ * SemesterSelectorWidget component that allows users to select a semester
  * from a dropdown list. It updates the selected semester and resets
  * related selections (study course and group) when a new semester is chosen.
  */
-export default function SemesterSelectWidget() {
+export default function SemesterSelectorWidget() {
   const theme = useTheme()
   const { t } = useTranslation()
 

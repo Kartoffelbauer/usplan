@@ -1,15 +1,9 @@
-import { useTranslation } from 'react-i18next'
 import { useEffect, useState, useCallback } from 'react'
 import { 
   Box, 
   useTheme, 
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography
 } from '@mui/material'
 import { addMinutes, parseISO } from 'date-fns'
-import ErrorIcon from '@mui/icons-material/Error'
 import { useCheckMobile } from '../../../utils/themeUtils'
 import { useTimetable } from '../../../context/TimetableContext'
 import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../utils/dateFnsUtils'
@@ -38,13 +32,11 @@ export default function TimetableSection({
   showDates,
   showSpecials,
 }) {
-  const { t } = useTranslation()
   const isMobile = useCheckMobile()
   const theme = useTheme()
   const {
     selectedSemester,
     timetable,
-    error
   } = useTimetable()
 
   // State to hold transformed calendar events
@@ -151,43 +143,21 @@ export default function TimetableSection({
             flexGrow: 1,
             flexDirection: 'column',
             height: '100%',
+            p: isMobile ? 0 : 2,
+            pl: sidebarOpen || isMobile ? 0 : 2
           }}
         >
           {/* Print-only Header */}
           <PrintOnlyHeaderWidget />
-          <Box
-            sx={{
-                width: '100%',
-                height: '100%',
-                overflow: 'hidden',
-                p: isMobile ? 0 : 2,
-                pl: sidebarOpen || isMobile ? 0 : 2,
-                borderRadius: { xs: 0, md: 4 },
-              }}
-            >
-            <CalendarWidget
-              selectedDate={selectedDate}
-              view={isMobile ? 'day' : 'week'}
-              onDateChange={handleCalendarDateChange}
-              events={events}
-              showDates={showDates}
-            />
-          </Box>
+          <CalendarWidget
+            selectedDate={selectedDate}
+            view={isMobile ? 'day' : 'week'}
+            onDateChange={handleCalendarDateChange}
+            events={events}
+            showDates={showDates}
+          />
         </Box>
       </Box>
-
-      {/* Simple Error Dialog */}
-      <Dialog open={!!error} maxWidth="sm" fullWidth>
-        <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <ErrorIcon color="error" />
-          {t('restError.title')}
-        </DialogTitle>
-        <DialogContent>
-          <Typography>
-            {error && error?.message } {t('restError.action')}
-          </Typography>
-        </DialogContent>
-      </Dialog>
     </>
   )
 }

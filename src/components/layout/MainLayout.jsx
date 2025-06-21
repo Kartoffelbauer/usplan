@@ -16,6 +16,7 @@ import {
 import Navbar from './Navbar'
 import TimetableSection from '../sections/timetable/TimetableSection'
 import ConfiguratorSection from '../sections/configurator/ConfiguratorSection'
+import ErrorDialogWidget from '../widgets/ErrorDialogWidget'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined'
@@ -250,6 +251,9 @@ export default function MainLayout() {
           />
         </TabPanel>
       </Box>
+
+      { /* Error Dialog for REST errors */}
+      <ErrorDialogWidget />
     </Box>
   )
 }
