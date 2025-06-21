@@ -29,7 +29,13 @@
         },
         "lectures": {
             "title": "Lectures",
-            "empty": "No Lectures"
+            "empty": "No Lectures",
+            "dialog": {
+                "title": "Add Lecture",
+                "results": "Results",
+                "add": "Add",
+                "cancel": "Cancel"
+            }
         },
         "export": {
             "title": "Export",

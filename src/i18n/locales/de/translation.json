@@ -28,7 +28,13 @@
         },
         "lectures": {
             "title": "Veranstaltungen",
-            "empty": "keine Veranstaltungen"
+            "empty": "keine Veranstaltungen",
+            "dialog": {
+                "title": "Veranstaltung hinzufügen",
+                "results": "Ergebniss(e)",
+                "add": "Hinzufügen",
+                "cancel": "Abbrechen"
+            }
         },
         "export": {
             "print": "Drucken",
