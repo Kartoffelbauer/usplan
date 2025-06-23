@@ -1,4 +1,3 @@
-import React, { useCallback } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -9,57 +8,15 @@ import {
   Typography,
   Divider,
   Checkbox,
-  Autocomplete,
-  TextField,
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../../../shared/context/TimetableContext'
+import StudyCourseSelectWidget from '../../../../shared/components/widgets/StudyCourseSelectWidget'
+import StudyGroupSelectWidget from '../../../../shared/components/widgets/StudyGroupSelectWidget'
 
 export default function AddLectureDialogWidget({ open, onClose, onAdd }) {
   const { t } = useTranslation()
-  const {
-    selectedSemester,
-    studyCourses,
-    studyGroups,
-    selectedStudyCourse,
-    selectedStudyGroup,
-    setSelectedStudyCourse,
-    setSelectedStudyGroup,
-    timetable,
-    loading,
-    error,
-  } = useTimetable()
-
-  const handleStudyCourseChange = useCallback((_, newValue) => {
-    setSelectedStudyCourse(newValue)
-    setSelectedStudyGroup(null)
-  }, [setSelectedStudyCourse, setSelectedStudyGroup])
-
-  const handleStudyGroupChange = useCallback((_, newValue) => {
-    setSelectedStudyGroup(newValue)
-  }, [setSelectedStudyGroup])
-
-  const renderStudyCourseOption = useCallback((props, option) => {
-    const { key, ...rest } = props
-    return (
-      <li key={option.id} {...rest} style={{
-        display: 'flex',
-        alignItems: 'center',
-        minWidth: 0,
-        whiteSpace: 'nowrap',
-      }}>
-        <span>{option.shortName}</span>
-        <span style={{
-          color: '#888',
-          marginLeft: 8,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}>
-          – {option.name}
-        </span>
-      </li>
-    )
-  }, [])
+  const { timetable } = useTimetable()
 
   const hasLectures = timetable?.happenings?.length > 0
 
@@ -77,34 +34,10 @@ export default function AddLectureDialogWidget({ open, onClose, onAdd }) {
           maxHeight: '70vh',
         }}
       >
-        {/* Autocomplete Row */}
+        {/* Study Course + Group Selection */}
         <Box display="flex" gap={2} paddingTop={1}>
-          <Autocomplete
-            fullWidth
-            size="small"
-            disabled={!selectedSemester || loading.studyCourses || error}
-            options={studyCourses || []}
-            getOptionLabel={(option) => `${option.shortName} - ${option.name}`}
-            value={selectedStudyCourse}
-            onChange={handleStudyCourseChange}
-            renderOption={renderStudyCourseOption}
-            renderInput={(params) => (
-              <TextField {...params} label={t('sidebar.selection.course.studyCourse')} variant="outlined" />
-            )}
-          />
-
-          <Autocomplete
-            fullWidth
-            size="small"
-            disabled={!selectedSemester || !selectedStudyCourse || loading.studyGroups || error}
-            options={studyGroups || []}
-            getOptionLabel={(option) => option.shortName}
-            value={selectedStudyGroup}
-            onChange={handleStudyGroupChange}
-            renderInput={(params) => (
-              <TextField {...params} label={t('sidebar.selection.course.studyGroup')} variant="outlined" />
-            )}
-          />
+          <StudyCourseSelectWidget />
+          <StudyGroupSelectWidget />
         </Box>
 
         {/* Scrollable Lecture List */}

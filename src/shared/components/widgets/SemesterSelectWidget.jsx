@@ -14,7 +14,7 @@ import { useTimetable } from '../../context/TimetableContext'
  * from a dropdown list. It updates the selected semester and resets
  * related selections (study course and group) when a new semester is chosen.
  */
-export default function SemesterSelectorWidget() {
+export default function SemesterSelectWidget() {
   const theme = useTheme()
   const { t } = useTranslation()
 

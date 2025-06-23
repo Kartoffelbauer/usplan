@@ -17,7 +17,7 @@ import { Delete, Add } from '@mui/icons-material'
  * @param {Function} onClear - Callback to remove all lectures
  * @param {Function} onRemove - Callback when a single lecture is removed (gets `id`)
  */
-export default function LectureSelectorWidget({ lectures, onAdd, onClear, onRemove }) {
+export default function LectureSelectWidget({ lectures, onAdd, onClear, onRemove }) {
   const { t } = useTranslation()
   const theme = useTheme()
   const isEmpty = lectures.length === 0

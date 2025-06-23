@@ -2,8 +2,8 @@ import { useState } from 'react'
 import { Divider } from '@mui/material'
 import Spacer from '../../../shared/components/ui/Spacer'
 import SidebarWrapper from '../../../shared/components/layouts/SidebarWrapper';
-import SemesterSelectorWidget from '../../../shared/components/widgets/SemesterSelectorWidget';
-import LectureSelectorWidget from '../../../shared/components/widgets/LectureSelectorWidget';
+import SemesterSelectWidget from '../../../shared/components/widgets/SemesterSelectWidget';
+import LectureSelectWidget from '../../../shared/components/widgets/LectureSelectWidget';
 import ExportTimetableWidget from '../../../shared/components/widgets/ExportTimetableWidget';
 import ColorSchemeLegendWidget from '../../../shared/components/widgets/ColorSchemeLegendWidget'
 import AddLectureDialogWidget from './widgets/AddLectureDialogWidget';
@@ -40,10 +40,10 @@ export default function ConfiguratorSidebar({sidebarOpen, onToggleSidebar}) {
   return (
     <SidebarWrapper sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar}>
       {/* Semester Selection */}
-      <SemesterSelectorWidget />
+      <SemesterSelectWidget />
 
       { /* Lecture Selection */}
-      <LectureSelectorWidget
+      <LectureSelectWidget
         lectures={lectures}
         onAdd={handleAddLecture}
         onClear={handleClearLectures}
