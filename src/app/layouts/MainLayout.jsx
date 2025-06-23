@@ -13,6 +13,7 @@ import {
   MenuItem,
   useTheme,
 } from '@mui/material'
+import { useTimetable } from '../../shared/context/TimetableContext'
 import Navbar from '../components/Navbar'
 import TimetableSection from '../../features/timetable/components/TimetableSection'
 import ConfiguratorSection from '../../features/configurator/components/ConfiguratorSection'
@@ -41,6 +42,7 @@ export default function MainLayout() {
   const { t } = useTranslation()
   const isMobile = useCheckMobile()
   const theme = useTheme()
+  const { selectedTimetable, setSelectedTimetable } = useTimetable()
 
   // ==================== GLOBAL STATE ====================
   
@@ -68,7 +70,14 @@ export default function MainLayout() {
   // ==================== EVENT HANDLERS ====================
 
   const handleToggleSidebar = () => setSidebarOpen((prevOpen) => !prevOpen)
-  const handleTabChange = (_, newTabIndex) => setActiveTabIndex(newTabIndex)
+  const handleTabChange = (_, newTabIndex) => {
+    setActiveTabIndex(newTabIndex)
+    if (newTabIndex === 0) {
+      setSelectedTimetable('course')
+    } else if (newTabIndex === 1) {
+      setSelectedTimetable('config')
+    }
+  }
 
   /**
    * Handles date selection from various components

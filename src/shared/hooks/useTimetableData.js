@@ -4,10 +4,11 @@ import {
   getSemesters,
   getStudyCourses,
   getStudyGroups,
+  getLectures,
   getRooms,
   getTimetableForCourses,
   getTimetableForRooms,
-  getTimetablesForLectures,
+  getTimetableForLectures,
 } from '../services/timetableService'
 
 export const useTimetableData = () => {
@@ -15,6 +16,7 @@ export const useTimetableData = () => {
   const [semesters, setSemesters] = useState([])
   const [studyCourses, setStudyCourses] = useState([])
   const [studyGroups, setStudyGroups] = useState([])
+  const [lectures, setLectures] = useState([])
   const [rooms, setRooms] = useState([])
   const [selectedLectures, setSelectedLectures] = useState([])
   const [timetable, setTimetable] = useState(undefined)
@@ -23,6 +25,7 @@ export const useTimetableData = () => {
   const [loadingSemesters, setLoadingSemesters] = useState(false)
   const [loadingStudyCourses, setLoadingStudyCourses] = useState(false)
   const [loadingStudyGroups, setLoadingStudyGroups] = useState(false)
+  const [loadingLectures, setLoadingLectures] = useState(false)
   const [loadingRooms, setLoadingRooms] = useState(false)
   const [loadingTimetable, setLoadingTimetable] = useState(false)
 
@@ -90,6 +93,20 @@ export const useTimetableData = () => {
       .finally(() => setLoadingStudyGroups(false))
   }, [selectedSemester, selectedStudyCourse])
 
+  // Load lectures
+  useEffect(() => {
+    if (!selectedSemester || !selectedStudyGroup) {
+      setLectures([])
+      setSelectedLectures([])
+      return
+    }
+    setLoadingLectures(true)
+    getLectures(selectedSemester.id, selectedStudyGroup.id)
+      .then(setLectures)
+      .catch(setError)
+      .finally(() => setLoadingLectures(false))
+  }, [selectedSemester, selectedStudyGroup])
+
   // Load rooms
   useEffect(() => {
     if (!selectedLocation) {
@@ -116,7 +133,7 @@ export const useTimetableData = () => {
       !selectedSemester || !selectedTimetable ||
       (selectedTimetable === 'course' && !selectedStudyGroup) ||
       (selectedTimetable === 'room' && !selectedRoom) ||
-      (selectedTimetable === 'config' && !selectedLectures)
+      (selectedTimetable === 'config' && !selectedLectures || selectedLectures.length === 0)
     ) {
       setTimetable(undefined)
       return
@@ -130,7 +147,7 @@ export const useTimetableData = () => {
     } else if (selectedTimetable === 'room') {
       fetchFn = () => getTimetableForRooms(selectedSemester.id, selectedRoom.id);
     } else if (selectedTimetable === 'config') {
-      fetchFn = () => getTimetablesForLectures(selectedSemester.id, selectedLectures);
+      fetchFn = () => getTimetableForLectures(selectedSemester.id, selectedLectures.flatMap(obj => obj.id));
     }
 
     fetchFn()
@@ -144,6 +161,7 @@ export const useTimetableData = () => {
     semesters,
     studyCourses,
     studyGroups,
+    lectures,
     rooms,
     timetable,
     selectedLocation,
@@ -165,6 +183,7 @@ export const useTimetableData = () => {
       semesters: loadingSemesters,
       studyCourses: loadingStudyCourses,
       studyGroups: loadingStudyGroups,
+      lectures: loadingLectures,
       rooms: loadingRooms,
       loadingTimetable: loadingTimetable,
     },

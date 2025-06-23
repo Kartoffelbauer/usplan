@@ -32,7 +32,7 @@
             "dialog": {
                 "title": "Veranstaltung hinzufügen",
                 "results": "Ergebniss(e)",
-                "add": "Hinzufügen",
+                "apply": "Aktualisieren",
                 "cancel": "Abbrechen"
             }
         },
