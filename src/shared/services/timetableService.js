@@ -1,4 +1,4 @@
-import { REST_ENDPOINT } from '../config.js'
+import { REST_ENDPOINT } from '../../app/config.js'
 
 export async function getLocations() {
   const res = await fetch(`${REST_ENDPOINT}/splan/rest/LocationService/getSelectableLocations`)

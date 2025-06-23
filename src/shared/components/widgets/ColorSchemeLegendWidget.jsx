@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Box, Typography, useTheme } from '@mui/material'
 import { rgbaColorToTheme } from '../../utils/themeUtils'
-import { COLOR_SCHEME_LEGEND } from '../../config'
+import { COLOR_SCHEME_LEGEND } from '../../../app/config'
 
 /**
  * Widget to display the color scheme legend

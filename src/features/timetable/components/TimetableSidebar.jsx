@@ -1,10 +1,10 @@
 import { Divider } from '@mui/material'
-import Spacer from '../../ui/Spacer'
-import SidebarWrapper from '../../layout/SidebarWrapper';
-import SemesterSelectorWidget from '../../widgets/SemesterSelectorWidget'
-import TimetableFilterWidget from '../../widgets/TimetableFilterWidget'
-import ExportTimetableWidget from '../../widgets/ExportTimetableWidget'
-import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
+import Spacer from '../../../shared/components/ui/Spacer'
+import SidebarWrapper from '../../../shared/components/layouts/SidebarWrapper';
+import SemesterSelectorWidget from '../../../shared/components/widgets/SemesterSelectorWidget'
+import TimetableFilterWidget from './TimetableFilterWidget'
+import ExportTimetableWidget from '../../../shared/components/widgets/ExportTimetableWidget'
+import ColorSchemeLegendWidget from '../../../shared/components/widgets/ColorSchemeLegendWidget'
 
 /**
  * Sidebar component that provides controls for displaying and exporting the timetable

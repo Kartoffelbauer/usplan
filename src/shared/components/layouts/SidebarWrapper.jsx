@@ -1,6 +1,6 @@
 import React from 'react'
 import { Box, Drawer, useTheme } from '@mui/material'
-import { useCheckMobile } from '../../utils/themeUtils'
+import { useCheckMobile } from '../../../shared/utils/themeUtils'
 
 /**
  * Wrapper for sidebar layout

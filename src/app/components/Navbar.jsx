@@ -15,9 +15,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
 import { addDays, subDays, isBefore, isAfter, startOfWeek, endOfWeek } from 'date-fns'
-import { APP_NAME } from '../../config'
-import { useCheckMobile } from '../../utils/themeUtils'
-import { useTimetable } from '../../context/TimetableContext'
+import { APP_NAME } from '../config'
+import { useCheckMobile } from '../../shared/utils/themeUtils'
+import { useTimetable } from '../../shared/context/TimetableContext'
 
 export default function Navbar({
   onMenuClick,

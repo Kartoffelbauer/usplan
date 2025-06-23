@@ -1,9 +1,9 @@
 // src/App.jsx
 import { useMemo } from 'react'
 import { CssBaseline, ThemeProvider, useMediaQuery } from '@mui/material'
-import { getTheme } from './theme'
-import { TimetableProvider } from './context/TimetableContext'
-import MainLayout from './components/layout/MainLayout'
+import { getTheme } from './theme/theme'
+import { TimetableProvider } from '../shared/context/TimetableContext'
+import MainLayout from './layouts/MainLayout'
 
 function App() {
   const prefersDark = useMediaQuery('(prefers-color-scheme: dark)')

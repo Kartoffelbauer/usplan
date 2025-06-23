@@ -8,7 +8,7 @@ import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 import { rgbaColorToTheme } from '../../utils/themeUtils'
-import CalendarWrapper from '../layout/CalendarWrapper'
+import CalendarWrapper from '../layouts/CalendarWrapper'
 
 const localeMap = { en: enUS, de }
 

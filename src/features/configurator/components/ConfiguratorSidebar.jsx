@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Divider } from '@mui/material'
-import Spacer from '../../ui/Spacer'
-import SidebarWrapper from '../../layout/SidebarWrapper';
-import SemesterSelectorWidget from '../../widgets/SemesterSelectorWidget';
-import LectureSelectorWidget from '../../widgets/LectureSelectorWidget';
-import ExportTimetableWidget from '../../widgets/ExportTimetableWidget';
-import ColorSchemeLegendWidget from '../../widgets/ColorSchemeLegendWidget'
-import AddLectureDialogWidget from '../../widgets/AddLectureDialogWidget';
+import Spacer from '../../../shared/components/ui/Spacer'
+import SidebarWrapper from '../../../shared/components/layouts/SidebarWrapper';
+import SemesterSelectorWidget from '../../../shared/components/widgets/SemesterSelectorWidget';
+import LectureSelectorWidget from '../../../shared/components/widgets/LectureSelectorWidget';
+import ExportTimetableWidget from '../../../shared/components/widgets/ExportTimetableWidget';
+import ColorSchemeLegendWidget from '../../../shared/components/widgets/ColorSchemeLegendWidget'
+import AddLectureDialogWidget from './AddLectureDialogWidget';
 
 /**
  * Sidebar component that provides controls for timetable configuration

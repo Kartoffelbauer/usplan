@@ -1,9 +1,9 @@
-import './i18n'
+import './shared/i18n'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
-import './index.css'
-import './styles/exportStyles.css'
+import App from './app/App'
+import './app/styles/index.css'
+import './shared/styles/exportStyles.css'
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'

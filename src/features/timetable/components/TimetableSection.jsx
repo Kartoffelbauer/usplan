@@ -4,12 +4,12 @@ import {
   useTheme, 
 } from '@mui/material'
 import { addMinutes, parseISO } from 'date-fns'
-import { useCheckMobile } from '../../../utils/themeUtils'
-import { useTimetable } from '../../../context/TimetableContext'
-import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../utils/dateFnsUtils'
-import ConfiguratorSidebar from './ConfiguratorSidebar'
-import PrintOnlyHeaderWidget from '../../widgets/PrintOnlyHeaderWidget'
-import CalendarWidget from '../../widgets/CalendarWidget'
+import { useCheckMobile } from '../../../shared/utils/themeUtils'
+import { useTimetable } from '../../../shared/context/TimetableContext'
+import { getCurrentWeekday, eachNthWeekOfInterval, mapToCurrentWeek } from '../../../shared/utils/dateFnsUtils'
+import TimetableSidebar from './TimetableSidebar'
+import PrintOnlyHeaderWidget from '../../../shared/components/widgets/PrintOnlyHeaderWidget'
+import CalendarWidget from '../../../shared/components/widgets/CalendarWidget'
 
 /**
  * TimetableSection component that manages the sidebar and calendar view
@@ -133,7 +133,7 @@ export default function TimetableSection({
         backgroundColor={theme.palette.background.secondary}
       >
         {/* Sidebar for navigation */}
-        <ConfiguratorSidebar sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar} />
+        <TimetableSidebar sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar} />
 
         {/* Calendar View */}
         <Box
