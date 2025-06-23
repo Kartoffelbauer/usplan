@@ -12,7 +12,7 @@ import {
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import RoomIcon from '@mui/icons-material/Room'
 import { useTranslation } from 'react-i18next'
-import { useTimetable } from '../../../shared/context/TimetableContext'
+import { useTimetable } from '../../../../shared/context/TimetableContext'
 
 /**
  * Widget for filtering the timetable

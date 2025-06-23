@@ -6,7 +6,7 @@ import SemesterSelectorWidget from '../../../shared/components/widgets/SemesterS
 import LectureSelectorWidget from '../../../shared/components/widgets/LectureSelectorWidget';
 import ExportTimetableWidget from '../../../shared/components/widgets/ExportTimetableWidget';
 import ColorSchemeLegendWidget from '../../../shared/components/widgets/ColorSchemeLegendWidget'
-import AddLectureDialogWidget from './AddLectureDialogWidget';
+import AddLectureDialogWidget from './widgets/AddLectureDialogWidget';
 
 /**
  * Sidebar component that provides controls for timetable configuration

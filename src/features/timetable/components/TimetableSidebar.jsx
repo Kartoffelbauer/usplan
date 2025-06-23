@@ -2,7 +2,7 @@ import { Divider } from '@mui/material'
 import Spacer from '../../../shared/components/ui/Spacer'
 import SidebarWrapper from '../../../shared/components/layouts/SidebarWrapper';
 import SemesterSelectorWidget from '../../../shared/components/widgets/SemesterSelectorWidget'
-import TimetableFilterWidget from './TimetableFilterWidget'
+import TimetableFilterWidget from './widgets/TimetableFilterWidget'
 import ExportTimetableWidget from '../../../shared/components/widgets/ExportTimetableWidget'
 import ColorSchemeLegendWidget from '../../../shared/components/widgets/ColorSchemeLegendWidget'
 

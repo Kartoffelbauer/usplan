@@ -13,7 +13,7 @@ import {
   TextField,
 } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { useTimetable } from '../../../shared/context/TimetableContext'
+import { useTimetable } from '../../../../shared/context/TimetableContext'
 
 export default function AddLectureDialogWidget({ open, onClose, onAdd }) {
   const { t } = useTranslation()
