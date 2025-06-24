@@ -17,7 +17,8 @@ import { useTimetable } from '../../shared/context/TimetableContext'
 import Navbar from '../components/Navbar'
 import TimetableSection from '../../features/timetable/components/TimetableSection'
 import ConfiguratorSection from '../../features/configurator/components/ConfiguratorSection'
-import ErrorDialogWidget from '../../shared/components/widgets/ErrorDialogWidget'
+import DisclaimerDialogWidget from '../components/DisclaimerDialog'
+import ErrorDialog from '../components/ErrorDialog'
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import EditCalendarOutlinedIcon from '@mui/icons-material/EditCalendarOutlined'
@@ -261,8 +262,11 @@ export default function MainLayout() {
         </TabPanel>
       </Box>
 
+      {/* Disclaimer Dialog */}
+      <DisclaimerDialogWidget />
+
       { /* Error Dialog for REST errors */}
-      <ErrorDialogWidget />
+      <ErrorDialog />
     </Box>
   )
 }

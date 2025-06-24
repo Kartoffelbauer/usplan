@@ -54,8 +54,15 @@
             "exam": "Exam"
         }
     },
-    "restError": {
-        "title": "Error",
-        "action": "Refresh page to try again."
+    "dialog": {
+        "disclaimer": {
+            "title": "Attention",
+            "description": "This app in its current state is just a prototype. Bugs, missing features, or unexpected behavior especially in the calendar view, are to be expected!",
+            "action": "Got it!"
+        },
+        "rest": {
+            "title": "Error",
+            "action": "Refresh page to try again."
+        }
     }
 }

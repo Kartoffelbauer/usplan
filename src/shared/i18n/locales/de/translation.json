@@ -51,8 +51,15 @@
             "exam": "Prüfung"
         }
     },
-    "restError": {
-        "title": "Fehler",
-        "action": "Lade Sie die Seite neu, um es erneut zu versuchen."
+    "dialog": {
+        "disclaimer": {
+            "title": "Achtung",
+            "description": "Diese App ist nur ein Prototyp. Bugs, fehlende Funktionen oder unerwartetes Verhalten, insbesondere in der Kalenderansicht, sind zu erwarten!",
+            "action": "Verstanden!"
+        },
+        "rest": {
+            "title": "Fehler",
+            "action": "Lade Sie die Seite neu, um es erneut zu versuchen."
+        }
     }
 }
