@@ -1,9 +1,0 @@
-{
-  "routes": [
-    {
-      "route": "/api/*",
-      "rewrite": "https://splan.hs-heilbronn.de/splan/rest/*",
-      "allowedRoles": ["anonymous"]
-    }
-  ]
-}
