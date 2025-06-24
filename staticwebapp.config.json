@@ -3,7 +3,6 @@
     {
       "route": "/api/*",
       "redirect": "http://splan.hs-heilbronn.de/splan/rest/*",
-      "statusCode": 200,
       "allowedRoles": [
         "anonymous"
       ]
