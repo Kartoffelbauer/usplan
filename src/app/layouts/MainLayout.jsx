@@ -237,7 +237,7 @@ export default function MainLayout() {
       </Box>
 
       {/* Main Content */}
-      <Box display="flex" flexGrow={1} width="100%" overflow="hidden">
+      <Box display="flex" flexGrow={1} width="100%" overflow="hidden" backgroundColor={theme.palette.background.secondary}>
         <TabPanel value={activeTabIndex} index={0}>
           <TimetableSection
             selectedDate={selectedDate}
