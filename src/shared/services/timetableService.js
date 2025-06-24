@@ -85,7 +85,6 @@ export async function getTimetableForLectures(semesterId, lectures) {
     throw new Error('Missing semester or lectures for lectures timetable query.')
   }
 
-  console.log(`${REST_ENDPOINT}/TimetableService/getForPlanningUnitAndRoom/${semesterId}/${lectures.join(',')}/false/-1/false`)
   const res = await fetch(`${REST_ENDPOINT}/TimetableService/getForPlanningUnitAndLectures/${semesterId}/${lectures.join(',')}/false/-1/false`)
   if (!res.ok) throw new Error('Failed to load timetable for lectures.')
 

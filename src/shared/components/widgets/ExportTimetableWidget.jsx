@@ -72,7 +72,7 @@ export default function ExportTimetableWidget() {
         </Button>
         <Button
           onClick={onExportIcal}
-          disabled={!timetable}
+          disabled={!timetable || selectedTimetable === 'config'}
           startIcon={<ContentCopyIcon fontSize="small" />}
         >
           {t('sidebar.export.ical', 'iCal')}

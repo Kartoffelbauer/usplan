@@ -24,7 +24,7 @@ export default function TimetableSection({
   showSpecials,
 }) {
   return (
-  <Box display="flex" flexGrow={1}>
+  <Box display="flex" flexGrow={1} height={'100%'}>
       {/* Sidebar for navigation */}
       <TimetableSidebar sidebarOpen={sidebarOpen} onToggleSidebar={onToggleSidebar} />
 
