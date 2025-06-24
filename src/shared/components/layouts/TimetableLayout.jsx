@@ -55,10 +55,12 @@ export default function TimetableLayout({
 
   // Helper function to create event object
   const createEvent = useCallback((event, start, end) => ({
-    title: event.orglectureName,
     start,
     end,
-    location: event.roomNames,
+    lecture: event.orglectureName,
+    rooms: event.roomNames,
+    lecturers: event.lecturerNames,
+    studyGroups: event.planningGroupNames,
     lightColor: `rgba(${event.red}, ${event.green}, ${event.blue}, ${event.alpha})`,
   }), [])
 
@@ -73,8 +75,8 @@ export default function TimetableLayout({
       start: new Date(selectedSemester.beginOfLectureDate),
       end: new Date(selectedSemester.endOfLectureDate),
     }
-    const happenings = []
-
+    const events = []
+console.log(timetable.happenings)
     timetable.happenings.forEach(event => {
       // Skip exams if not showing specials
       if ((!showSpecials && event.exam) || event.holiday) return
@@ -91,7 +93,7 @@ export default function TimetableLayout({
           addMinutes(displayDate, event.beginMinute),
           addMinutes(displayDate, event.endMinute)
         )
-        happenings.push(eventObj)
+        events.push(eventObj)
       }
       // Handle WEEK type events
       else {
@@ -107,12 +109,12 @@ export default function TimetableLayout({
             addMinutes(weekday, event.beginMinute),
             addMinutes(weekday, event.endMinute)
           )
-          happenings.push(eventObj)
+          events.push(eventObj)
         })
       }
     })
 
-    setEvents(happenings)
+    setEvents(events)
   }, [timetable, selectedSemester, showDates, showSpecials, getWeekInterval, createEvent])
 
   return (
