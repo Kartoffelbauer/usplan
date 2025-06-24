@@ -58,7 +58,7 @@
     "dialog": {
         "disclaimer": {
             "title": "Attention",
-            "description": "This app in its current state is just a prototype. Bugs, missing features, or unexpected behavior especially in the calendar view, are to be expected!",
+            "description": "This app in its current state is just a prototype. Bugs, missing features, or unexpected behavior especially in the calendar view and the export, are to be expected!",
             "action": "Got it!"
         },
         "rest": {

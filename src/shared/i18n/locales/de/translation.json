@@ -55,7 +55,7 @@
     "dialog": {
         "disclaimer": {
             "title": "Achtung",
-            "description": "Diese App ist nur ein Prototyp. Bugs, fehlende Funktionen oder unerwartetes Verhalten, insbesondere in der Kalenderansicht, sind zu erwarten!",
+            "description": "Diese App ist nur ein Prototyp. Bugs, fehlende Funktionen oder unerwartetes Verhalten, insbesondere in der Kalenderansicht und im Export, sind zu erwarten!",
             "action": "Verstanden!"
         },
         "rest": {
