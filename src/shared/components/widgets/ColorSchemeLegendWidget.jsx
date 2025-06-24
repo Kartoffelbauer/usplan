@@ -37,7 +37,7 @@ export default function ColorSchemeLegendWidget() {
             }}
           />
           <Typography variant="body2" color="text.secondary">
-            {t(`sidebar.colorScheme.${scheme.labelKey}`, scheme.defaultLabel)}
+            {t(`sidebar.colorScheme.${scheme.key}`)}
           </Typography>
         </Box>
       ))}
