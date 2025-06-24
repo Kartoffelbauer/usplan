@@ -2,7 +2,7 @@
 export const APP_NAME = 'Ultimate StarPlan'
 
 // The rest endpoint of the API
-export const REST_ENDPOINT = '/api'
+export const REST_ENDPOINT = 'http://localhost:8010/proxy'
 
 // This file defines the color schemes for diffrent types of lectures
 export const COLOR_SCHEME_LEGEND = [
