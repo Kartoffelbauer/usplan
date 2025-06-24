@@ -100,8 +100,7 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
             border: '1px solid',
             borderColor: 'divider',
             borderRadius: 1,
-            p: 1.5,
-            minHeight: 100,
+            px: 1.5,
           }}
         >
           {hasLectures ? (
@@ -153,7 +152,9 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
                 color: 'text.secondary',
               }}
             >
-              {t('sidebar.lectures.empty', 'No Lectures')}
+              <Typography variant="boyd1" gutterBottom>
+                {t('sidebar.lectures.empty', 'No Lectures')}
+              </Typography>
             </Box>
           )}
         </Box>
