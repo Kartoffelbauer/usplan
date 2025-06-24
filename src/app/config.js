@@ -2,7 +2,7 @@
 export const APP_NAME = 'Ultimate StarPlan'
 
 // The rest endpoint of the API
-export const REST_ENDPOINT = 'https://starplan-cors-proxy-fjgdehgpe9emhkfz.westeurope-01.azurewebsites.net'
+export const REST_ENDPOINT = 'https://starplan-cors-proxy-fjgdehgpe9emhkfz.westeurope-01.azurewebsites.net/https://splan.hs-heilbronn.de'
 
 // This file defines the color schemes for diffrent types of lectures
 export const COLOR_SCHEME_LEGEND = [
