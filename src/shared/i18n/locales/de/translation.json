@@ -38,7 +38,8 @@
         },
         "export": {
             "print": "Drucken",
-            "linkCopied": "Link kopiert!"
+            "success": "Link kopiert!",
+            "error": "Export fehlgeschlagen!"
         },
         "colorScheme": {
             "title": "Farbschema",

@@ -20,11 +20,13 @@ import { printTimetable, icalUrlForTimetable, copyToClipboard } from '../../util
 export default function ExportTimetableWidget() {
     const { t, i18n } = useTranslation()
     const [showCopyConfirmation, setShowCopyConfirmation] = useState(false)
+    const [copySuccess, setCopySuccess] = useState(false)
     const {
         timetable,
         selectedSemester,
         selectedStudyGroup,
         selectedRoom,
+        selectedLectures,
         selectedTimetable,
     } = useTimetable()
 
@@ -39,21 +41,21 @@ export default function ExportTimetableWidget() {
      * iCal export functionality - copies link to clipboard
      */
     const onExportIcal = useCallback(async () => {
-        if (!selectedTimetable || !selectedSemester ||
-            (selectedTimetable === 'course' && !selectedStudyGroup) ||
-            (selectedTimetable === 'room' && !selectedRoom)) {
-            return
+      setCopySuccess(false)
+
+      if (selectedTimetable && selectedSemester &&
+          (selectedTimetable === 'course' && selectedStudyGroup) ||
+          (selectedTimetable === 'room' && selectedRoom)) {
+
+        setCopySuccess(icalUrlForTimetable(selectedTimetable, selectedSemester.id, selectedTimetable === 'course' ? selectedStudyGroup.id : selectedRoom.id, i18n.language))
+
+        if (copySuccess) {
+          setCopySuccess(await copyToClipboard(icalUrl))
         }
-        
-        const icalUrl = icalUrlForTimetable(selectedTimetable, selectedSemester.id, selectedTimetable === 'course' ? selectedStudyGroup.id : selectedRoom.id, i18n.language)
-        
-        if (icalUrl) {
-          const success = await copyToClipboard(icalUrl)
-          if (success) {
-            setShowCopyConfirmation(true)
-            setTimeout(() => setShowCopyConfirmation(false), 3000)
-          }
-        }
+      }
+
+      setShowCopyConfirmation(true)
+      setTimeout(() => setShowCopyConfirmation(false), 3000)
     }, [selectedTimetable, selectedSemester, selectedStudyGroup, selectedRoom, i18n.language])
     
   return (
@@ -72,7 +74,7 @@ export default function ExportTimetableWidget() {
         </Button>
         <Button
           onClick={onExportIcal}
-          disabled={!timetable || selectedTimetable === 'config'}
+          disabled={!timetable}
           startIcon={<ContentCopyIcon fontSize="small" />}
         >
           {t('sidebar.export.ical', 'iCal')}
@@ -81,14 +83,14 @@ export default function ExportTimetableWidget() {
 
       <Fade in={showCopyConfirmation}>
         <Alert
-          severity="success"
+          severity={copySuccess ? 'success' : 'error'}
           sx={{
             mt: 1,
             py: 0.5,
             fontSize: '0.875rem',
           }}
         >
-          {t('sidebar.export.linkCopied', 'Link copied!')}
+          {copySuccess ? t('sidebar.export.success', 'Link copied!') : t('sidebar.export.error', 'Export failed!')}
         </Alert>
       </Fade>
     </Box>

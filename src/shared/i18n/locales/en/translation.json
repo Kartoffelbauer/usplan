@@ -41,7 +41,8 @@
             "title": "Export",
             "ical": "ICAL",
             "print": "Print",
-            "linkCopied": "Link copied!"
+            "success": "Link copied!",
+            "error": "Export failed!"
         },
         "colorScheme": {
             "title": "Color Scheme",
