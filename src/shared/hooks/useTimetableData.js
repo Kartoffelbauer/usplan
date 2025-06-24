@@ -133,7 +133,7 @@ export const useTimetableData = () => {
       !selectedSemester || !selectedTimetable ||
       (selectedTimetable === 'course' && !selectedStudyGroup) ||
       (selectedTimetable === 'room' && !selectedRoom) ||
-      (selectedTimetable === 'config' && !selectedLectures && selectedLectures.length === 0)
+      (selectedTimetable === 'config' && (!selectedLectures || selectedLectures.length === 0))
     ) {
       setTimetable(undefined)
       return
