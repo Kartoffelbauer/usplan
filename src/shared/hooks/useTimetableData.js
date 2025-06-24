@@ -19,7 +19,7 @@ export const useTimetableData = () => {
   const [lectures, setLectures] = useState([])
   const [rooms, setRooms] = useState([])
   const [selectedLectures, setSelectedLectures] = useState([])
-  const [timetable, setTimetable] = useState(undefined)
+  const [timetable, setTimetable] = useState(null)
 
   const [loadingLocations, setLoadingLocations] = useState(false)
   const [loadingSemesters, setLoadingSemesters] = useState(false)
@@ -97,7 +97,9 @@ export const useTimetableData = () => {
   useEffect(() => {
     if (!selectedSemester || !selectedStudyGroup) {
       setLectures([])
-      setSelectedLectures([])
+      if (!selectedSemester) {
+        setSelectedLectures([])
+      }
       return
     }
     setLoadingLectures(true)
@@ -135,7 +137,7 @@ export const useTimetableData = () => {
       (selectedTimetable === 'room' && !selectedRoom) ||
       (selectedTimetable === 'config' && (!selectedLectures || selectedLectures.length === 0))
     ) {
-      setTimetable(undefined)
+      setTimetable(null)
       return
     }
 
