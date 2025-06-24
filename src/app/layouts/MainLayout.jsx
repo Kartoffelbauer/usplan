@@ -43,7 +43,7 @@ export default function MainLayout() {
   const { t } = useTranslation()
   const isMobile = useCheckMobile()
   const theme = useTheme()
-  const { selectedTimetable, setSelectedTimetable } = useTimetable()
+  const { setSelectedTimetable } = useTimetable()
 
   // ==================== GLOBAL STATE ====================
   

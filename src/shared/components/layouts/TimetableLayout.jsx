@@ -67,7 +67,6 @@ export default function TimetableLayout({
   // Transform timetable into calendar events
   useEffect(() => {
     if (!timetable || !selectedSemester) {
-      console.warn('No timetable or selected semester available')
       setEvents([])
       return
     }
