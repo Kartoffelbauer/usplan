@@ -11,14 +11,6 @@
       "console": "integratedTerminal"
     },
     {
-      "name": "LCP Server",
-        "type": "node",
-        "request": "launch",
-        "runtimeExecutable": "npm",
-        "runtimeArgs": ["run", "lcp", "--", "--proxyUrl", "https://splan.hs-heilbronn.de/"],
-        "console": "integratedTerminal"
-    },
-    {
       "name": "NPM Build",
       "type": "node",
       "request": "launch",
@@ -26,13 +18,22 @@
       "runtimeArgs": ["run", "build"],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal"
+    },
+    {
+      "name": "NPM Preview",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "preview"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
     }
   ],
   "compounds": [
     {
-      "name": "Both Servers",
+      "name": "Build and Preview",
       "default": true,
-      "configurations": ["Dev Server", "LCP Server"]
+      "configurations": ["NPM Build", "NPM Preview"]
     }
   ]
 }

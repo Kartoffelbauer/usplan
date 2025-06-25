@@ -38,5 +38,5 @@ export function rgbaColorToTheme(lightColor, darkenFactor = 0.5) {
  */
 export function useCheckMobile() {
   const theme = useTheme()
-  return useMediaQuery(theme.breakpoints.down('md'))
+  return useMediaQuery(theme.breakpoints.down('md'), { noSsr: true })
 }

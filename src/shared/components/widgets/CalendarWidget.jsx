@@ -1,10 +1,17 @@
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { format, parse, startOfWeek, getDay, addMinutes, set } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 import de from 'date-fns/locale/de'
-import { Box, Typography } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Popover,
+  Tooltip,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 import { rgbaColorToTheme } from '../../utils/themeUtils'
@@ -21,52 +28,51 @@ const createLocalizer = (currentLocale) =>
     locales: { [currentLocale]: localeMap[currentLocale] },
   })
 
-/**
- * Custom event content renderer for the calendar
- */
-function renderEventContent({ event }) {
-  const lecture = event.lecture || ''
+function renderEventDetails(event, ellipsis = false) {
   const rooms = Array.isArray(event.rooms) ? event.rooms.join(', ') : event.rooms
   const lecturers = Array.isArray(event.lecturers) ? event.lecturers.join(', ') : event.lecturers
   const studyGroups = Array.isArray(event.studyGroups) ? event.studyGroups.join(', ') : event.studyGroups
 
-  const tooltip = [lecture, rooms, lecturers, studyGroups]
-    .filter(Boolean)
-    .join('\n')
-
-  const ellipsisStyle = {
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-  }
+  const style = ellipsis
+    ? { whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
+    : {}
 
   return (
-    <Box title={tooltip} height={'100%'}>
-      <Typography variant="body2" fontWeight="bold" sx={ellipsisStyle}>
-        {lecture}
-      </Typography>
+    <>
+      {event.lecture && (
+        <Typography variant="body2" fontWeight="bold" sx={style}>
+          {event.lecture}
+        </Typography>
+      )}
       {rooms && (
-        <Typography variant="body2" sx={ellipsisStyle}>
+        <Typography variant="body2" sx={style}>
           {rooms}
         </Typography>
       )}
       {lecturers && (
-        <Typography variant="caption" color="text.secondary" display="block" sx={ellipsisStyle}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          display="block"
+          sx={style}
+        >
           {lecturers}
         </Typography>
       )}
       {studyGroups && (
-        <Typography variant="caption" color="text.secondary" display="block" sx={ellipsisStyle}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          display="block"
+          sx={style}
+        >
           {studyGroups}
         </Typography>
       )}
-    </Box>
+    </>
   )
 }
 
-/**
- * CalendarWidget component that displays a calendar with events
- */
 export default function CalendarWidget({
   selectedDate,
   view,
@@ -76,6 +82,25 @@ export default function CalendarWidget({
 }) {
   const { timetable } = useTimetable()
   const { i18n } = useTranslation()
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const [tooltipAnchor, setTooltipAnchor] = useState(null)
+  const [tooltipContent, setTooltipContent] = useState(null)
+
+  const handleSelectEvent = (event, e) => {
+    if (isMobile) {
+      setTooltipContent(event)
+      setTooltipAnchor(e.currentTarget)
+    }
+  }
+
+  const handleClosePopover = () => {
+    setTooltipAnchor(null)
+    setTooltipContent(null)
+  }
+
+  const isOpen = Boolean(tooltipAnchor)
 
   const currentLanguage = useMemo(() => {
     const lang = i18n.language.split('-')[0]
@@ -85,7 +110,7 @@ export default function CalendarWidget({
   const localizer = useMemo(() => createLocalizer(currentLanguage), [currentLanguage])
 
   const calendarFormats = useMemo(() => ({
-    dayFormat: showDates ? (currentLanguage === 'de' ? 'EEE dd' : 'dd EEE') : 'EEEE'
+    dayFormat: showDates ? (currentLanguage === 'de' ? 'EEE dd' : 'dd EEE') : 'EEEE',
   }), [currentLanguage, showDates])
 
   const getTime = useCallback((minutes, fallback) =>
@@ -98,7 +123,7 @@ export default function CalendarWidget({
 
   const getEventProps = useCallback((event) => ({
     style: {
-      backgroundColor: rgbaColorToTheme(event.lightColor)
+      backgroundColor: rgbaColorToTheme(event.lightColor),
     },
   }), [])
 
@@ -106,11 +131,12 @@ export default function CalendarWidget({
     <CalendarWrapper>
       {view === 'day' && (
         <Box sx={{ paddingBottom: 1, display: 'flex', justifyContent: 'center' }}>
-          <Typography variant='body1'>
+          <Typography variant="body1">
             {format(selectedDate, calendarFormats.dayFormat, { locale: localeMap[currentLanguage] })}
           </Typography>
         </Box>
       )}
+
       <Calendar
         key={`calendar-${currentLanguage}-${showDates}`}
         localizer={localizer}
@@ -129,10 +155,32 @@ export default function CalendarWidget({
         toolbar={false}
         style={{ width: '100%', height: '100%' }}
         eventPropGetter={getEventProps}
+        onSelectEvent={handleSelectEvent}
         components={{
-          event: renderEventContent
+          event: (props) =>
+            isMobile ? (
+              <Box onClick={(e) => handleSelectEvent(props.event, e)}>
+                <Box>{renderEventDetails(props.event, true)}</Box>
+              </Box>
+            ) : (
+              <Tooltip arrow placement="auto" height="100%" title={<Box>{renderEventDetails(props.event)}</Box>}>
+                <Box>{renderEventDetails(props.event, true)}</Box>
+              </Tooltip>
+            ),
         }}
       />
+
+      <Popover
+        open={isOpen}
+        anchorEl={tooltipAnchor}
+        onClose={handleClosePopover}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Box sx={{ p: 2, maxWidth: 300 }}>
+          {tooltipContent && renderEventDetails(tooltipContent)}
+        </Box>
+      </Popover>
     </CalendarWrapper>
   )
 }
