@@ -26,6 +26,7 @@ export const getTheme = (mode) =>
           body: {
             transition: 'background-color 0.3s, color 0.3s',
             backgroundColor: mode === 'dark' ? '#121212' : '#ffffff',
+            color: mode === 'dark' ? '#ffffff' : '#000000',
           },
         },
       },

@@ -22,7 +22,6 @@ export default function CalendarWrapper({ children }) {
         color: theme.palette.text.primary,
         borderRadius: { xs: 0, md: 4 },
         p: 2,
-        transition: 'all 0.3s ease-in-out',
 
         // Apply only to non-print media
         '@media not print': {

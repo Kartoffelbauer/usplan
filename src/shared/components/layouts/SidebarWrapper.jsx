@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Drawer, useTheme } from '@mui/material'
+import { Box, SwipeableDrawer, useTheme } from '@mui/material'
 import { useCheckMobile } from '../../../shared/utils/themeUtils'
 
 /**
@@ -47,9 +47,10 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
         </Box>
       )}
       {isMobile && (
-        <Drawer
+        <SwipeableDrawer
           className="no-print"
           open={sidebarOpen}
+          onOpen={onToggleSidebar}
           onClose={onToggleSidebar}
           ModalProps={{ keepMounted: true }}
           sx={{
@@ -68,7 +69,7 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
           }}
         >
           {children}
-        </Drawer>
+        </SwipeableDrawer>
       )}
     </>
   )
