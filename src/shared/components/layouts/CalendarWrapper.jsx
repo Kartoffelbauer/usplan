@@ -18,7 +18,7 @@ export default function CalendarWrapper({ children }) {
     <Box
       sx={{
         height: '100%',
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.default,
         color: theme.palette.text.primary,
         borderRadius: { xs: 0, md: 4 },
         p: 2,
