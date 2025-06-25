@@ -87,9 +87,18 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
         }}
       >
         {/* Study Course + Group Selection */}
-        <Box display="flex" gap={2} paddingTop={1}>
-          <StudyCourseSelectWidget />
-          <StudyGroupSelectWidget />
+        <Box
+          display="flex"
+          flexWrap="wrap"
+          gap={2}
+          paddingTop={1}
+        >
+          <Box flex="1 1 200px">
+            <StudyCourseSelectWidget />
+          </Box>
+          <Box flex="1 1 200px">
+            <StudyGroupSelectWidget />
+          </Box>
         </Box>
 
         {/* Scrollable Lecture List */}
