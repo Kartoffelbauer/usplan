@@ -129,7 +129,14 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
                       <Typography variant="caption" color="text.secondary">
                         {selectedStudyGroup?.shortName || 'Semester ?'}
                       </Typography>
-                      <Typography>{lecture.name || 'Lecture ?'}</Typography>
+                      <Typography
+                        sx={{
+                          wordBreak: 'break-word',
+                          overflowWrap: 'anywhere',
+                        }}
+                      >
+                        {lecture.name || 'Lecture ?'}
+                      </Typography>
                     </Box>
 
                     <Box display="flex" alignItems="center" gap={2}>
