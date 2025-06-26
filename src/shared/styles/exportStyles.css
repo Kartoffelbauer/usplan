@@ -1,4 +1,8 @@
 @media print {
+  @page {
+    size: landscape;
+  }
+
   /* Hide all elements with the no-print class */
   .no-print {
     display: none !important;
