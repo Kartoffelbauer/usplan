@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { format, parse, startOfWeek, getDay, addMinutes, set } from 'date-fns'
 import enUS from 'date-fns/locale/en-US'
 import de from 'date-fns/locale/de'
@@ -12,6 +11,7 @@ import {
   useTheme,
   useMediaQuery,
 } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import { useTimetable } from '../../context/TimetableContext'
 import { rgbaColorToTheme } from '../../utils/themeUtils'
@@ -163,7 +163,18 @@ export default function CalendarWidget({
                 <Box>{renderEventDetails(props.event, true)}</Box>
               </Box>
             ) : (
-              <Tooltip arrow placement="auto" height="100%" title={<Box>{renderEventDetails(props.event)}</Box>}>
+              <Tooltip
+                height="100%"
+                title={<Box>{renderEventDetails(props.event)}</Box>}
+                slotProps={{
+                  tooltip: {
+                    sx: (theme) => ({
+                      backgroundColor: alpha(theme.palette.background.paper, 0.92),
+                      color: theme.palette.text.primary,
+                      boxShadow: theme.shadows[1],
+                    }),
+                  },
+                }}>
                 <Box>{renderEventDetails(props.event, true)}</Box>
               </Tooltip>
             ),
