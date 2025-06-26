@@ -78,6 +78,7 @@ export default function TimetableLayout({
     const events = []
 
     timetable.happenings.forEach(event => {
+      console.log(event)
       // Skip exams if not showing specials
       if ((!showSpecials && event.exam) || event.holiday) return
 
