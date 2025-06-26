@@ -149,7 +149,7 @@ export const useTimetableData = () => {
     } else if (selectedTimetable === 'room') {
       fetchFn = () => getTimetableForRooms(selectedSemester.id, selectedRoom.id);
     } else if (selectedTimetable === 'config') {
-      fetchFn = () => getTimetableForLectures(selectedSemester.id, selectedLectures.flatMap(obj => obj.id));
+      fetchFn = () => getTimetableForLectures(selectedSemester.id, selectedLectures);
     }
 
     fetchFn()

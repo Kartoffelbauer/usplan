@@ -18,7 +18,7 @@ import AddLectureDialogWidget from './AddLectureDialogWidget';
 export default function LectureSelectWidget() {
   const { t } = useTranslation()
   const theme = useTheme()
-  const { selectedLectures, setSelectedLectures } = useTimetable()
+  const { selectedLectures, timetable, setSelectedLectures } = useTimetable()
   const isEmpty = selectedLectures.length === 0
 
   // State to manage the dialog open state
@@ -37,7 +37,7 @@ export default function LectureSelectWidget() {
 
   // Function to remove a single lecture by id
   const handleRemoveLecture = (id) => {
-    setSelectedLectures((prevLectures) => prevLectures.filter((lecture) => lecture.id !== id));
+    setSelectedLectures((prevLectures) => prevLectures.filter((prevLect) => prevLect !== id));
   }
 
   return (
@@ -92,29 +92,36 @@ export default function LectureSelectWidget() {
             </Box>
           ) : (
             <Stack divider={<Divider />} spacing={1}>
-              {selectedLectures.map((lecture) => (
+              {timetable && Array.from(
+                new Map(
+                  timetable.happenings
+                    .filter(event => selectedLectures.includes(event.orgLectureIds[0]))
+                    .map(event => [event.orgLectureIds[0], event])
+                ).values()
+              ).map((lecture) => (
                 <Box
-                  key={lecture.id}
+                  key={lecture.orgLectureIds[0]}
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"
                 >
+                  {console.log('Lecture happening:', lecture)}
                   <Box display="flex" alignItems="center">
                     <IconButton
-                      onClick={() => handleRemoveLecture(lecture.id)}
+                      onClick={() => handleRemoveLecture(lecture.orgLectureIds[0])}
                       size="small"
                     >
                       <Delete fontSize="small" />
                     </IconButton>
                     <Box ml={1}>
                       <Typography variant="caption" color={theme.palette.text.secondary}>
-                        {lecture.semester}
+                        {lecture.fullPlanningGroupNames}
                       </Typography>
-                      <Typography variant='subtitle2'>{lecture.name}</Typography>
+                      <Typography variant='subtitle2'>{lecture.fullOrglectureName.replace(/\s*\(\d+\)/, '')}</Typography>
                     </Box>
                   </Box>
                   <Typography variant="subtitle2" color={theme.palette.text.secondary}>
-                    {lecture.id}
+                    {lecture.orglectureName.match(/\((\d+)\)/)?.[1]}
                   </Typography>
                 </Box>
               ))}

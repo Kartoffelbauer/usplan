@@ -24,7 +24,6 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
   const { t } = useTranslation()
   const {
     lectures,
-    selectedStudyGroup,
     selectedLectures,
     setSelectedLectures,
   } = useTimetable()
@@ -34,7 +33,7 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
   useEffect(() => {
     if (open) {
       // Start with existing selected lecture IDs
-      setLocalSelectedIds(selectedLectures.map(l => l.id))
+      setLocalSelectedIds(selectedLectures)
     }
   }, [open, selectedLectures])
 
@@ -45,21 +44,14 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
   }, [])
 
   const handleAdd = () => {
-    const allLectures = lectures.flatMap(obj => obj.a)
-
-    const newlySelected = allLectures
-      .filter(lecture => localSelectedIds.includes(lecture.id))
-      .map(lecture => ({
-        id: lecture.id,
-        name: lecture.name,
-        semester: selectedStudyGroup?.shortName || '',
-      }))
+    const allLectureIds = lectures.flatMap(obj => obj.a.id)
+    const newlySelected = allLectureIds.filter(lecture => localSelectedIds.includes(lecture))
 
     const updated = [
       // Keep already selected lectures that were not deselected
-      ...selectedLectures.filter(l => localSelectedIds.includes(l.id)),
+      ...selectedLectures.filter(lecture => localSelectedIds.includes(lecture)),
       // Add newly selected lectures not already present
-      ...newlySelected.filter(newL => !selectedLectures.some(existing => existing.id === newL.id))
+      ...newlySelected.filter(newLect => !selectedLectures.some(exLect => exLect === newLect))
     ]
 
     setSelectedLectures(updated)
@@ -110,6 +102,7 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
             borderColor: 'divider',
             borderRadius: 1,
             px: 1.5,
+            minHeight: '75px',
           }}
         >
           {hasLectures ? (
@@ -126,9 +119,11 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
                     py={1}
                   >
                     <Box flex={1}>
-                      <Typography variant="caption" color="text.secondary">
-                        {selectedStudyGroup?.shortName || 'Semester ?'}
-                      </Typography>
+                      {lecture.importId && (
+                        <Typography variant="caption" color="text.secondary">
+                          {lecture.importId}
+                        </Typography>
+                      )}
                       <Typography
                         sx={{
                           wordBreak: 'break-word',
@@ -138,22 +133,12 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
                         {lecture.name || 'Lecture ?'}
                       </Typography>
                     </Box>
-
-                    <Box display="flex" alignItems="center" gap={2}>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        whiteSpace="nowrap"
-                      >
-                        {lecture.id}
-                      </Typography>
-                      <Checkbox
-                        checked={isSelected}
-                        onChange={() => toggleLecture(lecture.id)}
-                        size="small"
-                        color="secondary"
-                      />
-                    </Box>
+                    <Checkbox
+                      checked={isSelected}
+                      onChange={() => toggleLecture(lecture.id)}
+                      size="small"
+                      color="secondary"
+                    />
                   </Box>
                   {index !== arr.length - 1 && <Divider />}
                 </Box>
