@@ -110,13 +110,23 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
               const isSelected = localSelectedIds.includes(lecture.id)
 
               return (
-                <Box key={lecture.id}>
+                <Box
+                  key={lecture.id}
+                  onClick={() => toggleLecture(lecture.id)}
+                  sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: 'action.hover',
+                    },
+                  }}
+                >
                   <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="space-between"
                     gap={2}
-                    py={1}
+                    p={1}
+                    pr={0}
                   >
                     <Box flex={1}>
                       {lecture.importId && (
@@ -135,6 +145,7 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
                     </Box>
                     <Checkbox
                       checked={isSelected}
+                      onClick={(e) => e.stopPropagation()} // prevents double toggle
                       onChange={() => toggleLecture(lecture.id)}
                       size="small"
                       color="secondary"
