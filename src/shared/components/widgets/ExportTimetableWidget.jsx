@@ -47,9 +47,9 @@ export default function ExportTimetableWidget() {
           (selectedTimetable === 'course' && selectedStudyGroup) ||
           (selectedTimetable === 'room' && selectedRoom)) {
 
-        setCopySuccess(icalUrlForTimetable(selectedTimetable, selectedSemester.id, selectedTimetable === 'course' ? selectedStudyGroup.id : selectedRoom.id, i18n.language))
+        const icalUrl = icalUrlForTimetable(selectedTimetable, selectedSemester.id, selectedTimetable === 'course' ? selectedStudyGroup.id : selectedRoom.id, i18n.language)
 
-        if (copySuccess) {
+        if (icalUrl) {
           setCopySuccess(await copyToClipboard(icalUrl))
         }
       }
