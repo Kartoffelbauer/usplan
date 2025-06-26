@@ -100,9 +100,9 @@ export default function AddLectureDialogWidget({ open, setOpen }) {
             overflowY: 'auto',
             border: '1px solid',
             borderColor: 'divider',
-            borderRadius: 1,
-            px: 1.5,
             minHeight: '75px',
+            borderRadius: 1,
+            p: 1,
           }}
         >
           {hasLectures ? (
