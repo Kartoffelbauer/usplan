@@ -15,6 +15,9 @@ import { useCheckMobile } from '../../../shared/utils/themeUtils'
 export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar }) {
   const theme = useTheme()
   const isMobile = useCheckMobile()
+  
+  // Define sidebar width as a constant
+  const sidebarWidth = 325
 
   return (
     <>
@@ -26,11 +29,11 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
               display: 'flex',
               flexDirection: 'column',
               flexShrink: 0,
-              width: 325,
+              width: sidebarWidth,
               maxHeight: '100vh',
               height: '100%',
-              overflowY: 'auto',
-              marginLeft: sidebarOpen ? 0 : '-325px',
+              overflowY: sidebarOpen ? 'auto' : 'hidden',
+              marginLeft: sidebarOpen ? 0 : `calc(-${sidebarWidth}px + ${theme.spacing(2)})`,
               gap: 2,
               p: 2,
               pt: 4,
@@ -56,7 +59,7 @@ export default function SidebarWrapper({ children, sidebarOpen, onToggleSidebar 
           sx={{
             display: { xs: 'block', md: 'none' },
             '& .MuiDrawer-paper': {
-              width: 320,
+              width: sidebarWidth - 5, // Slightly smaller for mobile
               backgroundColor: theme.palette.background.secondary,
               border: 'none',
               gap: 2,

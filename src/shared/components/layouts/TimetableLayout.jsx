@@ -126,7 +126,7 @@ export default function TimetableLayout({
         flexDirection: 'column',
         height: '100%',
         p: isMobile ? 0 : 2,
-        pl: sidebarOpen || isMobile ? 0 : 2
+        pl: 0
       }}
     >
       {/* Print-only Header */}
